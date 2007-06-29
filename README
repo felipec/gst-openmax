@@ -39,6 +39,14 @@ Then as root (depending on your prefix).
 
  make install
 
+Finally you can try it:
+
+ export GST_PLUGIN_PATH=$HOME/omx/lib/gstreamer-0.10
+ gst-launch-0.10 filesrc location="test.mp3" ! omx_mp3dec ! alsasink
+ gst-launch-0.10 filesrc location="test.ogg" ! omx_vorbisdec ! alsasink
+
+NOTE: The omx_mp3dec element only works if you compiled omxil with mad support.
+
 == Links ==
 
 * http://omxil.sourceforge.net/
