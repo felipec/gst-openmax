@@ -67,6 +67,8 @@ change_state (GstElement *element,
     {
         case GST_STATE_CHANGE_NULL_TO_READY:
             g_omx_core_init (self->gomx, self->omx_component);
+            if (self->gomx->omx_error)
+                return GST_STATE_CHANGE_FAILURE;
             setup_ports (self->gomx);
             g_omx_core_prepare (self->gomx);
             break;
@@ -100,6 +102,9 @@ change_state (GstElement *element,
             break;
 
         case GST_STATE_CHANGE_READY_TO_NULL:
+            g_omx_core_deinit (self->gomx);
+            if (self->gomx->omx_error)
+                return GST_STATE_CHANGE_FAILURE;
             break;
 
         default:
@@ -116,7 +121,6 @@ dispose (GObject *obj)
 
     self = GST_OMX_BASE (obj);
 
-    g_omx_core_deinit (self->gomx);
     g_omx_core_free (self->gomx);
 
     G_OBJECT_CLASS (parent_class)->dispose (obj);

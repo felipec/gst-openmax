@@ -120,25 +120,31 @@ g_omx_core_init (GOmxCore *core, const gchar *name)
 {
     if (counter == 0)
     {
-        OMX_Init ();
+        core->omx_error = OMX_Init ();
+
+        if (core->omx_error)
+            return;
     }
 
     counter++;
 
     /** @todo: Why is it not a const? */
-    OMX_GetHandle (&core->omx_handle, (gchar *) name, core, &callbacks);
+    core->omx_error = OMX_GetHandle (&core->omx_handle, (gchar *) name, core, &callbacks);
 }
 
 void
 g_omx_core_deinit (GOmxCore *core)
 {
-    OMX_FreeHandle (core->omx_handle);
+    core->omx_error = OMX_FreeHandle (core->omx_handle);
+
+    if (core->omx_error)
+        return;
 
     counter--;
 
     if (counter == 0)
     {
-        OMX_Deinit ();
+        core->omx_error = OMX_Deinit ();
     }
 }
 
@@ -242,7 +248,7 @@ g_omx_core_setup_port (GOmxCore *core,
 
     port = core->ports[omx_port->nPortIndex];
 
-    g_omx_port_setup (port, omx_port->nBufferCountActual, omx_port->nBufferSize);	
+    g_omx_port_setup (port, omx_port->nBufferCountActual, omx_port->nBufferSize);
 }
 
 void

@@ -50,6 +50,7 @@ struct GOmxCore
 {
     OMX_HANDLETYPE omx_handle;
     OMX_STATETYPE omx_state;
+    OMX_ERRORTYPE omx_error;
 
     GOmxPort *ports[2]; /**< @todo: extend. */
 
