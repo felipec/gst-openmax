@@ -1,0 +1,45 @@
+GstOpenMAX
+
+GStreamer OpenMAX IL wrapper
+
+You'll need an OpenMAX IL implementation. Luckily STMicroelectronics has
+provided an useful sample implementation in the Bellagio project which is Open
+Source.
+
+== How to build omxil ==
+
+Download the source code from:
+
+http://omxil.sourceforge.net/
+http://dl.sourceforge.net/sourceforge/omxil/libomxil-B-0.3.2.tar.gz
+
+Install as usual:
+
+ ./configure --prefix="$HOME/omx"
+ make
+ make install
+
+Register the components:
+
+ $HOME/omx/bin/omxregister
+
+== How to build gst-openmax ==
+
+If you are fetching it from CVS:
+
+ ./autogen.sh --noconfigure
+
+Assuming you have libomxil installed in "$HOME/omx":
+
+ ./configure --prefix="$HOME/omx" --with-pkg-config-path=$HOME/omx/lib/pkgconfig
+
+ make
+
+Then as root (depending on your prefix).
+
+ make install
+
+== Links ==
+
+* http://omxil.sourceforge.net/
+* http://freedesktop.org/wiki/GstOpenMAX

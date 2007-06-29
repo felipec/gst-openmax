@@ -2,7 +2,7 @@ AC_PREREQ([2.52])
 
 AC_INIT([GstOpenMAX], [0.1.0], [http://freedesktop.org/wiki/GstOpenMAX], [gst-openmax])
 AC_CONFIG_AUX_DIR([config])
-AM_INIT_AUTOMAKE([foreign])
+AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER([config.h])
 AC_CONFIG_FILES([Makefile omx/Makefile])
 
