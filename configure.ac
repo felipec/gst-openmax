@@ -1,15 +1,17 @@
-AC_INIT([gst-openmax], [0.1.0])
+AC_PREREQ([2.52])
+
+AC_INIT([GstOpenMAX], [0.1.0], [http://freedesktop.org/wiki/GstOpenMAX], [gst-openmax])
 AC_CONFIG_AUX_DIR([config])
-AM_INIT_AUTOMAKE([-Wall -Werror foreign])
+AM_INIT_AUTOMAKE([foreign])
 AM_CONFIG_HEADER([config.h])
 AC_CONFIG_FILES([Makefile omx/Makefile])
-
-dnl versions of OpenMAX IL
-OMXIL_REQUIRED=0.3
 
 dnl versions of GStreamer
 GST_MAJORMINOR=0.10
 GST_REQUIRED=0.10.0
+
+dnl initialize GStreamer macros
+AG_GST_INIT
 
 dnl AM_MAINTAINER_MODE provides the option to enable maintainer mode
 AM_MAINTAINER_MODE
@@ -19,31 +21,71 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 
-# GST_ARG_DEBUG
-# GST_ARG_VALGRIND
+dnl add GStreamer macros for aclocal
+AC_SUBST(ACLOCAL_AMFLAGS, ["-I common/m4"])
+
+dnl add GStreamer arguments
+AG_GST_ARG_DEBUG
+AG_GST_ARG_PROFILING
+AG_GST_ARG_VALGRIND
+AG_GST_ARG_GCOV
+
+AG_GST_ARG_WITH_PKG_CONFIG_PATH
+AG_GST_ARG_WITH_PACKAGE_NAME
+AG_GST_ARG_WITH_PACKAGE_ORIGIN
+
+dnl ** checks **
 
 dnl Check for OpenMAX IL
-PKG_CHECK_MODULES([OMXIL], [libomxil >= $OMXIL_REQUIRED])
+PKG_CHECK_MODULES([OMXIL], [libomxil])
 
 dnl Check for GStreamer
-PKG_CHECK_MODULES([GST], [gstreamer-$GST_MAJORMINOR >= $GST_REQUIRED])
+AG_GST_CHECK_GST($GST_MAJORMINOR, [$GST_REQUIRED])
 
-dnl Check for GStreamer Base
-PKG_CHECK_MODULES([GST_BASE], [gstreamer-base-$GST_MAJORMINOR >= $GST_REQUIRED])
+dnl ** finalize ***
 
-dnl append GST_ERROR cflags to GST_CFLAGS
-dnl GST_CFLAGS="$GST_CFLAGS $GST_ERROR"
+dnl set license and copyright notice
+GST_LICENSE="LGPL"
+AC_DEFINE_UNQUOTED(GST_LICENSE, "$GST_LICENSE", [GStreamer license])
+AC_SUBST(GST_LICENSE)
 
-dnl set the plugindir where plugins should be installed
-if test "x${prefix}" = "x$HOME"; then
-  plugindir="$HOME/.gstreamer-$GST_MAJORMINOR/plugins"
-else
-  plugindir="\$(libdir)/gstreamer-$GST_MAJORMINOR"
+dnl set GStreamer plug-in dir
+AG_GST_SET_PLUGINDIR
+
+dnl GST_OPTION_CFLAGS
+if test "x$USE_DEBUG" = xyes; then
+   PROFILE_CFLAGS="-g"
 fi
-AC_SUBST([plugindir])
+AC_SUBST(PROFILE_CFLAGS)
 
-dnl set proper LDFLAGS for plugins
-GST_PLUGIN_LDFLAGS='-module -avoid-version -export-symbols-regex [_]*\(gst_\|Gst\|GST_\).*'
-AC_SUBST([GST_PLUGIN_LDFLAGS])
+DEPRECATED_CFLAGS="-DGST_DISABLE_DEPRECATED"
+AC_SUBST(DEPRECATED_CFLAGS)
+
+dnl every flag in GST_OPTION_CFLAGS can be overridden at make time
+GST_OPTION_CFLAGS="\$(ERROR_CFLAGS) \$(DEBUG_CFLAGS) \$(PROFILE_CFLAGS) \$(GCOV_CFLAGS) \$(OPT_CFLAGS) \$(DEPRECATED_CFLAGS)"
+AC_SUBST(GST_OPTION_CFLAGS)
+
+dnl our libraries need to be versioned correctly
+AC_SUBST(GST_LT_LDFLAGS)
+
+dnl FIXME: do we want to rename to GST_ALL_* ?
+dnl prefer internal headers to already installed ones
+dnl also add builddir include for enumtypes and marshal
+dnl add GST_OPTION_CFLAGS, but overridable
+GST_CFLAGS="-I\$(top_srcdir)/gst-libs -I\$(top_builddir)/gst-libs $GST_CFLAGS \$(GST_OPTION_CFLAGS)"
+AC_SUBST(GST_CFLAGS)
+AC_SUBST(GST_LIBS)
+
+dnl LDFLAGS really should only contain flags, not libs - they get added before
+dnl whatevertarget_LIBS and -L flags here affect the rest of the linking
+GST_ALL_LDFLAGS="-no-undefined"
+AC_SUBST(GST_ALL_LDFLAGS)
+
+dnl this really should only contain flags, not libs - they get added before
+dnl whatevertarget_LIBS and -L flags here affect the rest of the linking
+GST_PLUGIN_LDFLAGS="-module -avoid-version -export-symbols-regex '^[_]*gst_plugin_desc\$\$' $GST_ALL_LDFLAGS"
+AC_SUBST(GST_PLUGIN_LDFLAGS)
+
+dnl *** output ***
 
 AC_OUTPUT
