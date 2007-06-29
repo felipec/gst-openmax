@@ -105,6 +105,45 @@ type_class_init (gpointer g_class,
 }
 
 static void
+set_caps (GstOmxBase *omx_base)
+{
+    guint rate;
+    guint channels;
+
+    {
+        OMX_AUDIO_PARAM_PCMMODETYPE *param;
+
+        param = calloc (1, sizeof (OMX_AUDIO_PARAM_PCMMODETYPE));
+        param->nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
+        param->nVersion.nVersion = 1;
+
+        param->nPortIndex = 1;
+        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, param);
+        rate = param->nSamplingRate;
+        channels = param->nChannels;
+        free (param);
+    }
+
+    GST_DEBUG_OBJECT (omx_base, "fixing caps");
+
+    {
+        GstCaps *new_caps;
+
+        new_caps = gst_caps_new_simple ("audio/x-raw-int",
+                                        "width", G_TYPE_INT, 16,
+                                        "depth", G_TYPE_INT, 16,
+                                        "rate", G_TYPE_INT, rate,
+                                        "signed", G_TYPE_BOOLEAN, TRUE,
+                                        "endianness", G_TYPE_INT, G_BYTE_ORDER ? 1234 : 4321,
+                                        "channels", G_TYPE_INT, channels,
+                                        NULL);
+
+        GST_INFO_OBJECT (omx_base, "caps are: %" GST_PTR_FORMAT, new_caps);
+        gst_pad_set_caps (omx_base->srcpad, new_caps);
+    }
+}
+
+static void
 type_instance_init (GTypeInstance *instance,
                     gpointer g_class)
 {
@@ -117,6 +156,7 @@ type_instance_init (GTypeInstance *instance,
     GST_DEBUG_OBJECT (omx_base, "start");
 
     omx_base->omx_component = OMX_COMPONENT_ID;
+	omx_base->set_caps = set_caps;
 }
 
 GType
