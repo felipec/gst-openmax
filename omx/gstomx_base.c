@@ -33,7 +33,8 @@ setup_ports (GOmxCore *core)
 
     param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
     param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-    param->nVersion.nVersion = 1;
+    param->nVersion.s.nVersionMajor = 1;
+    param->nVersion.s.nVersionMinor = 1;
 
     /* Input port configuration. */
 

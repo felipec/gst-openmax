@@ -115,7 +115,8 @@ set_caps (GstOmxBase *omx_base)
 
         param = calloc (1, sizeof (OMX_AUDIO_PARAM_PCMMODETYPE));
         param->nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
-        param->nVersion.nVersion = 1;
+        param->nVersion.s.nVersionMajor = 1;
+        param->nVersion.s.nVersionMinor = 1;
 
         param->nPortIndex = 1;
         OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, param);
