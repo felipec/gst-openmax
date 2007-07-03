@@ -20,6 +20,7 @@
 #include "gstomx.h"
 #include "gstomx_base.h"
 #include "gstomx_dummy.h"
+#include "gstomx_mpeg4dec.h"
 #include "gstomx_vorbisdec.h"
 #include "gstomx_mp3dec.h"
 
@@ -33,6 +34,11 @@ plugin_init (GstPlugin *plugin)
     GST_DEBUG_CATEGORY_INIT (gstomx_debug, "omx", 0, "OpenMAX");
 
     if (!gst_element_register (plugin, "omx_dummy", GST_RANK_NONE, GST_OMX_DUMMY_TYPE))
+    {
+        return false;
+    }
+
+    if (!gst_element_register (plugin, "omx_mpeg4dec", GST_RANK_NONE, GST_OMX_MPEG4DEC_TYPE))
     {
         return false;
     }
