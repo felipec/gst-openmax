@@ -105,10 +105,15 @@ type_class_init (gpointer g_class,
 }
 
 static void
-set_caps (GstOmxBase *omx_base)
+settings_changed_cb (GOmxCore *core)
 {
+    GstOmxBase *omx_base;
     guint rate;
     guint channels;
+
+    omx_base = core->client_data;
+
+    GST_DEBUG_OBJECT (omx_base, "settings changed");
 
     {
         OMX_AUDIO_PARAM_PCMMODETYPE *param;
@@ -120,12 +125,12 @@ set_caps (GstOmxBase *omx_base)
 
         param->nPortIndex = 1;
         OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, param);
+
         rate = param->nSamplingRate;
         channels = param->nChannels;
+
         free (param);
     }
-
-    GST_DEBUG_OBJECT (omx_base, "fixing caps");
 
     {
         GstCaps *new_caps;
@@ -157,7 +162,8 @@ type_instance_init (GTypeInstance *instance,
     GST_DEBUG_OBJECT (omx_base, "start");
 
     omx_base->omx_component = OMX_COMPONENT_ID;
-	omx_base->set_caps = set_caps;
+
+    omx_base->gomx->settings_changed_cb = settings_changed_cb;
 }
 
 GType

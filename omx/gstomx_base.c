@@ -145,23 +145,6 @@ type_class_init (gpointer g_class,
     gstelement_class->change_state = change_state;
 }
 
-static void
-set_caps (GstOmxBase *self)
-{
-    if (self->set_caps)
-    {
-        self->set_caps (self);
-    }
-}
-
-static void
-settings_changed_cb (GOmxCore *core)
-{
-    GstOmxBase *self;
-    self = core->client_data;
-    set_caps (self);
-}
-
 gpointer
 output_thread (gpointer cb_data)
 {
@@ -201,7 +184,9 @@ output_thread (gpointer cb_data)
 
                 if (!caps)
                 {
-                    set_caps (self);
+                    /** @todo We shouldn't be doing this. */
+                    GST_WARNING_OBJECT (self, "somebody didn't do his work");
+                    gomx->settings_changed_cb (gomx);
                 }
                 else
                 {
@@ -407,7 +392,6 @@ type_instance_init (GTypeInstance *instance,
         GOmxCore *gomx;
         self->gomx = gomx = g_omx_core_new ();
         gomx->client_data = self;
-        gomx->settings_changed_cb = settings_changed_cb;
         gomx->ports[0]->enable_queue = true;
         gomx->ports[1]->enable_queue = true;
     }

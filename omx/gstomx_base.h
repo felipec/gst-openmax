@@ -48,7 +48,6 @@ struct GstOmxBase
     GThread *thread;
 
     const char *omx_component;
-    GstOmxBaseCb set_caps;
 };
 
 struct GstOmxBaseClass
