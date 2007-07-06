@@ -26,10 +26,20 @@
 
 static GstElementClass *parent_class = NULL;
 
-static void 
-setup_ports (GOmxCore *core)
+/** Finishes the processing. */
+static void
+out_port_done_cb (GOmxPort *port)
 {
+    g_omx_sem_up (port->core->done_sem);
+}
+
+static void 
+setup_ports (GstOmxBase *self)
+{
+    GOmxCore *core;
     OMX_PARAM_PORTDEFINITIONTYPE *param;
+
+    core = self->gomx;
 
     param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
     param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
@@ -40,13 +50,16 @@ setup_ports (GOmxCore *core)
 
     param->nPortIndex = 0;
     OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, param); 
-    g_omx_port_setup (core->ports[param->nPortIndex], param->nBufferCountActual, param->nBufferSize);
+    self->in_port = g_omx_core_setup_port (core, param);
+    self->in_port->enable_queue = true;
 
     /* Output port configuration. */
 
     param->nPortIndex = 1;
     OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, param); 
-    g_omx_port_setup (core->ports[param->nPortIndex], param->nBufferCountActual, param->nBufferSize);
+    self->out_port = g_omx_core_setup_port (core, param);
+    self->out_port->enable_queue = true;
+    self->out_port->done_cb = out_port_done_cb;
 
     free (param);
 }
@@ -70,13 +83,14 @@ change_state (GstElement *element,
             g_omx_core_init (self->gomx, self->omx_component);
             if (self->gomx->omx_error)
                 return GST_STATE_CHANGE_FAILURE;
-            setup_ports (self->gomx);
+
+            setup_ports (self);
             g_omx_core_prepare (self->gomx);
             break;
 
         case GST_STATE_CHANGE_PLAYING_TO_PAUSED:
-            g_omx_port_set_done (self->gomx->ports[0]);
-            g_omx_port_set_done (self->gomx->ports[1]);
+            g_omx_port_set_done (self->in_port);
+            g_omx_port_set_done (self->out_port);
             break;
 
         case GST_STATE_CHANGE_PAUSED_TO_READY:
@@ -149,6 +163,7 @@ gpointer
 output_thread (gpointer cb_data)
 {
     GOmxCore *gomx;
+    GOmxPort *out_port;
     GstOmxBase *self;
 
     gomx = (GOmxCore *) cb_data;
@@ -156,11 +171,13 @@ output_thread (gpointer cb_data)
 
     GST_LOG_OBJECT (self, "start");
 
-    while (!gomx->ports[1]->done)
+    out_port = self->out_port;
+
+    while (!out_port->done)
     {
         OMX_BUFFERHEADERTYPE *omx_buffer;
 
-        omx_buffer = g_omx_port_request_buffer (gomx->ports[1]);
+        omx_buffer = g_omx_port_request_buffer (out_port);
 
         GST_LOG_OBJECT (self, "omx_buffer: %p", omx_buffer);
 
@@ -228,7 +245,7 @@ output_thread (gpointer cb_data)
 
         if (omx_buffer->nFlags & OMX_BUFFERFLAG_EOS)
         {
-            g_omx_port_set_done (gomx->ports[1]);
+            g_omx_port_set_done (out_port);
             break;
         }
 
@@ -258,7 +275,7 @@ output_thread (gpointer cb_data)
             }
         }
 
-        g_omx_port_release_buffer (gomx->ports[1], omx_buffer);
+        g_omx_port_release_buffer (out_port, omx_buffer);
     }
 
     GST_LOG_OBJECT (self, "end");
@@ -270,8 +287,9 @@ static GstFlowReturn
 pad_chain (GstPad *pad,
            GstBuffer *buf)
 {
-    GstOmxBase *self;
     GOmxCore *gomx;
+    GOmxPort *in_port;
+    GstOmxBase *self;
     GstFlowReturn ret = GST_FLOW_OK;
 
     self = GST_OMX_BASE (GST_OBJECT_PARENT (pad));
@@ -292,11 +310,13 @@ pad_chain (GstPad *pad,
         self->started = true;
     }
 
-    if (!gomx->ports[0]->done)
+    in_port = self->in_port;
+
+    if (!in_port->done)
     {
         OMX_BUFFERHEADERTYPE *omx_buffer;
 
-        omx_buffer = g_omx_port_request_buffer (gomx->ports[0]);
+        omx_buffer = g_omx_port_request_buffer (in_port);
 
         if (omx_buffer)
         {
@@ -320,7 +340,7 @@ pad_chain (GstPad *pad,
             omx_buffer->pAppPrivate = buf;
 
             GST_LOG_OBJECT (self, "release_buffer");
-            g_omx_port_release_buffer (gomx->ports[0], omx_buffer);
+            g_omx_port_release_buffer (in_port, omx_buffer);
         }
         else
         {
@@ -355,7 +375,7 @@ pad_event (GstPad *pad,
     {
         case GST_EVENT_EOS:
             /* Close the inpurt port. */
-            g_omx_port_set_done (self->gomx->ports[0]);
+            g_omx_port_set_done (self->in_port);
             /* Wait for the output port to get the EOS. */
             g_omx_core_wait_for_done (self->gomx);
             break;
@@ -392,8 +412,6 @@ type_instance_init (GTypeInstance *instance,
         GOmxCore *gomx;
         self->gomx = gomx = g_omx_core_new ();
         gomx->client_data = self;
-        gomx->ports[0]->enable_queue = true;
-        gomx->ports[1]->enable_queue = true;
     }
 
     self->sinkpad =

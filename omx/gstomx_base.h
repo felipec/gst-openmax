@@ -44,6 +44,9 @@ struct GstOmxBase
     GstPad *srcpad;
 
     GOmxCore *gomx;
+    GOmxPort *in_port;
+    GOmxPort *out_port;
+
     gboolean started;
     GThread *thread;
 

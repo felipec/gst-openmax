@@ -52,7 +52,7 @@ struct GOmxCore
     OMX_STATETYPE omx_state;
     OMX_ERRORTYPE omx_error;
 
-    GOmxPort *ports[2]; /**< @todo: extend. */
+    GPtrArray *ports;
 
     gpointer client_data; /**< Placeholder for the client data. */
 
@@ -101,11 +101,12 @@ void g_omx_core_start (GOmxCore *core);
 void g_omx_core_finish (GOmxCore *core);
 void g_omx_core_wait_for_done (GOmxCore *core);
 void g_omx_core_set_port_cb (GOmxCore *core, guint index, GOmxBufferCb cb);
-void g_omx_core_setup_port (GOmxCore *core, OMX_PARAM_PORTDEFINITIONTYPE *omx_port);
+GOmxPort *g_omx_core_get_port (GOmxCore *core, guint index);
+GOmxPort *g_omx_core_setup_port (GOmxCore *core, OMX_PARAM_PORTDEFINITIONTYPE *omx_port);
 
 GOmxPort *g_omx_port_new (GOmxCore *core);
 void g_omx_port_free (GOmxPort *port);
-void g_omx_port_setup (GOmxPort *port, gint num_buffers, gint buffer_size);
+void g_omx_port_setup (GOmxPort *port, OMX_PARAM_PORTDEFINITIONTYPE *omx_port);
 void g_omx_port_push_buffer (GOmxPort *port, OMX_BUFFERHEADERTYPE *omx_buffer);
 OMX_BUFFERHEADERTYPE *g_omx_port_request_buffer (GOmxPort *port);
 void g_omx_port_release_buffer (GOmxPort *port, OMX_BUFFERHEADERTYPE *omx_buffer);

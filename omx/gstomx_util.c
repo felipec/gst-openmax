@@ -49,9 +49,6 @@ got_buffer (GOmxCore *core,
             GOmxPort *port,
             OMX_BUFFERHEADERTYPE *omx_buffer);
 
-static void
-out_port_done_cb (GOmxPort *port);
-
 static OMX_ERRORTYPE
 EventHandler (OMX_HANDLETYPE omx_handle,
               OMX_PTR app_data,
@@ -83,14 +80,7 @@ g_omx_core_new (void)
 
     core = g_new0 (GOmxCore, 1);
 
-    core->ports[0] = g_omx_port_new (core);
-    core->ports[0]->callback = in_port_cb;
-    core->ports[0]->type = GOMX_PORT_INPUT;
-
-    core->ports[1] = g_omx_port_new (core);
-    core->ports[1]->callback = out_port_cb;
-    core->ports[1]->type = GOMX_PORT_OUTPUT;
-    core->ports[1]->done_cb = out_port_done_cb;
+    core->ports = g_ptr_array_new ();
 
     core->state_sem = g_omx_sem_new ();
     core->done_sem = g_omx_sem_new ();
@@ -106,8 +96,16 @@ g_omx_core_free (GOmxCore *core)
     g_omx_sem_free (core->done_sem);
     g_omx_sem_free (core->state_sem);
 
-    g_omx_port_free (core->ports[0]);
-    g_omx_port_free (core->ports[1]);
+    {
+        gint index;
+        for (index = 0; index < core->ports->len; index++)
+        {
+            GOmxPort *port;
+            port = g_omx_core_get_port (core, index);
+            g_omx_port_free (port);
+        }
+        g_ptr_array_free (core->ports, TRUE);
+    }
 
     g_free (core);
 }
@@ -158,20 +156,24 @@ g_omx_core_prepare (GOmxCore *core)
         gint index;
         gint i;
 
-        for (index = 0; index < 2; index++)
+        for (index = 0; index < core->ports->len; index++)
         {
-            if (core->ports[index])
+            GOmxPort *port;
+
+            port = g_omx_core_get_port (core, index);
+
+            if (port)
             {
-                for (i = 0; i < core->ports[index]->num_buffers; i++)
+                for (i = 0; i < port->num_buffers; i++)
                 {
                     gpointer buffer_data;
                     guint size;
 
-                    size = core->ports[index]->buffer_size;
+                    size = port->buffer_size;
                     buffer_data = g_malloc (size);
 
                     OMX_UseBuffer (core->omx_handle,
-                                   &core->ports[index]->buffers[i],
+                                   &port->buffers[i],
                                    index,
                                    NULL,
                                    size,
@@ -195,15 +197,19 @@ g_omx_core_start (GOmxCore *core)
         guint index;
         guint i;
 
-        for (index = 0; index < 2; index++)
+        for (index = 0; index < core->ports->len; index++)
         {
-            for (i = 0; i < core->ports[index]->num_buffers; i++)
+            GOmxPort *port;
+
+            port = g_omx_core_get_port (core, index);
+
+            for (i = 0; i < port->num_buffers; i++)
             {
                 OMX_BUFFERHEADERTYPE *omx_buffer;
 
-                omx_buffer = core->ports[index]->buffers[i];
+                omx_buffer = port->buffers[i];
 
-                got_buffer (core, core->ports[index], omx_buffer);
+                got_buffer (core, port, omx_buffer);
             }
         }
     }
@@ -222,13 +228,17 @@ g_omx_core_finish (GOmxCore *core)
         guint index;
         guint i;
 
-        for (index = 0; index < 2; index++)
+        for (index = 0; index < core->ports->len; index++)
         {
-            for (i = 0; i < core->ports[index]->num_buffers; i++)
+            GOmxPort *port;
+
+            port = g_omx_core_get_port (core, index);
+
+            for (i = 0; i < port->num_buffers; i++)
             {
                 OMX_BUFFERHEADERTYPE *omx_buffer;
 
-                omx_buffer = core->ports[index]->buffers[i];
+                omx_buffer = port->buffers[i];
 
                 g_free (omx_buffer->pBuffer);
 
@@ -240,15 +250,51 @@ g_omx_core_finish (GOmxCore *core)
     wait_for_state (core, OMX_StateLoaded);
 }
 
-void
+static void
+g_ptr_array_insert (GPtrArray *array,
+                    guint index,
+                    gpointer data)
+{
+    if (index + 1 > array->len)
+    {
+        g_ptr_array_set_size (array, index + 1);
+    }
+
+    array->pdata[index] = data;
+}
+
+GOmxPort *
 g_omx_core_setup_port (GOmxCore *core,
                        OMX_PARAM_PORTDEFINITIONTYPE *omx_port)
 {
     GOmxPort *port;
+    guint index;
 
-    port = core->ports[omx_port->nPortIndex];
+    index = omx_port->nPortIndex;
+    port = g_omx_core_get_port (core, index);
 
-    g_omx_port_setup (port, omx_port->nBufferCountActual, omx_port->nBufferSize);
+    if (!port)
+    {
+        port = g_omx_port_new (core);
+    }
+
+    g_omx_port_setup (port, omx_port);
+
+    g_ptr_array_insert (core->ports, index, port);
+
+    return port;
+}
+
+GOmxPort *
+g_omx_core_get_port (GOmxCore *core,
+                     guint index)
+{
+    if (index < core->ports->len)
+    {
+        return g_ptr_array_index (core->ports, index);
+    }
+
+    return NULL;
 }
 
 void
@@ -256,7 +302,9 @@ g_omx_core_set_port_cb (GOmxCore *core,
                         guint index,
                         GOmxBufferCb cb)
 {
-    core->ports[index]->user_cb = cb;
+    GOmxPort *port;
+    port = g_omx_core_get_port (core, index);
+    port->user_cb = cb;
 }
 
 void
@@ -301,11 +349,35 @@ g_omx_port_free (GOmxPort *port)
 
 void
 g_omx_port_setup (GOmxPort *port,
-                  gint num_buffers,
-                  gint buffer_size)
+                  OMX_PARAM_PORTDEFINITIONTYPE *omx_port)
 {
-    port->num_buffers = num_buffers;
-    port->buffer_size = buffer_size;
+    GOmxPortType type;
+    GOmxBufferCb callback;
+
+    switch (omx_port->eDir)
+    {
+        case OMX_DirInput:
+            type = GOMX_PORT_INPUT;
+            callback = in_port_cb;
+            break;
+        case OMX_DirOutput:
+            type = GOMX_PORT_OUTPUT;
+            callback = out_port_cb;
+            break;
+        default:
+            break;
+    }
+
+    port->type = type;
+    port->callback = callback;
+    port->num_buffers = omx_port->nBufferCountActual;
+    port->buffer_size = omx_port->nBufferSize;
+
+    if (port->buffers)
+    {
+        /** @todo handle this case */
+        g_print ("WARNING: unhandled setup\n");
+    }
     port->buffers = g_new (OMX_BUFFERHEADERTYPE *, port->num_buffers);
 }
 
@@ -526,12 +598,6 @@ got_buffer (GOmxCore *core,
     }
 }
 
-static void
-out_port_done_cb (GOmxPort *port)
-{
-    g_omx_sem_up (port->core->done_sem);
-}
-
 /*
  * OpenMAX IL callbacks.
  */
@@ -602,10 +668,12 @@ EmptyBufferDone (OMX_HANDLETYPE omx_handle,
                  OMX_BUFFERHEADERTYPE *omx_buffer)
 {
     GOmxCore *core;
+    GOmxPort *port;
 
     core = (GOmxCore*) app_data;
+    port = g_omx_core_get_port (core, omx_buffer->nInputPortIndex);
 
-    got_buffer (core, core->ports[omx_buffer->nInputPortIndex], omx_buffer);
+    got_buffer (core, port, omx_buffer);
 
     return OMX_ErrorNone;
 }
@@ -616,10 +684,12 @@ FillBufferDone (OMX_HANDLETYPE omx_handle,
                 OMX_BUFFERHEADERTYPE *omx_buffer)
 {
     GOmxCore *core;
+    GOmxPort *port;
 
     core = (GOmxCore *) app_data;
+    port = g_omx_core_get_port (core, omx_buffer->nOutputPortIndex);
 
-    got_buffer (core, core->ports[omx_buffer->nOutputPortIndex], omx_buffer);
+    got_buffer (core, port, omx_buffer);
 
     return OMX_ErrorNone;
 }
