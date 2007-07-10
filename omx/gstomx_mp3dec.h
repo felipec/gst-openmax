@@ -32,16 +32,16 @@ G_BEGIN_DECLS
 typedef struct GstOmxMp3Dec GstOmxMp3Dec;
 typedef struct GstOmxMp3DecClass GstOmxMp3DecClass;
 
-#include "gstomx_base.h"
+#include "gstomx_base_filter.h"
 
 struct GstOmxMp3Dec
 {
-    GstOmxBase omx_base;
+    GstOmxBaseFilter omx_base;
 };
 
 struct GstOmxMp3DecClass 
 {
-    GstOmxBaseClass parent_class;
+    GstOmxBaseFilterClass parent_class;
 };
 
 GType gst_omx_mp3dec_get_type (void);

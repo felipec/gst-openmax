@@ -32,16 +32,16 @@ G_BEGIN_DECLS
 typedef struct GstOmxMpeg4Dec GstOmxMpeg4Dec;
 typedef struct GstOmxMpeg4DecClass GstOmxMpeg4DecClass;
 
-#include "gstomx_base.h"
+#include "gstomx_base_filter.h"
 
 struct GstOmxMpeg4Dec
 {
-    GstOmxBase omx_base;
+    GstOmxBaseFilter omx_base;
 };
 
 struct GstOmxMpeg4DecClass 
 {
-    GstOmxBaseClass parent_class;
+    GstOmxBaseFilterClass parent_class;
 };
 
 GType gst_omx_mpeg4dec_get_type (void);

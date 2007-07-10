@@ -32,16 +32,16 @@ G_BEGIN_DECLS
 typedef struct GstOmxDummy GstOmxDummy;
 typedef struct GstOmxDummyClass GstOmxDummyClass;
 
-#include "gstomx_base.h"
+#include "gstomx_base_filter.h"
 
 struct GstOmxDummy
 {
-    GstOmxBase omx_base;
+    GstOmxBaseFilter omx_base;
 };
 
 struct GstOmxDummyClass 
 {
-    GstOmxBaseClass parent_class;
+    GstOmxBaseFilterClass parent_class;
 };
 
 GType gst_omx_dummy_get_type (void);

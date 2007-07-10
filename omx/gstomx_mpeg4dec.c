@@ -18,7 +18,7 @@
  */
 
 #include "gstomx_mpeg4dec.h"
-#include "gstomx_base.h"
+#include "gstomx_base_filter.h"
 #include "gstomx.h"
 
 #include <string.h>
@@ -28,7 +28,7 @@
 #define OMX_COMPONENT_ID "OMX.st.video_decoder.mpeg4"
 /* #define OMX_COMPONENT_ID "OMX_VideoDecoder" */
 
-static GstOmxBaseClass *parent_class = NULL;
+static GstOmxBaseFilterClass *parent_class = NULL;
 
 static GstCaps *
 generate_src_template ()
@@ -90,9 +90,9 @@ static void
 type_base_init (gpointer g_class)
 {
     GstElementClass *element_class;
-    GstOmxBaseClass *omx_base_class;
+    GstOmxBaseFilterClass *omx_base_class;
 
-    omx_base_class = GST_OMX_BASE_CLASS (g_class);
+    omx_base_class = GST_OMX_BASE_FILTER_CLASS (g_class);
     element_class = GST_ELEMENT_CLASS (g_class);
 
     {
@@ -131,13 +131,13 @@ static void
 type_class_init (gpointer g_class,
                  gpointer class_data)
 {
-    parent_class = g_type_class_ref (GST_OMX_BASE_TYPE);
+    parent_class = g_type_class_ref (GST_OMX_BASE_FILTER_TYPE);
 }
 
 static void
 settings_changed_cb (GOmxCore *core)
 {
-    GstOmxBase *omx_base;
+    GstOmxBaseFilter *omx_base;
     guint width;
     guint height;
     guint framerate;
@@ -197,13 +197,13 @@ sink_setcaps (GstPad *pad,
               GstCaps *caps)
 {
     GstStructure *structure;
-    GstOmxBase *omx_base;
+    GstOmxBaseFilter *omx_base;
     GOmxCore *gomx;
     OMX_PARAM_PORTDEFINITIONTYPE *param;
     gint width = 0;
     gint height = 0;
 
-    omx_base = GST_OMX_BASE (GST_PAD_PARENT (pad));
+    omx_base = GST_OMX_BASE_FILTER (GST_PAD_PARENT (pad));
     gomx = (GOmxCore *) omx_base->gomx;
 
     GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
@@ -273,9 +273,9 @@ static void
 type_instance_init (GTypeInstance *instance,
                     gpointer g_class)
 {
-    GstOmxBase *omx_base;
+    GstOmxBaseFilter *omx_base;
 
-    omx_base = GST_OMX_BASE (instance);
+    omx_base = GST_OMX_BASE_FILTER (instance);
 
     GST_DEBUG_OBJECT (omx_base, "start");
 
@@ -302,7 +302,7 @@ gst_omx_mpeg4dec_get_type (void)
         type_info->instance_size = sizeof (GstOmxMpeg4Dec);
         type_info->instance_init = type_instance_init;
 
-        type = g_type_register_static (GST_OMX_BASE_TYPE, "GstOmxMpeg4Dec", type_info, 0);
+        type = g_type_register_static (GST_OMX_BASE_FILTER_TYPE, "GstOmxMpeg4Dec", type_info, 0);
 
         g_free (type_info);
     }

@@ -18,7 +18,6 @@
  */
 
 #include "gstomx.h"
-#include "gstomx_base.h"
 #include "gstomx_dummy.h"
 #include "gstomx_mpeg4dec.h"
 #include "gstomx_vorbisdec.h"
