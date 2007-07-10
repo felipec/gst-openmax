@@ -41,6 +41,7 @@ PKG_CHECK_MODULES([OMXIL], [libomxil])
 
 dnl Check for GStreamer
 AG_GST_CHECK_GST($GST_MAJORMINOR, [$GST_REQUIRED])
+AG_GST_CHECK_GST_BASE($GST_MAJORMINOR, [$GST_REQUIRED])
 
 dnl ** finalize ***
 

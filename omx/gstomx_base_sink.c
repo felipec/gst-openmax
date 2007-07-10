@@ -1,0 +1,289 @@
+/*
+ * Copyright (C) 2007 Nokia Corporation. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation
+ * version 2.1 of the License.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+
+#include "gstomx_base_sink.h"
+#include "gstomx.h"
+
+#include <string.h>
+
+#include <stdbool.h>
+
+static GstElementClass *parent_class = NULL;
+
+static void 
+setup_ports (GstOmxBaseSink *self)
+{
+    GOmxCore *core;
+    OMX_PARAM_PORTDEFINITIONTYPE *param;
+
+    core = self->gomx;
+
+    param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
+    param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
+    param->nVersion.s.nVersionMajor = 1;
+    param->nVersion.s.nVersionMinor = 1;
+
+    /* Input port configuration. */
+
+    param->nPortIndex = 0;
+    OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, param); 
+    self->in_port = g_omx_core_setup_port (core, param);
+    self->in_port->enable_queue = true;
+
+    free (param);
+}
+
+static gboolean
+start (GstBaseSink *gst_base)
+{
+	GstOmxBaseSink *self;
+
+	self = GST_OMX_BASE_SINK (gst_base);
+
+	GST_DEBUG_OBJECT (self, "begin");
+
+    g_omx_core_init (self->gomx, self->omx_component);
+    if (self->gomx->omx_error)
+        return GST_STATE_CHANGE_FAILURE;
+
+	GST_DEBUG_OBJECT (self, "end");
+
+	return true;
+}
+
+static gboolean
+stop (GstBaseSink *gst_base)
+{
+	GstOmxBaseSink *self;
+
+	self = GST_OMX_BASE_SINK (gst_base);
+
+	GST_DEBUG_OBJECT (self, "begin");
+
+	g_omx_core_finish (self->gomx);
+
+    g_omx_core_deinit (self->gomx);
+    if (self->gomx->omx_error)
+        return GST_STATE_CHANGE_FAILURE;
+
+    GST_DEBUG_OBJECT (self, "end");
+
+	return true;
+}
+
+static void
+dispose (GObject *obj)
+{
+    GstOmxBaseSink *self;
+
+    self = GST_OMX_BASE_SINK (obj);
+
+    g_omx_core_free (self->gomx);
+
+    G_OBJECT_CLASS (parent_class)->dispose (obj);
+}
+
+static GstFlowReturn
+render (GstBaseSink *gst_base,
+        GstBuffer *buf)
+{
+    GOmxCore *gomx;
+    GOmxPort *in_port;
+    GstOmxBaseSink *self;
+    GstFlowReturn ret = GST_FLOW_OK;
+
+    self = GST_OMX_BASE_SINK (gst_base);
+
+    gomx = self->gomx;
+
+    GST_LOG_OBJECT (self, "begin");
+    GST_LOG_OBJECT (self, "gst_buffer: size=%lu", GST_BUFFER_SIZE (buf));
+
+    GST_DEBUG_OBJECT (self, "state: %d", gomx->omx_state);
+
+    if (gomx->omx_state == OMX_StateLoaded)
+    {
+        GST_INFO_OBJECT (self, "omx: prepare");
+
+        setup_ports (self);
+        g_omx_core_prepare (self->gomx);
+    }
+
+    in_port = self->in_port;
+
+    if (!in_port->done)
+    {
+        switch (gomx->omx_state)
+        {
+            case OMX_StateIdle:
+                {
+                    GST_INFO_OBJECT (self, "omx: play");
+                    g_omx_core_start (gomx);
+                }
+                break;
+            default:
+                break;
+        }
+
+        switch (gomx->omx_state)
+        {
+            case OMX_StateExecuting:
+                /* OK */
+                break;
+            default:
+                GST_ERROR_OBJECT (self, "Whoa! very wrong");
+                break;
+        }
+
+        {
+            OMX_BUFFERHEADERTYPE *omx_buffer;
+
+            GST_LOG_OBJECT (self, "request_buffer");
+            omx_buffer = g_omx_port_request_buffer (in_port);
+
+            if (omx_buffer)
+            {
+                GST_LOG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, offset=%lu",
+                                omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nOffset);
+
+                omx_buffer->nOffset = 0;
+                /** @todo Get rid of this memcpy. */
+                memcpy (omx_buffer->pBuffer, GST_BUFFER_DATA (buf), GST_BUFFER_SIZE (buf));
+                omx_buffer->nFilledLen = GST_BUFFER_SIZE (buf);
+
+                GST_LOG_OBJECT (self, "release_buffer");
+                g_omx_port_release_buffer (in_port, omx_buffer);
+            }
+            else
+            {
+                GST_WARNING_OBJECT (self, "bad buffer");
+                /* ret = GST_FLOW_ERROR; */
+            }
+        }
+    }
+    else
+    {
+        GST_WARNING_OBJECT (self, "done");
+        ret = GST_FLOW_UNEXPECTED;
+    }
+
+    GST_LOG_OBJECT (self, "end");
+
+    return ret;
+}
+
+static gboolean
+event (GstBaseSink *gst_base,
+       GstEvent *event)
+{
+    GstOmxBaseSink *self;
+
+    self = GST_OMX_BASE_SINK (gst_base);
+
+    GST_DEBUG_OBJECT (self, "begin");
+
+    GST_DEBUG_OBJECT (self, "event: %s", GST_EVENT_TYPE_NAME (event));
+
+    switch (GST_EVENT_TYPE (event))
+    {
+        case GST_EVENT_EOS:
+            /* Close the inpurt port. */
+            g_omx_port_set_done (self->in_port);
+            break;
+
+        case GST_EVENT_NEWSEGMENT:
+            break;
+
+        default:
+            break;
+    }
+
+    GST_DEBUG_OBJECT (self, "end");
+
+    return true;
+}
+
+static void
+type_class_init (gpointer g_class,
+                 gpointer class_data)
+{
+    GObjectClass *gobject_class;
+    GstElementClass *gstelement_class;
+    GstBaseSinkClass *gst_base_sink_class;
+
+    gobject_class = G_OBJECT_CLASS (g_class);
+    gstelement_class = GST_ELEMENT_CLASS (g_class);
+    gst_base_sink_class = GST_BASE_SINK_CLASS (g_class);
+
+    parent_class = g_type_class_ref (GST_TYPE_ELEMENT);
+
+    gobject_class->dispose = dispose;
+
+    gst_base_sink_class->start = start;
+    gst_base_sink_class->stop = stop;
+    gst_base_sink_class->event = event;
+    gst_base_sink_class->preroll = render;
+    gst_base_sink_class->render = render;
+}
+
+static void
+type_instance_init (GTypeInstance *instance,
+                    gpointer g_class)
+{
+    GstOmxBaseSink *self;
+    GstElementClass *element_class;
+
+    element_class = GST_ELEMENT_CLASS (g_class);
+
+    self = GST_OMX_BASE_SINK (instance);
+
+    GST_DEBUG_OBJECT (self, "begin");
+
+    /* GOmx */
+    {
+        GOmxCore *gomx;
+        self->gomx = gomx = g_omx_core_new ();
+        gomx->client_data = self;
+    }
+
+    GST_DEBUG_OBJECT (self, "end");
+}
+
+GType
+gst_omx_base_sink_get_type (void)
+{
+    static GType type = 0;
+
+    if (type == 0) 
+    {
+        GTypeInfo *type_info;
+
+        type_info = g_new0 (GTypeInfo, 1);
+        type_info->class_size = sizeof (GstOmxBaseSinkClass);
+        type_info->class_init = type_class_init;
+        type_info->instance_size = sizeof (GstOmxBaseSink);
+        type_info->instance_init = type_instance_init;
+
+        type = g_type_register_static (GST_TYPE_BASE_SINK, "GstOmxBaseSink", type_info, 0);
+
+        g_free (type_info);
+    }
+
+    return type;
+}

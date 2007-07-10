@@ -22,6 +22,7 @@
 #include "gstomx_mpeg4dec.h"
 #include "gstomx_vorbisdec.h"
 #include "gstomx_mp3dec.h"
+#include "gstomx_alsasink.h"
 
 #include <stdbool.h>
 
@@ -48,6 +49,11 @@ plugin_init (GstPlugin *plugin)
     }
 
     if (!gst_element_register (plugin, "omx_mp3dec", GST_RANK_NONE, GST_OMX_MP3DEC_TYPE))
+    {
+        return false;
+    }
+
+    if (!gst_element_register (plugin, "omx_alsasink", GST_RANK_NONE, GST_OMX_ALSASINK_TYPE))
     {
         return false;
     }
