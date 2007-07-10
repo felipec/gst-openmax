@@ -192,6 +192,83 @@ settings_changed_cb (GOmxCore *core)
     }
 }
 
+static gboolean
+sink_setcaps (GstPad *pad,
+              GstCaps *caps)
+{
+    GstStructure *structure;
+    GstOmxBase *omx_base;
+    GOmxCore *gomx;
+    OMX_PARAM_PORTDEFINITIONTYPE *param;
+    gint width = 0;
+    gint height = 0;
+
+    omx_base = GST_OMX_BASE (GST_PAD_PARENT (pad));
+    gomx = (GOmxCore *) omx_base->gomx;
+
+    GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
+
+    g_return_val_if_fail (gst_caps_get_size (caps) == 1, FALSE);
+
+    structure = gst_caps_get_structure (caps, 0);
+
+    gst_structure_get_int (structure, "width", &width);
+    gst_structure_get_int (structure, "height", &height);
+
+    param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
+    param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
+    param->nVersion.s.nVersionMajor = 1;
+    param->nVersion.s.nVersionMinor = 1;
+
+    /* Input port configuration. */
+    {
+        param->nPortIndex = 0;
+        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param); 
+
+        param->nBufferSize = width * height * 4; /** @todo keep an eye on that one: 4? */
+        param->format.video.nFrameWidth = width;
+        param->format.video.nFrameHeight = height;
+
+        param->format.video.eCompressionFormat = OMX_VIDEO_CodingMPEG4;
+
+        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+    }
+
+    /* Output port configuration. */
+    {
+        param->nPortIndex = 1;
+        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param); 
+
+        param->format.video.nFrameWidth = width;
+        param->format.video.nFrameHeight = height;
+
+        {
+            OMX_COLOR_FORMATTYPE color_format;
+
+            color_format = param->format.video.eColorFormat;
+
+            switch (color_format)
+            {
+                case OMX_COLOR_FormatYCbYCr:
+                case OMX_COLOR_FormatCbYCrY:
+                    param->nBufferSize = (width * height) * 2;
+                    break;
+                case OMX_COLOR_FormatYUV420Planar:
+                    param->nBufferSize = (width * height) * 1.5;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+    }
+
+    free (param);
+
+    return gst_pad_set_caps (pad, caps);
+}
+
 static void
 type_instance_init (GTypeInstance *instance,
                     gpointer g_class)
@@ -205,6 +282,8 @@ type_instance_init (GTypeInstance *instance,
     omx_base->omx_component = OMX_COMPONENT_ID;
 
     omx_base->gomx->settings_changed_cb = settings_changed_cb;
+
+    gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);
 }
 
 GType

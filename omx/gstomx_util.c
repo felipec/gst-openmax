@@ -128,6 +128,7 @@ g_omx_core_init (GOmxCore *core, const gchar *name)
 
     /** @todo: Why is it not a const? */
     core->omx_error = OMX_GetHandle (&core->omx_handle, (gchar *) name, core, &callbacks);
+    core->omx_state = OMX_StateLoaded;
 }
 
 void
@@ -650,6 +651,7 @@ EventHandler (OMX_HANDLETYPE omx_handle,
             }
         case OMX_EventPortSettingsChanged:
             {
+                /** @todo only on the relevant port. */
                 if (core->settings_changed_cb)
                 {
                     core->settings_changed_cb (core);

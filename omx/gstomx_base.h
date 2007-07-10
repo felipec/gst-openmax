@@ -47,7 +47,6 @@ struct GstOmxBase
     GOmxPort *in_port;
     GOmxPort *out_port;
 
-    gboolean started;
     GThread *thread;
 
     const char *omx_component;

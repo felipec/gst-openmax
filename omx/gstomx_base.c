@@ -83,17 +83,14 @@ change_state (GstElement *element,
             g_omx_core_init (self->gomx, self->omx_component);
             if (self->gomx->omx_error)
                 return GST_STATE_CHANGE_FAILURE;
-
-            setup_ports (self);
-            g_omx_core_prepare (self->gomx);
             break;
 
         case GST_STATE_CHANGE_PLAYING_TO_PAUSED:
-            g_omx_port_set_done (self->in_port);
-            g_omx_port_set_done (self->out_port);
             break;
 
         case GST_STATE_CHANGE_PAUSED_TO_READY:
+            g_omx_port_set_done (self->in_port);
+            g_omx_port_set_done (self->out_port);
             break;
 
         default:
@@ -113,7 +110,6 @@ change_state (GstElement *element,
         case GST_STATE_CHANGE_PAUSED_TO_READY:
             g_thread_join (self->thread);
             g_omx_core_finish (self->gomx);
-            self->started = false;
             break;
 
         case GST_STATE_CHANGE_READY_TO_NULL:
@@ -194,6 +190,7 @@ output_thread (gpointer cb_data)
         {
             GstBuffer *buf;
 
+            if (!self->in_port->done)
             {
                 GstCaps *caps = NULL;
 
@@ -207,7 +204,7 @@ output_thread (gpointer cb_data)
                 }
                 else
                 {
-                    GST_DEBUG_OBJECT (self, "caps already fixed");
+                    GST_LOG_OBJECT (self, "caps already fixed");
                     gst_caps_unref (caps);
                 }
             }
@@ -245,6 +242,7 @@ output_thread (gpointer cb_data)
 
         if (omx_buffer->nFlags & OMX_BUFFERFLAG_EOS)
         {
+            GST_INFO_OBJECT (self, "set_done: out_port");
             g_omx_port_set_done (out_port);
             break;
         }
@@ -299,53 +297,78 @@ pad_chain (GstPad *pad,
     GST_LOG_OBJECT (self, "start");
     GST_LOG_OBJECT (self, "gst_buffer: size=%lu", GST_BUFFER_SIZE (buf));
 
-    /* Start OpenMAX IL */
-    if (self->started == false)
-    {
-        GST_DEBUG_OBJECT (self, "start_omx");
+    GST_DEBUG_OBJECT (self, "state: %d", gomx->omx_state);
 
-        g_omx_core_start (gomx);
+    if (gomx->omx_state == OMX_StateLoaded)
+    {
+        GST_INFO_OBJECT (self, "omx: prepare");
+
+        setup_ports (self);
+        g_omx_core_prepare (self->gomx);
 
         self->thread = g_thread_create (output_thread, gomx, TRUE, NULL);
-        self->started = true;
     }
 
     in_port = self->in_port;
 
     if (!in_port->done)
     {
-        OMX_BUFFERHEADERTYPE *omx_buffer;
-
-        omx_buffer = g_omx_port_request_buffer (in_port);
-
-        if (omx_buffer)
+        switch (gomx->omx_state)
         {
-            GST_LOG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, offset=%lu",
-                            omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nOffset);
-
-            {
-                GstBuffer *old_buf;
-                old_buf = omx_buffer->pAppPrivate;
-
-                if (old_buf)
+            case OMX_StateIdle:
                 {
-                    gst_buffer_unref (old_buf);
+                    GST_INFO_OBJECT (self, "omx: play");
+                    g_omx_core_start (gomx);
                 }
-            }
-
-            omx_buffer->nOffset = 0;
-            omx_buffer->pBuffer = GST_BUFFER_DATA (buf);
-            omx_buffer->nAllocLen = GST_BUFFER_SIZE (buf);
-            omx_buffer->nFilledLen = GST_BUFFER_SIZE (buf);
-            omx_buffer->pAppPrivate = buf;
-
-            GST_LOG_OBJECT (self, "release_buffer");
-            g_omx_port_release_buffer (in_port, omx_buffer);
+                break;
+            default:
+                break;
         }
-        else
+
+        switch (gomx->omx_state)
         {
-            GST_WARNING_OBJECT (self, "bad buffer");
-            /* ret = GST_FLOW_ERROR; */
+            case OMX_StateExecuting:
+                /* OK */
+                break;
+            default:
+                GST_ERROR_OBJECT (self, "Whoa! very wrong");
+                break;
+        }
+
+        {
+            OMX_BUFFERHEADERTYPE *omx_buffer;
+
+            omx_buffer = g_omx_port_request_buffer (in_port);
+
+            if (omx_buffer)
+            {
+                GST_LOG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, offset=%lu",
+                                omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nOffset);
+
+                {
+                    GstBuffer *old_buf;
+                    old_buf = omx_buffer->pAppPrivate;
+
+                    if (old_buf)
+                    {
+                        gst_buffer_unref (old_buf);
+                    }
+                }
+
+                omx_buffer->nOffset = 0;
+                omx_buffer->pBuffer = GST_BUFFER_DATA (buf);
+                omx_buffer->nAllocLen = GST_BUFFER_SIZE (buf);
+                omx_buffer->nFilledLen = GST_BUFFER_SIZE (buf);
+                omx_buffer->pAppPrivate = buf;
+
+                GST_LOG_OBJECT (self, "release_buffer");
+                g_omx_port_release_buffer (in_port, omx_buffer);
+            }
+            else
+            {
+                GST_WARNING_OBJECT (self, "bad buffer");
+                /* ret = GST_FLOW_ERROR; */
+            }
         }
     }
     else
