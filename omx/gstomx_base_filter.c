@@ -224,7 +224,7 @@ output_thread (gpointer cb_data)
             }
             else
             {
-                /* This is only menat for the first OpenMAX buffers,
+                /* This is only meant for the first OpenMAX buffers,
                  * which need to be pre-allocated. */
                 /* Also for the very last one. */
                 gst_pad_alloc_buffer_and_set_caps (self->srcpad,
@@ -238,6 +238,9 @@ output_thread (gpointer cb_data)
                     memcpy (GST_BUFFER_DATA (buf), omx_buffer->pBuffer + omx_buffer->nOffset, omx_buffer->nFilledLen);
                     gst_pad_push (self->srcpad, buf);
                     omx_buffer->nFilledLen = 0;
+                    GST_WARNING_OBJECT (self, "couldn't ZC");
+                    g_free (omx_buffer->pBuffer);
+                    omx_buffer->pBuffer = NULL;
                 }
             }
         }
