@@ -23,6 +23,7 @@
 #include "gstomx_vorbisdec.h"
 #include "gstomx_mp3dec.h"
 #include "gstomx_alsasink.h"
+#include "gstomx_videosink.h"
 
 #include <stdbool.h>
 
@@ -54,6 +55,11 @@ plugin_init (GstPlugin *plugin)
     }
 
     if (!gst_element_register (plugin, "omx_alsasink", GST_RANK_NONE, GST_OMX_ALSASINK_TYPE))
+    {
+        return false;
+    }
+
+    if (!gst_element_register (plugin, "omx_videosink", GST_RANK_NONE, GST_OMX_VIDEOSINK_TYPE))
     {
         return false;
     }
