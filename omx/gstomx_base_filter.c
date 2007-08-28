@@ -356,6 +356,10 @@ pad_chain (GstPad *pad,
                     {
                         gst_buffer_unref (old_buf);
                     }
+                    else if (omx_buffer->pBuffer)
+                    {
+                        g_free (omx_buffer->pBuffer);
+                    }
                 }
 
                 omx_buffer->nOffset = 0;
