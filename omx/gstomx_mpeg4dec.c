@@ -26,7 +26,6 @@
 #include <stdbool.h>
 
 #define OMX_COMPONENT_ID "OMX.st.video_decoder.mpeg4"
-/* #define OMX_COMPONENT_ID "OMX_VideoDecoder" */
 
 static GstOmxBaseFilterClass *parent_class = NULL;
 
@@ -310,7 +309,7 @@ type_instance_init (GTypeInstance *instance,
 
     GST_DEBUG_OBJECT (omx_base, "start");
 
-    omx_base->omx_component = OMX_COMPONENT_ID;
+    omx_base->omx_component = g_strdup (OMX_COMPONENT_ID);
 
     omx_base->gomx->settings_changed_cb = settings_changed_cb;
 

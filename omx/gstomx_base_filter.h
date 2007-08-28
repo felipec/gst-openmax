@@ -49,7 +49,7 @@ struct GstOmxBaseFilter
 
     GThread *thread;
 
-    const char *omx_component;
+    char *omx_component;
     gboolean use_timestamps;
 };
 

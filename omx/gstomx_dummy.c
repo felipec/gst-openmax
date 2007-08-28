@@ -107,7 +107,7 @@ type_instance_init (GTypeInstance *instance,
 
     GST_DEBUG_OBJECT (omx_base, "start");
 
-    omx_base->omx_component = OMX_COMPONENT_ID;
+    omx_base->omx_component = g_strdup (OMX_COMPONENT_ID);
 }
 
 GType

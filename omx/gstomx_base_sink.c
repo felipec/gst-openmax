@@ -24,6 +24,12 @@
 
 #include <stdbool.h>
 
+enum
+{
+    ARG_0,
+    ARG_COMPONENT_NAME
+};
+
 static GstElementClass *parent_class = NULL;
 
 static void 
@@ -95,6 +101,8 @@ dispose (GObject *obj)
     self = GST_OMX_BASE_SINK (obj);
 
     g_omx_core_free (self->gomx);
+
+    g_free (self->omx_component);
 
     G_OBJECT_CLASS (parent_class)->dispose (obj);
 }
@@ -238,6 +246,52 @@ event (GstBaseSink *gst_base,
 }
 
 static void
+set_property (GObject *obj,
+              guint prop_id,
+              const GValue *value,
+              GParamSpec *pspec)
+{
+    GstOmxBaseSink *self;
+
+    self = GST_OMX_BASE_SINK (obj);
+
+    switch (prop_id)
+    {
+        case ARG_COMPONENT_NAME:
+            if (self->omx_component)
+            {
+                g_free (self->omx_component);
+            }
+            self->omx_component = g_value_dup_string (value);
+            break;
+        default:
+            G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
+            break;
+    }
+}
+
+static void
+get_property (GObject *obj,
+              guint prop_id,
+              GValue *value,
+              GParamSpec *pspec)
+{
+    GstOmxBaseSink *self;
+
+    self = GST_OMX_BASE_SINK (obj);
+
+    switch (prop_id)
+    {
+        case ARG_COMPONENT_NAME:
+            g_value_set_string (value, self->omx_component);
+            break;
+        default:
+            G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
+            break;
+    }
+}
+
+static void
 type_class_init (gpointer g_class,
                  gpointer class_data)
 {
@@ -258,6 +312,17 @@ type_class_init (gpointer g_class,
     gst_base_sink_class->event = event;
     gst_base_sink_class->preroll = render;
     gst_base_sink_class->render = render;
+
+    /* Properties stuff */
+    {
+        gobject_class->set_property = set_property;
+        gobject_class->get_property = get_property;
+
+        g_object_class_install_property (gobject_class, ARG_COMPONENT_NAME,
+                                         g_param_spec_string ("component-name", "Component name",
+                                                              "Name of the OpenMAX IL component to use",
+                                                              NULL, G_PARAM_READWRITE));
+    }
 }
 
 static void

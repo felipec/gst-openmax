@@ -46,7 +46,7 @@ struct GstOmxBaseSink
     GOmxCore *gomx;
     GOmxPort *in_port;
 
-    const char *omx_component;
+    char *omx_component;
 };
 
 struct GstOmxBaseSinkClass
