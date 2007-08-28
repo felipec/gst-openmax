@@ -216,6 +216,7 @@ output_thread (gpointer cb_data)
             if (buf && !(omx_buffer->nFlags & OMX_BUFFERFLAG_EOS))
             {
                 GST_BUFFER_SIZE (buf) = omx_buffer->nFilledLen;
+                GST_BUFFER_TIMESTAMP (buf) = omx_buffer->nTimeStamp * (GST_SECOND / OMX_TICKS_PER_SECOND);
                 omx_buffer->pAppPrivate = NULL;
                 omx_buffer->pBuffer = NULL;
                 omx_buffer->nFilledLen = 0;
@@ -237,6 +238,7 @@ output_thread (gpointer cb_data)
                 {
                     GST_WARNING_OBJECT (self, "couldn't zerocopy");
                     memcpy (GST_BUFFER_DATA (buf), omx_buffer->pBuffer + omx_buffer->nOffset, omx_buffer->nFilledLen);
+                    GST_BUFFER_TIMESTAMP (buf) = omx_buffer->nTimeStamp * (GST_SECOND / OMX_TICKS_PER_SECOND);
                     omx_buffer->nFilledLen = 0;
                     g_free (omx_buffer->pBuffer);
                     omx_buffer->pBuffer = NULL;
@@ -370,6 +372,7 @@ pad_chain (GstPad *pad,
                 omx_buffer->nAllocLen = GST_BUFFER_SIZE (buf);
                 omx_buffer->nFilledLen = GST_BUFFER_SIZE (buf);
                 omx_buffer->pAppPrivate = buf;
+                omx_buffer->nTimeStamp = GST_BUFFER_TIMESTAMP (buf) / (GST_SECOND / OMX_TICKS_PER_SECOND);
 
                 GST_LOG_OBJECT (self, "release_buffer");
                 g_omx_port_release_buffer (in_port, omx_buffer);
