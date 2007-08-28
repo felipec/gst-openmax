@@ -56,13 +56,13 @@ start (GstBaseSink *gst_base)
 
 	self = GST_OMX_BASE_SINK (gst_base);
 
-	GST_DEBUG_OBJECT (self, "begin");
+	GST_LOG_OBJECT (self, "begin");
 
     g_omx_core_init (self->gomx, self->omx_component);
     if (self->gomx->omx_error)
         return GST_STATE_CHANGE_FAILURE;
 
-	GST_DEBUG_OBJECT (self, "end");
+	GST_LOG_OBJECT (self, "end");
 
 	return true;
 }
@@ -74,7 +74,7 @@ stop (GstBaseSink *gst_base)
 
 	self = GST_OMX_BASE_SINK (gst_base);
 
-	GST_DEBUG_OBJECT (self, "begin");
+	GST_LOG_OBJECT (self, "begin");
 
 	g_omx_core_finish (self->gomx);
 
@@ -82,7 +82,7 @@ stop (GstBaseSink *gst_base)
     if (self->gomx->omx_error)
         return GST_STATE_CHANGE_FAILURE;
 
-    GST_DEBUG_OBJECT (self, "end");
+    GST_LOG_OBJECT (self, "end");
 
 	return true;
 }
@@ -115,7 +115,7 @@ render (GstBaseSink *gst_base,
     GST_LOG_OBJECT (self, "begin");
     GST_LOG_OBJECT (self, "gst_buffer: size=%lu", GST_BUFFER_SIZE (buf));
 
-    GST_DEBUG_OBJECT (self, "state: %d", gomx->omx_state);
+    GST_LOG_OBJECT (self, "state: %d", gomx->omx_state);
 
     if (gomx->omx_state == OMX_StateLoaded)
     {
@@ -172,7 +172,7 @@ render (GstBaseSink *gst_base,
             }
             else
             {
-                GST_WARNING_OBJECT (self, "bad buffer");
+                GST_WARNING_OBJECT (self, "null buffer");
                 /* ret = GST_FLOW_ERROR; */
             }
         }
@@ -196,7 +196,7 @@ event (GstBaseSink *gst_base,
 
     self = GST_OMX_BASE_SINK (gst_base);
 
-    GST_DEBUG_OBJECT (self, "begin");
+    GST_LOG_OBJECT (self, "begin");
 
     GST_DEBUG_OBJECT (self, "event: %s", GST_EVENT_TYPE_NAME (event));
 
@@ -214,7 +214,7 @@ event (GstBaseSink *gst_base,
             break;
     }
 
-    GST_DEBUG_OBJECT (self, "end");
+    GST_LOG_OBJECT (self, "end");
 
     return true;
 }
@@ -253,7 +253,7 @@ type_instance_init (GTypeInstance *instance,
 
     self = GST_OMX_BASE_SINK (instance);
 
-    GST_DEBUG_OBJECT (self, "begin");
+    GST_LOG_OBJECT (self, "begin");
 
     /* GOmx */
     {
@@ -262,7 +262,7 @@ type_instance_init (GTypeInstance *instance,
         gomx->client_data = self;
     }
 
-    GST_DEBUG_OBJECT (self, "end");
+    GST_LOG_OBJECT (self, "end");
 }
 
 GType

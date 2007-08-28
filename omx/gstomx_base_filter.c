@@ -73,9 +73,11 @@ change_state (GstElement *element,
 
     self = GST_OMX_BASE_FILTER (element);
 
-    GST_DEBUG_OBJECT (self, "changing state %s - %s",
-                      gst_element_state_get_name (GST_STATE_TRANSITION_CURRENT (transition)),
-                      gst_element_state_get_name (GST_STATE_TRANSITION_NEXT (transition)));
+    GST_LOG_OBJECT (self, "begin");
+
+    GST_INFO_OBJECT (self, "changing state %s - %s",
+                     gst_element_state_get_name (GST_STATE_TRANSITION_CURRENT (transition)),
+                     gst_element_state_get_name (GST_STATE_TRANSITION_NEXT (transition)));
 
     switch (transition)
     {
@@ -122,6 +124,8 @@ change_state (GstElement *element,
             break;
     }
 
+    GST_LOG_OBJECT (self, "end");
+
     return ret;
 }
 
@@ -163,7 +167,7 @@ output_thread (gpointer cb_data)
     gomx = (GOmxCore *) cb_data;
     self = GST_OMX_BASE_FILTER (gomx->client_data);
 
-    GST_LOG_OBJECT (self, "start");
+    GST_LOG_OBJECT (self, "begin");
 
     out_port = self->out_port;
 
@@ -177,7 +181,7 @@ output_thread (gpointer cb_data)
 
         if (!omx_buffer)
         {
-            GST_WARNING_OBJECT (self, "Bad buffer");
+            GST_WARNING_OBJECT (self, "null buffer");
             continue;
         }
 
@@ -292,10 +296,10 @@ pad_chain (GstPad *pad,
 
     gomx = self->gomx;
 
-    GST_LOG_OBJECT (self, "start");
+    GST_LOG_OBJECT (self, "begin");
     GST_LOG_OBJECT (self, "gst_buffer: size=%lu", GST_BUFFER_SIZE (buf));
 
-    GST_DEBUG_OBJECT (self, "state: %d", gomx->omx_state);
+    GST_LOG_OBJECT (self, "state: %d", gomx->omx_state);
 
     if (gomx->omx_state == OMX_StateLoaded)
     {
@@ -336,6 +340,7 @@ pad_chain (GstPad *pad,
         {
             OMX_BUFFERHEADERTYPE *omx_buffer;
 
+            GST_LOG_OBJECT (self, "request_buffer");
             omx_buffer = g_omx_port_request_buffer (in_port);
 
             if (omx_buffer)
@@ -364,7 +369,7 @@ pad_chain (GstPad *pad,
             }
             else
             {
-                GST_WARNING_OBJECT (self, "bad buffer");
+                GST_WARNING_OBJECT (self, "null buffer");
                 /* ret = GST_FLOW_ERROR; */
             }
         }
@@ -388,7 +393,7 @@ pad_event (GstPad *pad,
 
     self = GST_OMX_BASE_FILTER (GST_OBJECT_PARENT (pad));
 
-    GST_DEBUG_OBJECT (self, "start");
+    GST_LOG_OBJECT (self, "begin");
 
     GST_DEBUG_OBJECT (self, "event: %s", GST_EVENT_TYPE_NAME (event));
 
@@ -408,7 +413,7 @@ pad_event (GstPad *pad,
             break;
     }
 
-    GST_DEBUG_OBJECT (self, "stop");
+    GST_LOG_OBJECT (self, "end");
 
     return gst_pad_event_default (pad, event);
 }
@@ -424,7 +429,7 @@ type_instance_init (GTypeInstance *instance,
 
     self = GST_OMX_BASE_FILTER (instance);
 
-    GST_DEBUG_OBJECT (self, "start");
+    GST_LOG_OBJECT (self, "begin");
 
     /* GOmx */
     {
@@ -446,6 +451,8 @@ type_instance_init (GTypeInstance *instance,
 
     gst_element_add_pad (GST_ELEMENT (self), self->sinkpad);
     gst_element_add_pad (GST_ELEMENT (self), self->srcpad);
+
+    GST_LOG_OBJECT (self, "end");
 }
 
 GType
