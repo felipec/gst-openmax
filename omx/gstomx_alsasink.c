@@ -74,18 +74,18 @@ static gboolean
 setcaps (GstBaseSink *gst_sink,
          GstCaps *caps)
 {
-	GstOmxBaseSink *self;
-	GOmxCore *gomx;
+    GstOmxBaseSink *self;
+    GOmxCore *gomx;
 
-	self = GST_OMX_BASE_SINK (gst_sink);
-	gomx = (GOmxCore *) self->gomx;
+    self = GST_OMX_BASE_SINK (gst_sink);
+    gomx = (GOmxCore *) self->gomx;
 
     GST_INFO_OBJECT (self, "setcaps (sink): %" GST_PTR_FORMAT, caps);
 
-	g_return_val_if_fail (gst_caps_get_size (caps) == 1, FALSE);
+    g_return_val_if_fail (gst_caps_get_size (caps) == 1, FALSE);
 
-	{
-		GstStructure *structure;
+    {
+        GstStructure *structure;
         gint channels;
         gint width;
         gint rate;
@@ -125,7 +125,7 @@ setcaps (GstBaseSink *gst_sink,
         }
     }
 
-	return true;
+    return true;
 }
 
 static void

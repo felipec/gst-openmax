@@ -52,31 +52,31 @@ setup_ports (GstOmxBaseSink *self)
 static gboolean
 start (GstBaseSink *gst_base)
 {
-	GstOmxBaseSink *self;
+    GstOmxBaseSink *self;
 
-	self = GST_OMX_BASE_SINK (gst_base);
+    self = GST_OMX_BASE_SINK (gst_base);
 
-	GST_LOG_OBJECT (self, "begin");
+    GST_LOG_OBJECT (self, "begin");
 
     g_omx_core_init (self->gomx, self->omx_component);
     if (self->gomx->omx_error)
         return GST_STATE_CHANGE_FAILURE;
 
-	GST_LOG_OBJECT (self, "end");
+    GST_LOG_OBJECT (self, "end");
 
-	return true;
+    return true;
 }
 
 static gboolean
 stop (GstBaseSink *gst_base)
 {
-	GstOmxBaseSink *self;
+    GstOmxBaseSink *self;
 
-	self = GST_OMX_BASE_SINK (gst_base);
+    self = GST_OMX_BASE_SINK (gst_base);
 
-	GST_LOG_OBJECT (self, "begin");
+    GST_LOG_OBJECT (self, "begin");
 
-	g_omx_core_finish (self->gomx);
+    g_omx_core_finish (self->gomx);
 
     g_omx_core_deinit (self->gomx);
     if (self->gomx->omx_error)
@@ -84,7 +84,7 @@ stop (GstBaseSink *gst_base)
 
     GST_LOG_OBJECT (self, "end");
 
-	return true;
+    return true;
 }
 
 static void
