@@ -24,6 +24,12 @@
 
 #include <stdbool.h>
 
+enum
+{
+    ARG_0,
+    ARG_USE_TIMESTAMPS
+};
+
 static GstElementClass *parent_class = NULL;
 
 /** Finishes the processing. */
@@ -142,6 +148,48 @@ dispose (GObject *obj)
 }
 
 static void
+set_property (GObject *obj,
+              guint prop_id,
+              const GValue *value,
+              GParamSpec *pspec)
+{
+    GstOmxBaseFilter *self;
+
+    self = GST_OMX_BASE_FILTER (obj);
+
+    switch (prop_id)
+    {
+        case ARG_USE_TIMESTAMPS:
+            self->use_timestamps = g_value_get_boolean (value);
+            break;
+        default:
+            G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
+            break;
+    }
+}
+
+static void
+get_property (GObject *obj,
+              guint prop_id,
+              GValue *value,
+              GParamSpec *pspec)
+{
+    GstOmxBaseFilter *self;
+
+    self = GST_OMX_BASE_FILTER (obj);
+
+    switch (prop_id)
+    {
+        case ARG_USE_TIMESTAMPS:
+            g_value_set_boolean (value, self->use_timestamps);
+            break;
+        default:
+            G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
+            break;
+    }
+}
+
+static void
 type_class_init (gpointer g_class,
                  gpointer class_data)
 {
@@ -155,6 +203,17 @@ type_class_init (gpointer g_class,
 
     gobject_class->dispose = dispose;
     gstelement_class->change_state = change_state;
+
+    /* Properties stuff */
+    {
+        gobject_class->set_property = set_property;
+        gobject_class->get_property = get_property;
+
+        g_object_class_install_property (gobject_class, ARG_USE_TIMESTAMPS,
+                                         g_param_spec_boolean ("use-timestamps", "Use timestamps",
+                                                               "Whether or not to use timestamps",
+                                                               FALSE, G_PARAM_READWRITE));
+    }
 }
 
 static gpointer
@@ -216,7 +275,11 @@ output_thread (gpointer cb_data)
             if (buf && !(omx_buffer->nFlags & OMX_BUFFERFLAG_EOS))
             {
                 GST_BUFFER_SIZE (buf) = omx_buffer->nFilledLen;
-                GST_BUFFER_TIMESTAMP (buf) = omx_buffer->nTimeStamp * (GST_SECOND / OMX_TICKS_PER_SECOND);
+                if (self->use_timestamps)
+                {
+                    GST_BUFFER_TIMESTAMP (buf) = omx_buffer->nTimeStamp * (GST_SECOND / OMX_TICKS_PER_SECOND);
+                }
+
                 omx_buffer->pAppPrivate = NULL;
                 omx_buffer->pBuffer = NULL;
                 omx_buffer->nFilledLen = 0;
@@ -236,9 +299,13 @@ output_thread (gpointer cb_data)
 
                 if (buf)
                 {
-                    GST_WARNING_OBJECT (self, "couldn't zerocopy");
+                    GST_WARNING_OBJECT (self, "couldn't zero-copy");
                     memcpy (GST_BUFFER_DATA (buf), omx_buffer->pBuffer + omx_buffer->nOffset, omx_buffer->nFilledLen);
-                    GST_BUFFER_TIMESTAMP (buf) = omx_buffer->nTimeStamp * (GST_SECOND / OMX_TICKS_PER_SECOND);
+                    if (self->use_timestamps)
+                    {
+                        GST_BUFFER_TIMESTAMP (buf) = omx_buffer->nTimeStamp * (GST_SECOND / OMX_TICKS_PER_SECOND);
+                    }
+
                     omx_buffer->nFilledLen = 0;
                     g_free (omx_buffer->pBuffer);
                     omx_buffer->pBuffer = NULL;
@@ -372,7 +439,10 @@ pad_chain (GstPad *pad,
                 omx_buffer->nAllocLen = GST_BUFFER_SIZE (buf);
                 omx_buffer->nFilledLen = GST_BUFFER_SIZE (buf);
                 omx_buffer->pAppPrivate = buf;
-                omx_buffer->nTimeStamp = GST_BUFFER_TIMESTAMP (buf) / (GST_SECOND / OMX_TICKS_PER_SECOND);
+                if (self->use_timestamps)
+                {
+                    omx_buffer->nTimeStamp = GST_BUFFER_TIMESTAMP (buf) / (GST_SECOND / OMX_TICKS_PER_SECOND);
+                }
 
                 GST_LOG_OBJECT (self, "release_buffer");
                 g_omx_port_release_buffer (in_port, omx_buffer);

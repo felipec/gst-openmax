@@ -50,6 +50,7 @@ struct GstOmxBaseFilter
     GThread *thread;
 
     const char *omx_component;
+    gboolean use_timestamps;
 };
 
 struct GstOmxBaseFilterClass
