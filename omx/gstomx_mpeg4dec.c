@@ -75,13 +75,44 @@ static GstCaps *
 generate_sink_template ()
 {
     GstCaps *caps;
+    GstStructure *struc;
 
-    caps = gst_caps_new_simple ("video/x-divx",
-                                "divxversion", G_TYPE_INT, 4,
-                                "width", GST_TYPE_INT_RANGE, 16, 4096,
-                                "height", GST_TYPE_INT_RANGE, 16, 4096,
-                                "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
-                                NULL);
+    caps = gst_caps_new_empty ();
+
+    struc = gst_structure_new ("video/mpeg",
+                               "mpegversion", G_TYPE_INT, 4,
+                               "systemstream", G_TYPE_BOOLEAN, false,
+                               "width", GST_TYPE_INT_RANGE, 16, 4096,
+                               "height", GST_TYPE_INT_RANGE, 16, 4096,
+                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
+                               NULL);
+
+    gst_caps_append_structure (caps, struc);
+
+    struc = gst_structure_new ("video/x-divx",
+                               "divxversion", GST_TYPE_INT_RANGE, 4, 5,
+                               "width", GST_TYPE_INT_RANGE, 16, 4096,
+                               "height", GST_TYPE_INT_RANGE, 16, 4096,
+                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
+                               NULL);
+
+    gst_caps_append_structure (caps, struc);
+
+    struc = gst_structure_new ("video/x-xvid",
+                               "width", GST_TYPE_INT_RANGE, 16, 4096,
+                               "height", GST_TYPE_INT_RANGE, 16, 4096,
+                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
+                               NULL);
+
+    gst_caps_append_structure (caps, struc);
+
+    struc = gst_structure_new ("video/x-3ivx",
+                               "width", GST_TYPE_INT_RANGE, 16, 4096,
+                               "height", GST_TYPE_INT_RANGE, 16, 4096,
+                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
+                               NULL);
+
+    gst_caps_append_structure (caps, struc);
 
     return caps;
 }
