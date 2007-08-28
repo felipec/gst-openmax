@@ -162,10 +162,28 @@ render (GstBaseSink *gst_base,
                 GST_LOG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, offset=%lu",
                                 omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nOffset);
 
+                {
+                    GstBuffer *old_buf;
+                    old_buf = omx_buffer->pAppPrivate;
+
+                    if (old_buf)
+                    {
+                        gst_buffer_unref (old_buf);
+                    }
+                    else if (omx_buffer->pBuffer)
+                    {
+                        g_free (omx_buffer->pBuffer);
+                    }
+                }
+
+                /* We are going to use this. */
+                gst_buffer_ref (buf);
+
                 omx_buffer->nOffset = 0;
-                /** @todo Get rid of this memcpy. */
-                memcpy (omx_buffer->pBuffer, GST_BUFFER_DATA (buf), GST_BUFFER_SIZE (buf));
+                omx_buffer->pBuffer = GST_BUFFER_DATA (buf);
+                omx_buffer->nAllocLen = GST_BUFFER_SIZE (buf);
                 omx_buffer->nFilledLen = GST_BUFFER_SIZE (buf);
+                omx_buffer->pAppPrivate = buf;
 
                 GST_LOG_OBJECT (self, "release_buffer");
                 g_omx_port_release_buffer (in_port, omx_buffer);
