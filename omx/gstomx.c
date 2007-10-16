@@ -20,6 +20,7 @@
 #include "gstomx.h"
 #include "gstomx_dummy.h"
 #include "gstomx_mpeg4dec.h"
+#include "gstomx_h263dec.h"
 #include "gstomx_vorbisdec.h"
 #include "gstomx_mp3dec.h"
 #include "gstomx_alsasink.h"
@@ -40,6 +41,11 @@ plugin_init (GstPlugin *plugin)
     }
 
     if (!gst_element_register (plugin, "omx_mpeg4dec", GST_RANK_NONE, GST_OMX_MPEG4DEC_TYPE))
+    {
+        return false;
+    }
+
+    if (!gst_element_register (plugin, "omx_h263dec", GST_RANK_NONE, GST_OMX_H263DEC_TYPE))
     {
         return false;
     }
