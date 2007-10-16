@@ -236,7 +236,7 @@ type_class_init (gpointer g_class,
         g_object_class_install_property (gobject_class, ARG_USE_TIMESTAMPS,
                                          g_param_spec_boolean ("use-timestamps", "Use timestamps",
                                                                "Whether or not to use timestamps",
-                                                               FALSE, G_PARAM_READWRITE));
+                                                               TRUE, G_PARAM_READWRITE));
     }
 }
 
@@ -536,6 +536,8 @@ type_instance_init (GTypeInstance *instance,
     self = GST_OMX_BASE_FILTER (instance);
 
     GST_LOG_OBJECT (self, "begin");
+
+    self->use_timestamps = true;
 
     /* GOmx */
     {
