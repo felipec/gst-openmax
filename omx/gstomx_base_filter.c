@@ -98,8 +98,11 @@ change_state (GstElement *element,
             break;
 
         case GST_STATE_CHANGE_PAUSED_TO_READY:
-            g_omx_port_set_done (self->in_port);
-            g_omx_port_set_done (self->out_port);
+            if (self->initialized)
+            {
+                g_omx_port_set_done (self->in_port);
+                g_omx_port_set_done (self->out_port);
+            }
             break;
 
         default:
@@ -117,8 +120,11 @@ change_state (GstElement *element,
             break;
 
         case GST_STATE_CHANGE_PAUSED_TO_READY:
-            g_thread_join (self->thread);
-            g_omx_core_finish (self->gomx);
+            if (self->initialized)
+            {
+                g_thread_join (self->thread);
+                g_omx_core_finish (self->gomx);
+            }
             break;
 
         case GST_STATE_CHANGE_READY_TO_NULL:
@@ -399,6 +405,8 @@ pad_chain (GstPad *pad,
         g_omx_core_prepare (self->gomx);
 
         self->thread = g_thread_create (output_thread, gomx, TRUE, NULL);
+
+        self->initialized = true;
     }
 
     in_port = self->in_port;
