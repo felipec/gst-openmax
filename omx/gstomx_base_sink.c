@@ -32,7 +32,7 @@ enum
 
 static GstElementClass *parent_class = NULL;
 
-static void 
+static void
 setup_ports (GstOmxBaseSink *self)
 {
     GOmxCore *core;
@@ -48,7 +48,7 @@ setup_ports (GstOmxBaseSink *self)
     /* Input port configuration. */
 
     param->nPortIndex = 0;
-    OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, param); 
+    OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, param);
     self->in_port = g_omx_core_setup_port (core, param);
     self->in_port->enable_queue = true;
 
@@ -353,7 +353,7 @@ gst_omx_base_sink_get_type (void)
 {
     static GType type = 0;
 
-    if (type == 0) 
+    if (type == 0)
     {
         GTypeInfo *type_info;
 

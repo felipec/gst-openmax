@@ -39,7 +39,7 @@ struct GstOmxMp3Dec
     GstOmxBaseFilter omx_base;
 };
 
-struct GstOmxMp3DecClass 
+struct GstOmxMp3DecClass
 {
     GstOmxBaseFilterClass parent_class;
 };

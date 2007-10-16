@@ -39,7 +39,7 @@ struct GstOmxAlsaSink
     GstOmxBaseSink omx_base;
 };
 
-struct GstOmxAlsaSinkClass 
+struct GstOmxAlsaSinkClass
 {
     GstOmxBaseSinkClass parent_class;
 };

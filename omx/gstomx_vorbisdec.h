@@ -39,7 +39,7 @@ struct GstOmxVorbisDec
     GstOmxBaseFilter omx_base;
 };
 
-struct GstOmxVorbisDecClass 
+struct GstOmxVorbisDecClass
 {
     GstOmxBaseFilterClass parent_class;
 };

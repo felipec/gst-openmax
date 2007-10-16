@@ -39,7 +39,7 @@ struct GstOmxDummy
     GstOmxBaseFilter omx_base;
 };
 
-struct GstOmxDummyClass 
+struct GstOmxDummyClass
 {
     GstOmxBaseFilterClass parent_class;
 };

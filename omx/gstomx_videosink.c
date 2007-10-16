@@ -276,7 +276,7 @@ static void
 type_class_init (gpointer g_class,
                  gpointer class_data)
 {
-    GObjectClass *gobject_class;    
+    GObjectClass *gobject_class;
     GstBaseSinkClass *gst_base_sink_class;
 
     gobject_class = (GObjectClass *) g_class;

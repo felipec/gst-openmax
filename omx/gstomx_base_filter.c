@@ -40,7 +40,7 @@ out_port_done_cb (GOmxPort *port)
     g_omx_sem_up (port->core->done_sem);
 }
 
-static void 
+static void
 setup_ports (GstOmxBaseFilter *self)
 {
     GOmxCore *core;
@@ -56,14 +56,14 @@ setup_ports (GstOmxBaseFilter *self)
     /* Input port configuration. */
 
     param->nPortIndex = 0;
-    OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, param); 
+    OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, param);
     self->in_port = g_omx_core_setup_port (core, param);
     self->in_port->enable_queue = true;
 
     /* Output port configuration. */
 
     param->nPortIndex = 1;
-    OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, param); 
+    OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, param);
     self->out_port = g_omx_core_setup_port (core, param);
     self->out_port->enable_queue = true;
     self->out_port->done_cb = out_port_done_cb;
@@ -592,7 +592,7 @@ gst_omx_base_filter_get_type (void)
 {
     static GType type = 0;
 
-    if (type == 0) 
+    if (type == 0)
     {
         GTypeInfo *type_info;
 

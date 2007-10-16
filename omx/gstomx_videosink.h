@@ -41,7 +41,7 @@ struct GstOmxVideoSink
     guint y_scale;
 };
 
-struct GstOmxVideoSinkClass 
+struct GstOmxVideoSinkClass
 {
     GstOmxBaseSinkClass parent_class;
 };

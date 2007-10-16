@@ -229,7 +229,7 @@ sink_setcaps (GstPad *pad,
     /* Input port configuration. */
     {
         param->nPortIndex = 0;
-        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param); 
+        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
 
         param->nBufferSize = width * height * 4; /** @todo keep an eye on that one: 4? */
         param->format.video.nFrameWidth = width;
@@ -243,7 +243,7 @@ sink_setcaps (GstPad *pad,
     /* Output port configuration. */
     {
         param->nPortIndex = 1;
-        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param); 
+        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
 
         param->format.video.nFrameWidth = width;
         param->format.video.nFrameHeight = height;
