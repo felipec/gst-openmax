@@ -240,6 +240,15 @@ type_class_init (gpointer g_class,
     }
 }
 
+static void
+push_buffer (GstOmxBaseFilter *self,
+             GstBuffer *buf)
+{
+    GST_LOG_OBJECT (self, "pad push begin");
+    gst_pad_push (self->srcpad, buf);
+    GST_LOG_OBJECT (self, "pad push end");
+}
+
 static gpointer
 output_thread (gpointer cb_data)
 {
@@ -258,6 +267,7 @@ output_thread (gpointer cb_data)
     {
         OMX_BUFFERHEADERTYPE *omx_buffer;
 
+        GST_LOG_OBJECT (self, "request buffer");
         omx_buffer = g_omx_port_request_buffer (out_port);
 
         GST_LOG_OBJECT (self, "omx_buffer: %p", omx_buffer);
@@ -307,7 +317,9 @@ output_thread (gpointer cb_data)
                 omx_buffer->pAppPrivate = NULL;
                 omx_buffer->pBuffer = NULL;
                 omx_buffer->nFilledLen = 0;
-                gst_pad_push (self->srcpad, buf);
+
+                push_buffer (self, buf);
+
                 gst_buffer_unref (buf);
             }
             else
@@ -333,7 +345,8 @@ output_thread (gpointer cb_data)
                     omx_buffer->nFilledLen = 0;
                     g_free (omx_buffer->pBuffer);
                     omx_buffer->pBuffer = NULL;
-                    gst_pad_push (self->srcpad, buf);
+
+                    push_buffer (self, buf);
                 }
             }
         }
@@ -350,6 +363,7 @@ output_thread (gpointer cb_data)
             GstBuffer *buf;
             GstFlowReturn result;
 
+            GST_LOG_OBJECT (self, "allocate buffer");
             result = gst_pad_alloc_buffer_and_set_caps (self->srcpad,
                                                         GST_BUFFER_OFFSET_NONE,
                                                         omx_buffer->nAllocLen,
@@ -366,13 +380,16 @@ output_thread (gpointer cb_data)
             }
             else
             {
-                GST_WARNING_OBJECT (self, "Could not allocate buffer");
+                GST_WARNING_OBJECT (self, "could not allocate buffer");
                 omx_buffer->pBuffer = g_malloc (omx_buffer->nAllocLen);
             }
         }
 
+        GST_LOG_OBJECT (self, "release_buffer");
         g_omx_port_release_buffer (out_port, omx_buffer);
     }
+
+    GST_DEBUG_OBJECT (self, "finishing output thread");
 
     GST_LOG_OBJECT (self, "end");
 
@@ -438,7 +455,7 @@ pad_chain (GstPad *pad,
         {
             OMX_BUFFERHEADERTYPE *omx_buffer;
 
-            GST_LOG_OBJECT (self, "request_buffer");
+            GST_LOG_OBJECT (self, "request buffer");
             omx_buffer = g_omx_port_request_buffer (in_port);
 
             if (omx_buffer)
@@ -465,6 +482,7 @@ pad_chain (GstPad *pad,
                 omx_buffer->nAllocLen = GST_BUFFER_SIZE (buf);
                 omx_buffer->nFilledLen = GST_BUFFER_SIZE (buf);
                 omx_buffer->pAppPrivate = buf;
+
                 if (self->use_timestamps)
                 {
                     omx_buffer->nTimeStamp = GST_BUFFER_TIMESTAMP (buf) / (GST_SECOND / OMX_TICKS_PER_SECOND);
