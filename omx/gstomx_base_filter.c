@@ -366,8 +366,8 @@ output_thread (gpointer cb_data)
             }
             else
             {
-                GST_ERROR_OBJECT (self, "Could not allocate buffer");
-                break;
+                GST_WARNING_OBJECT (self, "Could not allocate buffer");
+                omx_buffer->pBuffer = g_malloc (omx_buffer->nAllocLen);
             }
         }
 
@@ -496,6 +496,7 @@ pad_event (GstPad *pad,
            GstEvent *event)
 {
     GstOmxBaseFilter *self;
+    gboolean ret;
 
     self = GST_OMX_BASE_FILTER (GST_OBJECT_PARENT (pad));
 
@@ -510,18 +511,23 @@ pad_event (GstPad *pad,
             g_omx_port_set_done (self->in_port);
             /* Wait for the output port to get the EOS. */
             g_omx_core_wait_for_done (self->gomx);
+            ret = gst_pad_push_event (self->srcpad, event);
             break;
 
-        case GST_EVENT_NEWSEGMENT:
+        case GST_EVENT_FLUSH_START:
+            g_omx_sem_up (self->in_port->sem);
+            OMX_SendCommand (self->gomx->omx_handle, OMX_CommandFlush, 0, NULL);
+            ret = gst_pad_push_event (self->srcpad, event);
             break;
 
         default:
+            ret = gst_pad_push_event (self->srcpad, event);
             break;
     }
 
     GST_LOG_OBJECT (self, "end");
 
-    return gst_pad_event_default (pad, event);
+    return ret;
 }
 
 static void
