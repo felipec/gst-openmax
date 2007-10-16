@@ -105,7 +105,7 @@ type_base_init (gpointer g_class)
         GstElementDetails details;
 
         details.longname = "OpenMAX IL H.263 video decoder";
-        details.klass = "Codec/Decoder/Audio";
+        details.klass = "Codec/Decoder/Video";
         details.description = "Decodes video in H.263 format with OpenMAX IL";
         details.author = "Felipe Contreras";
 

@@ -129,7 +129,7 @@ type_base_init (gpointer g_class)
         GstElementDetails details;
 
         details.longname = "OpenMAX IL MPEG4 video decoder";
-        details.klass = "Codec/Decoder/Audio";
+        details.klass = "Codec/Decoder/Video";
         details.description = "Decodes video in MPEG4 format with OpenMAX IL";
         details.author = "Felipe Contreras";
 
