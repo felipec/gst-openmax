@@ -24,6 +24,7 @@
 #include <stdbool.h>
 #include <glib.h>
 #include <OMX_Core.h>
+#include <OMX_Component.h>
 
 /* Typedefs. */
 

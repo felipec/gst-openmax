@@ -37,7 +37,7 @@ AG_GST_ARG_WITH_PACKAGE_ORIGIN
 dnl ** checks **
 
 dnl Check for OpenMAX IL
-PKG_CHECK_MODULES([OMXIL], [libomxil])
+PKG_CHECK_MODULES([OMXIL], [libomxil-B])
 
 dnl Check for GStreamer
 AG_GST_CHECK_GST($GST_MAJORMINOR, [$GST_REQUIRED])
