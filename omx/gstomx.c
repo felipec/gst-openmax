@@ -35,6 +35,8 @@ plugin_init (GstPlugin *plugin)
 {
     GST_DEBUG_CATEGORY_INIT (gstomx_debug, "omx", 0, "OpenMAX");
 
+    g_omx_init ();
+
     if (!gst_element_register (plugin, "omx_dummy", GST_RANK_NONE, GST_OMX_DUMMY_TYPE))
     {
         return false;

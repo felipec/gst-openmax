@@ -19,6 +19,7 @@
  */
 
 #include "gstomx_util.h"
+#include <dlfcn.h>
 
 /*
  * Forward declarations
@@ -67,7 +68,112 @@ FillBufferDone (OMX_HANDLETYPE omx_handle,
                 OMX_PTR app_data,
                 OMX_BUFFERHEADERTYPE *omx_buffer);
 
+GOmxImp *
+g_omx_imp_new (const gchar *name);
+
+void
+g_omx_imp_free (GOmxImp *imp);
+
 static OMX_CALLBACKTYPE callbacks = { EventHandler, EmptyBufferDone, FillBufferDone };
+
+static GHashTable *implementations;
+static gboolean initialized;
+
+/*
+ * Main
+ */
+
+void
+g_omx_init (void)
+{
+    if (!initialized)
+    {
+        implementations = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_omx_imp_free);
+        initialized = true;
+    }
+}
+
+void
+g_omx_deinit (void)
+{
+    if (initialized)
+    {
+        g_hash_table_destroy (implementations);
+        initialized = false;
+    }
+}
+
+GOmxImp *
+g_omx_request_imp (const gchar *name)
+{
+    GOmxImp *imp;
+    imp = g_hash_table_lookup (implementations, name);
+    if (!imp)
+    {
+        imp = g_omx_imp_new (name);
+        if (!imp)
+            return NULL;
+        g_hash_table_insert (implementations, name, imp);
+    }
+    if (imp->client_count == 0)
+    {
+        OMX_ERRORTYPE omx_error;
+        omx_error = imp->sym_table.init ();
+        if (omx_error)
+            return NULL;
+    }
+    imp->client_count++;
+    return imp;
+}
+
+void
+g_omx_release_imp (GOmxImp *imp)
+{
+    imp->client_count--;
+    if (imp->client_count == 0)
+    {
+        imp->sym_table.deinit ();
+    }
+}
+
+GOmxImp *
+g_omx_imp_new (const gchar *name)
+{
+    GOmxImp *imp;
+
+    imp = g_new0 (GOmxImp, 1);
+
+    /* Load the OpenMAX IL symbols */
+    {
+        void *handle;
+        char *error;
+
+        imp->dl_handle = handle = dlopen (name, RTLD_LAZY);
+        if (!handle)
+        {
+            g_warning ("%s\n", dlerror ());
+            g_omx_imp_free (imp);
+            return NULL;
+        }
+
+        imp->sym_table.init = dlsym (handle, "OMX_Init");
+        imp->sym_table.deinit = dlsym (handle, "OMX_Deinit");
+        imp->sym_table.get_handle = dlsym (handle, "OMX_GetHandle");
+        imp->sym_table.free_handle = dlsym (handle, "OMX_FreeHandle");
+    }
+
+    return imp;
+}
+
+void
+g_omx_imp_free (GOmxImp *imp)
+{
+    if (imp->dl_handle)
+    {
+        dlclose (imp->dl_handle);
+    }
+    g_free (imp);
+}
 
 /*
  * Core
@@ -110,41 +216,36 @@ g_omx_core_free (GOmxCore *core)
     g_free (core);
 }
 
-/* We need this so we don't call OMX_Init twice. */
-static int counter = 0;
-
 void
-g_omx_core_init (GOmxCore *core, const gchar *name)
+g_omx_core_init (GOmxCore *core,
+                 const gchar *library_name,
+                 const gchar *component_name)
 {
-    if (counter == 0)
-    {
-        core->omx_error = OMX_Init ();
+    core->imp = g_omx_request_imp (library_name);
 
-        if (core->omx_error)
-            return;
+    if (!core->imp)
+    {
+        core->omx_error = OMX_ErrorUndefined;
+        return;
     }
 
-    counter++;
-
-    /** @todo: Why is it not a const? */
-    core->omx_error = OMX_GetHandle (&core->omx_handle, (gchar *) name, core, &callbacks);
+    core->omx_error = core->imp->sym_table.get_handle (&core->omx_handle, (gchar *) component_name, core, &callbacks);
     core->omx_state = OMX_StateLoaded;
 }
 
 void
 g_omx_core_deinit (GOmxCore *core)
 {
-    core->omx_error = OMX_FreeHandle (core->omx_handle);
+    if (!core->imp)
+        return;
+
+    core->omx_error = core->imp->sym_table.free_handle (core->omx_handle);
 
     if (core->omx_error)
         return;
 
-    counter--;
-
-    if (counter == 0)
-    {
-        core->omx_error = OMX_Deinit ();
-    }
+    g_omx_release_imp (core->imp);
+    core->imp = NULL;
 }
 
 void

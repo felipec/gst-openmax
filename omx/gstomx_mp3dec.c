@@ -25,7 +25,7 @@
 
 #include <stdbool.h>
 
-#define OMX_COMPONENT_ID "OMX.st.audio_decoder.mp3.mad"
+#define OMX_COMPONENT_NAME "OMX.st.audio_decoder.mp3.mad"
 
 static GstOmxBaseFilterClass *parent_class = NULL;
 
@@ -170,7 +170,7 @@ type_instance_init (GTypeInstance *instance,
 
     GST_DEBUG_OBJECT (omx_base, "start");
 
-    omx_base->omx_component = g_strdup (OMX_COMPONENT_ID);
+    omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
 
     omx_base->gomx->settings_changed_cb = settings_changed_cb;
 }

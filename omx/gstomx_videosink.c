@@ -25,7 +25,7 @@
 
 #include <stdbool.h>
 
-#define OMX_COMPONENT_ID "OMX.st.videosink"
+#define OMX_COMPONENT_NAME "OMX.st.videosink"
 
 static GstOmxBaseSinkClass *parent_class = NULL;
 
@@ -310,7 +310,7 @@ type_instance_init (GTypeInstance *instance,
 
     GST_DEBUG_OBJECT (omx_base, "start");
 
-    omx_base->omx_component = g_strdup (OMX_COMPONENT_ID);
+    omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
 }
 
 GType

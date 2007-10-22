@@ -12,6 +12,6 @@ libgstomx_la_SOURCES = gstomx.c gstomx.h \
 		       gstomx_alsasink.c gstomx_alsasink.h \
 		       gstomx_videosink.c gstomx_videosink.h
 
-libgstomx_la_CFLAGS = $(GST_CFLAGS) $(GST_BASE_CFLAGS) $(OMXIL_CFLAGS)
-libgstomx_la_LIBADD = $(GST_LIBS) $(GST_BASE_LIBS) $(OMXIL_LIBS)
+libgstomx_la_CFLAGS = -I$(srcdir)/headers $(GST_CFLAGS) $(GST_BASE_CFLAGS)
+libgstomx_la_LIBADD = $(GST_LIBS) $(GST_BASE_LIBS)
 libgstomx_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)

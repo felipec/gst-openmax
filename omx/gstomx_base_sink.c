@@ -24,10 +24,13 @@
 
 #include <stdbool.h>
 
+#define OMX_LIBRARY_NAME "libomxil.so"
+
 enum
 {
     ARG_0,
-    ARG_COMPONENT_NAME
+    ARG_COMPONENT_NAME,
+    ARG_LIBRARY_NAME
 };
 
 static GstElementClass *parent_class = NULL;
@@ -64,7 +67,7 @@ start (GstBaseSink *gst_base)
 
     GST_LOG_OBJECT (self, "begin");
 
-    g_omx_core_init (self->gomx, self->omx_component);
+    g_omx_core_init (self->gomx, self->omx_library, self->omx_component);
     if (self->gomx->omx_error)
         return GST_STATE_CHANGE_FAILURE;
 
@@ -103,6 +106,7 @@ dispose (GObject *obj)
     g_omx_core_free (self->gomx);
 
     g_free (self->omx_component);
+    g_free (self->omx_library);
 
     G_OBJECT_CLASS (parent_class)->dispose (obj);
 }
@@ -264,6 +268,13 @@ set_property (GObject *obj,
             }
             self->omx_component = g_value_dup_string (value);
             break;
+        case ARG_LIBRARY_NAME:
+            if (self->omx_library)
+            {
+                g_free (self->omx_library);
+            }
+            self->omx_library = g_value_dup_string (value);
+            break;
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
             break;
@@ -284,6 +295,9 @@ get_property (GObject *obj,
     {
         case ARG_COMPONENT_NAME:
             g_value_set_string (value, self->omx_component);
+            break;
+        case ARG_LIBRARY_NAME:
+            g_value_set_string (value, self->omx_library);
             break;
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
@@ -322,6 +336,11 @@ type_class_init (gpointer g_class,
                                          g_param_spec_string ("component-name", "Component name",
                                                               "Name of the OpenMAX IL component to use",
                                                               NULL, G_PARAM_READWRITE));
+
+        g_object_class_install_property (gobject_class, ARG_LIBRARY_NAME,
+                                         g_param_spec_string ("library-name", "Library name",
+                                                              "Name of the OpenMAX IL implementation library to use",
+                                                              NULL, G_PARAM_READWRITE));
     }
 }
 
@@ -344,6 +363,8 @@ type_instance_init (GTypeInstance *instance,
         self->gomx = gomx = g_omx_core_new ();
         gomx->client_data = self;
     }
+
+    self->omx_library = g_strdup (OMX_LIBRARY_NAME);
 
     GST_LOG_OBJECT (self, "end");
 }

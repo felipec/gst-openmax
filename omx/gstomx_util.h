@@ -31,6 +31,8 @@
 typedef struct GOmxCore GOmxCore;
 typedef struct GOmxPort GOmxPort;
 typedef struct GOmxSem GOmxSem;
+typedef struct GOmxImp GOmxImp;
+typedef struct GOmxSymbolTable GOmxSymbolTable;
 typedef enum GOmxPortType GOmxPortType;
 
 typedef void (*GOmxCb) (GOmxCore *core);
@@ -47,6 +49,24 @@ enum GOmxPortType
 
 /* Structures. */
 
+struct GOmxSymbolTable
+{
+    OMX_ERRORTYPE (*init) (void);
+    OMX_ERRORTYPE (*deinit) (void);
+    OMX_ERRORTYPE (*get_handle) (OMX_HANDLETYPE *handle,
+                                 OMX_STRING name,
+                                 OMX_PTR data,
+                                 OMX_CALLBACKTYPE *callbacks);
+    OMX_ERRORTYPE (*free_handle) (OMX_HANDLETYPE handle);
+};
+
+struct GOmxImp
+{
+    guint client_count;
+    void *dl_handle;
+    GOmxSymbolTable sym_table;
+};
+
 struct GOmxCore
 {
     OMX_HANDLETYPE omx_handle;
@@ -62,6 +82,7 @@ struct GOmxCore
 
     gboolean eos_sent; /**< Determines if the EOS flag has been sent. */
     GOmxCb settings_changed_cb;
+    GOmxImp *imp;
 };
 
 struct GOmxPort
@@ -95,7 +116,7 @@ struct GOmxSem
 
 GOmxCore *g_omx_core_new ();
 void g_omx_core_free (GOmxCore *core);
-void g_omx_core_init (GOmxCore *core, const gchar *name);
+void g_omx_core_init (GOmxCore *core, const gchar *library_name, const gchar *component_name);
 void g_omx_core_deinit (GOmxCore *core);
 void g_omx_core_prepare (GOmxCore *core);
 void g_omx_core_start (GOmxCore *core);
