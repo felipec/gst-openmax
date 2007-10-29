@@ -30,6 +30,8 @@
 
 GST_DEBUG_CATEGORY (gstomx_debug);
 
+#define DEFAULT_RANK GST_RANK_PRIMARY
+
 static gboolean
 plugin_init (GstPlugin *plugin)
 {
@@ -42,22 +44,22 @@ plugin_init (GstPlugin *plugin)
         return false;
     }
 
-    if (!gst_element_register (plugin, "omx_mpeg4dec", GST_RANK_NONE, GST_OMX_MPEG4DEC_TYPE))
+    if (!gst_element_register (plugin, "omx_mpeg4dec", DEFAULT_RANK, GST_OMX_MPEG4DEC_TYPE))
     {
         return false;
     }
 
-    if (!gst_element_register (plugin, "omx_h263dec", GST_RANK_NONE, GST_OMX_H263DEC_TYPE))
+    if (!gst_element_register (plugin, "omx_h263dec", DEFAULT_RANK, GST_OMX_H263DEC_TYPE))
     {
         return false;
     }
 
-    if (!gst_element_register (plugin, "omx_vorbisdec", GST_RANK_NONE, GST_OMX_VORBISDEC_TYPE))
+    if (!gst_element_register (plugin, "omx_vorbisdec", DEFAULT_RANK, GST_OMX_VORBISDEC_TYPE))
     {
         return false;
     }
 
-    if (!gst_element_register (plugin, "omx_mp3dec", GST_RANK_NONE, GST_OMX_MP3DEC_TYPE))
+    if (!gst_element_register (plugin, "omx_mp3dec", DEFAULT_RANK, GST_OMX_MP3DEC_TYPE))
     {
         return false;
     }
