@@ -1,6 +1,6 @@
 AC_PREREQ([2.52])
 
-AC_INIT([GstOpenMAX], [0.1.0], [http://freedesktop.org/wiki/GstOpenMAX], [gst-openmax])
+AC_INIT([GstOpenMAX], [0.10.0.2], [http://freedesktop.org/wiki/GstOpenMAX], [gst-openmax])
 AC_CONFIG_AUX_DIR([config])
 AM_INIT_AUTOMAKE
 AC_CONFIG_HEADERS([config.h])
