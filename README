@@ -108,11 +108,21 @@ Then as root (depending on your prefix):
 
  make install
 
-Finally you can try it:
+== How to try it ==
 
  export GST_PLUGIN_PATH=$HOME/omx/lib/gstreamer-0.10
+ export LD_LIBRARY_PATH=$HOME/omx/lib
+
+You'll be able to play videos with MP3,Vorbis,MPEG4 or H.263 content using Bellagio's components.
+
+Audio-only is a little trickier:
+
  gst-launch-0.10 filesrc location="test.mp3" ! omx_mp3dec use-timestamps=false ! audioconvert ! alsasink
  gst-launch-0.10 filesrc location="test.ogg" ! omx_vorbisdec use-timestamps=false ! audioconvert ! alsasink
+
+If you want to see what's happening:
+
+ export GST_DEBUG=omx:4
 
 == Links ==
 
