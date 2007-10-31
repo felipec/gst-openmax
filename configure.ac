@@ -4,7 +4,7 @@ AC_INIT([GstOpenMAX], [0.10.0.2], [http://freedesktop.org/wiki/GstOpenMAX], [gst
 AC_CONFIG_AUX_DIR([config])
 AM_INIT_AUTOMAKE
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([Makefile omx/Makefile])
+AC_CONFIG_FILES([Makefile omx/Makefile common/Makefile common/m4/Makefile])
 
 dnl versions of GStreamer
 GST_MAJORMINOR=0.10
