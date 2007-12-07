@@ -26,6 +26,8 @@
 
 #define OMX_LIBRARY_NAME "libomxil.so"
 
+#define ZERO_COPY
+
 enum
 {
     ARG_0,
@@ -354,16 +356,18 @@ output_thread (gpointer cb_data)
 
                 if (buf)
                 {
-                    GST_WARNING_OBJECT (self, "couldn't zero-copy");
                     memcpy (GST_BUFFER_DATA (buf), omx_buffer->pBuffer + omx_buffer->nOffset, omx_buffer->nFilledLen);
                     if (self->use_timestamps)
                     {
                         GST_BUFFER_TIMESTAMP (buf) = omx_buffer->nTimeStamp * (GST_SECOND / OMX_TICKS_PER_SECOND);
                     }
 
+#if defined(ZERO_COPY)
+                    GST_WARNING_OBJECT (self, "couldn't zero-copy");
                     omx_buffer->nFilledLen = 0;
                     g_free (omx_buffer->pBuffer);
                     omx_buffer->pBuffer = NULL;
+#endif /* defined(ZERO_COPY) */
 
                     push_buffer (self, buf);
                 }
@@ -381,6 +385,7 @@ output_thread (gpointer cb_data)
             break;
         }
 
+#if defined(ZERO_COPY)
         if (!omx_buffer->pBuffer)
         {
             GstBuffer *buf;
@@ -407,6 +412,7 @@ output_thread (gpointer cb_data)
                 omx_buffer->pBuffer = g_malloc (omx_buffer->nAllocLen);
             }
         }
+#endif /* defined(ZERO_COPY) */
 
         GST_LOG_OBJECT (self, "release_buffer");
         g_omx_port_release_buffer (out_port, omx_buffer);
@@ -486,6 +492,7 @@ pad_chain (GstPad *pad,
                 GST_DEBUG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, offset=%lu",
                                   omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nOffset);
 
+#if defined(ZERO_COPY)
                 {
                     GstBuffer *old_buf;
                     old_buf = omx_buffer->pAppPrivate;
@@ -505,6 +512,10 @@ pad_chain (GstPad *pad,
                 omx_buffer->nAllocLen = GST_BUFFER_SIZE (buf);
                 omx_buffer->nFilledLen = GST_BUFFER_SIZE (buf);
                 omx_buffer->pAppPrivate = buf;
+#elif !defined(ZERO_COPY)
+                memcpy (omx_buffer->pBuffer + omx_buffer->nOffset, GST_BUFFER_DATA (buf), GST_BUFFER_SIZE (buf));
+                omx_buffer->nFilledLen = GST_BUFFER_SIZE (buf);
+#endif /* !defined(ZERO_COPY) */
 
                 if (self->use_timestamps)
                 {
@@ -526,6 +537,10 @@ pad_chain (GstPad *pad,
         GST_WARNING_OBJECT (self, "done");
         ret = GST_FLOW_UNEXPECTED;
     }
+
+#if !defined(ZERO_COPY)
+    gst_buffer_unref (buf);
+#endif /* !defined(ZERO_COPY) */
 
     GST_LOG_OBJECT (self, "end");
 
