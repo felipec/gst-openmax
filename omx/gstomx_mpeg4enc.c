@@ -17,7 +17,7 @@
  *
  */
 
-#include "gstomx_mpeg4dec.h"
+#include "gstomx_mpeg4enc.h"
 #include "gstomx_base_filter.h"
 #include "gstomx.h"
 
@@ -25,14 +25,28 @@
 
 #include <stdbool.h>
 
-#define OMX_COMPONENT_NAME "OMX.st.video_decoder.mpeg4"
-
-/** @todo shall we integrate this in a single video decoder? */
+#define OMX_COMPONENT_NAME "OMX.st.video_encoder.mpeg4"
 
 static GstOmxBaseFilterClass *parent_class = NULL;
 
 static GstCaps *
 generate_src_template ()
+{
+    GstCaps *caps;
+
+    caps = gst_caps_new_simple ("video/mpeg",
+                                "width", GST_TYPE_INT_RANGE, 16, 4096,
+                                "height", GST_TYPE_INT_RANGE, 16, 4096,
+                                "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 30, 1,
+                                "mpegversion", G_TYPE_INT, 4,
+                                "systemstream", G_TYPE_BOOLEAN, FALSE,
+                                NULL);
+
+    return caps;
+}
+
+static GstCaps *
+generate_sink_template ()
 {
     GstCaps *caps;
     GstStructure *struc;
@@ -72,52 +86,6 @@ generate_src_template ()
     return caps;
 }
 
-static GstCaps *
-generate_sink_template ()
-{
-    GstCaps *caps;
-    GstStructure *struc;
-
-    caps = gst_caps_new_empty ();
-
-    struc = gst_structure_new ("video/mpeg",
-                               "mpegversion", G_TYPE_INT, 4,
-                               "systemstream", G_TYPE_BOOLEAN, false,
-                               "width", GST_TYPE_INT_RANGE, 16, 4096,
-                               "height", GST_TYPE_INT_RANGE, 16, 4096,
-                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
-                               NULL);
-
-    gst_caps_append_structure (caps, struc);
-
-    struc = gst_structure_new ("video/x-divx",
-                               "divxversion", GST_TYPE_INT_RANGE, 4, 5,
-                               "width", GST_TYPE_INT_RANGE, 16, 4096,
-                               "height", GST_TYPE_INT_RANGE, 16, 4096,
-                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
-                               NULL);
-
-    gst_caps_append_structure (caps, struc);
-
-    struc = gst_structure_new ("video/x-xvid",
-                               "width", GST_TYPE_INT_RANGE, 16, 4096,
-                               "height", GST_TYPE_INT_RANGE, 16, 4096,
-                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
-                               NULL);
-
-    gst_caps_append_structure (caps, struc);
-
-    struc = gst_structure_new ("video/x-3ivx",
-                               "width", GST_TYPE_INT_RANGE, 16, 4096,
-                               "height", GST_TYPE_INT_RANGE, 16, 4096,
-                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
-                               NULL);
-
-    gst_caps_append_structure (caps, struc);
-
-    return caps;
-}
-
 static void
 type_base_init (gpointer g_class)
 {
@@ -130,9 +98,9 @@ type_base_init (gpointer g_class)
     {
         GstElementDetails details;
 
-        details.longname = "OpenMAX IL MPEG-4 video decoder";
-        details.klass = "Codec/Decoder/Video";
-        details.description = "Decodes video in MPEG-4 format with OpenMAX IL";
+        details.longname = "OpenMAX IL MPEG-4 video encoder";
+        details.klass = "Codec/Encoder/Video";
+        details.description = "Encodes video in MPEG-4 format with OpenMAX IL";
         details.author = "Felipe Contreras";
 
         gst_element_class_set_details (element_class, &details);
@@ -173,7 +141,6 @@ settings_changed_cb (GOmxCore *core)
     guint width;
     guint height;
     guint framerate;
-    guint format;
 
     omx_base = core->client_data;
 
@@ -182,7 +149,7 @@ settings_changed_cb (GOmxCore *core)
     {
         OMX_PARAM_PORTDEFINITIONTYPE *param;
 
-        param = (OMX_PARAM_PORTDEFINITIONTYPE *) calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
+        param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
 
         param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
         param->nVersion.s.nVersionMajor = 1;
@@ -194,17 +161,6 @@ settings_changed_cb (GOmxCore *core)
         width = param->format.video.nFrameWidth;
         height = param->format.video.nFrameHeight;
         framerate = param->format.video.xFramerate;
-        switch (param->format.video.eColorFormat)
-        {
-            case OMX_COLOR_FormatYUV420Planar:
-                format = GST_MAKE_FOURCC ('I', '4', '2', '0'); break;
-            case OMX_COLOR_FormatYCbYCr:
-                format = GST_MAKE_FOURCC ('Y', 'U', 'Y', '2'); break;
-            case OMX_COLOR_FormatCbYCrY:
-                format = GST_MAKE_FOURCC ('U', 'Y', 'V', 'Y'); break;
-            default:
-                break;
-        }
 
         free (param);
     }
@@ -212,11 +168,12 @@ settings_changed_cb (GOmxCore *core)
     {
         GstCaps *new_caps;
 
-        new_caps = gst_caps_new_simple ("video/x-raw-yuv",
+        new_caps = gst_caps_new_simple ("video/mpeg",
+                                        "mpegversion", G_TYPE_INT, 4,
                                         "width", G_TYPE_INT, width,
                                         "height", G_TYPE_INT, height,
                                         "framerate", GST_TYPE_FRACTION, framerate, 1,
-                                        "format", GST_TYPE_FOURCC, format,
+                                        "systemstream", G_TYPE_BOOLEAN, FALSE,
                                         NULL);
 
         GST_INFO_OBJECT (omx_base, "caps are: %" GST_PTR_FORMAT, new_caps);
@@ -234,6 +191,7 @@ sink_setcaps (GstPad *pad,
     OMX_PARAM_PORTDEFINITIONTYPE *param;
     gint width = 0;
     gint height = 0;
+    gint framerate = 0;
 
     omx_base = GST_OMX_BASE_FILTER (GST_PAD_PARENT (pad));
     gomx = (GOmxCore *) omx_base->gomx;
@@ -247,6 +205,16 @@ sink_setcaps (GstPad *pad,
     gst_structure_get_int (structure, "width", &width);
     gst_structure_get_int (structure, "height", &height);
 
+    {
+        const GValue *tmp;
+        tmp = gst_structure_get_value (structure, "framerate");
+
+        if (tmp != NULL)
+        {
+            framerate = gst_value_get_fraction_numerator (tmp) / gst_value_get_fraction_denominator (tmp);
+        }
+    }
+
     param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
     param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
     param->nVersion.s.nVersionMajor = 1;
@@ -254,32 +222,20 @@ sink_setcaps (GstPad *pad,
 
     /* Input port configuration. */
     {
-        param->nPortIndex = 0;
-        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+		param->nPortIndex = 0;
+		OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
 
-        param->nBufferSize = width * height * 4; /** @todo keep an eye on that one: 4? */
-        param->format.video.nFrameWidth = width;
-        param->format.video.nFrameHeight = height;
+		param->format.video.nBitrate = 512000;
+		param->format.video.nBitrate = 64000 * 4;
 
-        param->format.video.eCompressionFormat = OMX_VIDEO_CodingMPEG4;
+		param->format.video.nFrameWidth = width;
+		param->format.video.nFrameHeight = height;
+		param->format.video.xFramerate = framerate;
 
-        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
-    }
-
-    /* Output port configuration. */
-    {
-        param->nPortIndex = 1;
-        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
-
-        param->format.video.nFrameWidth = width;
-        param->format.video.nFrameHeight = height;
-
-        /* This is against the standard. nBufferSize is read-only. */
-        /** @todo Keep it for now as it's needed for TI. */
         {
             OMX_COLOR_FORMATTYPE color_format;
 
-            color_format = param->format.video.eColorFormat;
+            color_format = OMX_COLOR_FormatYUV420Planar;
 
             switch (color_format)
             {
@@ -293,12 +249,84 @@ sink_setcaps (GstPad *pad,
                 default:
                     break;
             }
+
+            param->format.video.eColorFormat = color_format;
         }
 
-        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
-    }
+		OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+	}
+
+    /* Output port configuration. */
+	{
+		param->nPortIndex = 1;
+		OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+
+        {
+            OMX_VIDEO_CODINGTYPE compression_format;
+
+            compression_format = OMX_VIDEO_CodingMPEG4;
+
+            switch (compression_format)
+            {
+                case OMX_VIDEO_CodingAVC:
+                    param->nBufferSize = 26250; /** @todo keep an eye on that */
+                    break;
+                case OMX_VIDEO_CodingMPEG4:
+                case OMX_VIDEO_CodingH263:
+                    param->nBufferSize = (width * height / 2); /** @todo keep an eye on that */
+                    break;
+                default:
+                    break;
+            }
+
+            param->format.video.eCompressionFormat = compression_format;
+        }
+
+		param->format.video.nFrameWidth = width;
+		param->format.video.nFrameHeight = height;
+		param->format.video.xFramerate = framerate;
+
+		OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+	}
 
     free (param);
+
+    /* Control Rate */
+    {
+		OMX_VIDEO_PARAM_BITRATETYPE *param;
+		param = (OMX_VIDEO_PARAM_BITRATETYPE *) calloc (1, sizeof (OMX_VIDEO_PARAM_BITRATETYPE));
+
+		param->nSize = sizeof (OMX_VIDEO_PARAM_BITRATETYPE);
+		param->nPortIndex = 1;
+
+		OMX_GetParameter (gomx->omx_handle, OMX_IndexParamVideoBitrate, param);
+
+		param->eControlRate = OMX_Video_ControlRateVariable;
+
+		OMX_SetParameter (gomx->omx_handle, OMX_IndexParamVideoBitrate, param);
+
+		free (param);
+	}
+
+    /* MPEG4 Level */
+	{
+		OMX_VIDEO_PARAM_MPEG4TYPE *param;
+		param = (OMX_VIDEO_PARAM_MPEG4TYPE *) calloc (1, sizeof (OMX_VIDEO_PARAM_MPEG4TYPE));
+
+		param->nSize = sizeof (OMX_VIDEO_PARAM_MPEG4TYPE);
+
+        param->nPortIndex = 1;
+		OMX_GetParameter (gomx->omx_handle, OMX_IndexParamVideoMpeg4, param);
+
+#if 0
+		param->eLevel = OMX_VIDEO_MPEG4Level0; /** @todo calculate this automatically */
+#endif
+		param->eLevel = 0; /** @todo TI bug */
+
+		OMX_SetParameter (gomx->omx_handle, OMX_IndexParamVideoMpeg4, param);
+
+		free (param);
+	}
 
     return gst_pad_set_caps (pad, caps);
 }
@@ -311,7 +339,7 @@ type_instance_init (GTypeInstance *instance,
 
     omx_base = GST_OMX_BASE_FILTER (instance);
 
-    omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
+    omx_base->omx_component = OMX_COMPONENT_NAME;
 
     omx_base->gomx->settings_changed_cb = settings_changed_cb;
 
@@ -319,7 +347,7 @@ type_instance_init (GTypeInstance *instance,
 }
 
 GType
-gst_omx_mpeg4dec_get_type (void)
+gst_omx_mpeg4enc_get_type (void)
 {
     static GType type = 0;
 
@@ -328,13 +356,13 @@ gst_omx_mpeg4dec_get_type (void)
         GTypeInfo *type_info;
 
         type_info = g_new0 (GTypeInfo, 1);
-        type_info->class_size = sizeof (GstOmxMpeg4DecClass);
+        type_info->class_size = sizeof (GstOmxMpeg4EncClass);
         type_info->base_init = type_base_init;
         type_info->class_init = type_class_init;
-        type_info->instance_size = sizeof (GstOmxMpeg4Dec);
+        type_info->instance_size = sizeof (GstOmxMpeg4Enc);
         type_info->instance_init = type_instance_init;
 
-        type = g_type_register_static (GST_OMX_BASE_FILTER_TYPE, "GstOmxMpeg4Dec", type_info, 0);
+        type = g_type_register_static (GST_OMX_BASE_FILTER_TYPE, "GstOmxMpeg4Enc", type_info, 0);
 
         g_free (type_info);
     }

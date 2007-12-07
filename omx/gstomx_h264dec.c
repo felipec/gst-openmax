@@ -17,7 +17,7 @@
  *
  */
 
-#include "gstomx_mpeg4dec.h"
+#include "gstomx_h264dec.h"
 #include "gstomx_base_filter.h"
 #include "gstomx.h"
 
@@ -25,7 +25,7 @@
 
 #include <stdbool.h>
 
-#define OMX_COMPONENT_NAME "OMX.st.video_decoder.mpeg4"
+#define OMX_COMPONENT_NAME "OMX.st.video_decoder.avc"
 
 /** @todo shall we integrate this in a single video decoder? */
 
@@ -80,34 +80,7 @@ generate_sink_template ()
 
     caps = gst_caps_new_empty ();
 
-    struc = gst_structure_new ("video/mpeg",
-                               "mpegversion", G_TYPE_INT, 4,
-                               "systemstream", G_TYPE_BOOLEAN, false,
-                               "width", GST_TYPE_INT_RANGE, 16, 4096,
-                               "height", GST_TYPE_INT_RANGE, 16, 4096,
-                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
-                               NULL);
-
-    gst_caps_append_structure (caps, struc);
-
-    struc = gst_structure_new ("video/x-divx",
-                               "divxversion", GST_TYPE_INT_RANGE, 4, 5,
-                               "width", GST_TYPE_INT_RANGE, 16, 4096,
-                               "height", GST_TYPE_INT_RANGE, 16, 4096,
-                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
-                               NULL);
-
-    gst_caps_append_structure (caps, struc);
-
-    struc = gst_structure_new ("video/x-xvid",
-                               "width", GST_TYPE_INT_RANGE, 16, 4096,
-                               "height", GST_TYPE_INT_RANGE, 16, 4096,
-                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
-                               NULL);
-
-    gst_caps_append_structure (caps, struc);
-
-    struc = gst_structure_new ("video/x-3ivx",
+    struc = gst_structure_new ("video/x-h264",
                                "width", GST_TYPE_INT_RANGE, 16, 4096,
                                "height", GST_TYPE_INT_RANGE, 16, 4096,
                                "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
@@ -130,9 +103,9 @@ type_base_init (gpointer g_class)
     {
         GstElementDetails details;
 
-        details.longname = "OpenMAX IL MPEG-4 video decoder";
+        details.longname = "OpenMAX IL H.264 video decoder";
         details.klass = "Codec/Decoder/Video";
-        details.description = "Decodes video in MPEG-4 format with OpenMAX IL";
+        details.description = "Decodes video in H.264 format with OpenMAX IL";
         details.author = "Felipe Contreras";
 
         gst_element_class_set_details (element_class, &details);
@@ -261,7 +234,7 @@ sink_setcaps (GstPad *pad,
         param->format.video.nFrameWidth = width;
         param->format.video.nFrameHeight = height;
 
-        param->format.video.eCompressionFormat = OMX_VIDEO_CodingMPEG4;
+        param->format.video.eCompressionFormat = OMX_VIDEO_CodingAVC;
 
         OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
     }
@@ -319,7 +292,7 @@ type_instance_init (GTypeInstance *instance,
 }
 
 GType
-gst_omx_mpeg4dec_get_type (void)
+gst_omx_h264dec_get_type (void)
 {
     static GType type = 0;
 
@@ -328,13 +301,13 @@ gst_omx_mpeg4dec_get_type (void)
         GTypeInfo *type_info;
 
         type_info = g_new0 (GTypeInfo, 1);
-        type_info->class_size = sizeof (GstOmxMpeg4DecClass);
+        type_info->class_size = sizeof (GstOmxH264DecClass);
         type_info->base_init = type_base_init;
         type_info->class_init = type_class_init;
-        type_info->instance_size = sizeof (GstOmxMpeg4Dec);
+        type_info->instance_size = sizeof (GstOmxH264Dec);
         type_info->instance_init = type_instance_init;
 
-        type = g_type_register_static (GST_OMX_BASE_FILTER_TYPE, "GstOmxMpeg4Dec", type_info, 0);
+        type = g_type_register_static (GST_OMX_BASE_FILTER_TYPE, "GstOmxH264Dec", type_info, 0);
 
         g_free (type_info);
     }

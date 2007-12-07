@@ -21,10 +21,14 @@
 #include "gstomx_dummy.h"
 #include "gstomx_mpeg4dec.h"
 #include "gstomx_h263dec.h"
+#include "gstomx_h264dec.h"
+#include "gstomx_mpeg4enc.h"
 #include "gstomx_vorbisdec.h"
 #include "gstomx_mp3dec.h"
+#include "gstomx_aacdec.h"
 #include "gstomx_alsasink.h"
 #include "gstomx_videosink.h"
+#include "gstomx_filereadersrc.h"
 
 #include <stdbool.h>
 
@@ -54,6 +58,16 @@ plugin_init (GstPlugin *plugin)
         return false;
     }
 
+    if (!gst_element_register (plugin, "omx_h264dec", DEFAULT_RANK, GST_OMX_H263DEC_TYPE))
+    {
+        return false;
+    }
+
+    if (!gst_element_register (plugin, "omx_mpeg4dec", DEFAULT_RANK, GST_OMX_H263DEC_TYPE))
+    {
+        return false;
+    }
+
     if (!gst_element_register (plugin, "omx_vorbisdec", DEFAULT_RANK, GST_OMX_VORBISDEC_TYPE))
     {
         return false;
@@ -64,12 +78,22 @@ plugin_init (GstPlugin *plugin)
         return false;
     }
 
+    if (!gst_element_register (plugin, "omx_aacdec", GST_RANK_NONE, GST_OMX_AACDEC_TYPE))
+    {
+        return false;
+    }
+
     if (!gst_element_register (plugin, "omx_alsasink", GST_RANK_NONE, GST_OMX_ALSASINK_TYPE))
     {
         return false;
     }
 
     if (!gst_element_register (plugin, "omx_videosink", GST_RANK_NONE, GST_OMX_VIDEOSINK_TYPE))
+    {
+        return false;
+    }
+
+    if (!gst_element_register (plugin, "omx_filereadersrc", GST_RANK_NONE, GST_OMX_FILEREADERSRC_TYPE))
     {
         return false;
     }

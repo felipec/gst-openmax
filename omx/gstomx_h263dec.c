@@ -248,6 +248,8 @@ sink_setcaps (GstPad *pad,
         param->format.video.nFrameWidth = width;
         param->format.video.nFrameHeight = height;
 
+        /* This is against the standard. nBufferSize is read-only. */
+        /** @todo Keep it for now as it's needed for TI. */
         {
             OMX_COLOR_FORMATTYPE color_format;
 
@@ -282,8 +284,6 @@ type_instance_init (GTypeInstance *instance,
     GstOmxBaseFilter *omx_base;
 
     omx_base = GST_OMX_BASE_FILTER (instance);
-
-    GST_DEBUG_OBJECT (omx_base, "start");
 
     omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
 
