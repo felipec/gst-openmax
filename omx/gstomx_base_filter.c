@@ -297,8 +297,8 @@ output_thread (gpointer cb_data)
             continue;
         }
 
-        GST_LOG_OBJECT (self, "buffer: size=%lu, len=%lu, flags=%lu",
-                        omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nFlags);
+        GST_DEBUG_OBJECT (self, "buffer: size=%lu, len=%lu, flags=%lu",
+                          omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nFlags);
 
         if (omx_buffer->nFilledLen > 0)
         {
@@ -368,6 +368,10 @@ output_thread (gpointer cb_data)
                     push_buffer (self, buf);
                 }
             }
+        }
+        else
+        {
+            GST_WARNING_OBJECT (self, "empty buffer");
         }
 
         if (omx_buffer->nFlags & OMX_BUFFERFLAG_EOS)
@@ -479,8 +483,8 @@ pad_chain (GstPad *pad,
 
             if (omx_buffer)
             {
-                GST_LOG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, offset=%lu",
-                                omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nOffset);
+                GST_DEBUG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, offset=%lu",
+                                  omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nOffset);
 
                 {
                     GstBuffer *old_buf;

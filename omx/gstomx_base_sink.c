@@ -171,8 +171,8 @@ render (GstBaseSink *gst_base,
 
             if (omx_buffer)
             {
-                GST_LOG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, offset=%lu",
-                                omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nOffset);
+                GST_DEBUG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, offset=%lu",
+                                  omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nOffset);
 
                 {
                     GstBuffer *old_buf;
