@@ -272,6 +272,8 @@ sink_setcaps (GstPad *pad,
         param->format.video.nFrameWidth = width;
         param->format.video.nFrameHeight = height;
 
+        /* This is against the standard. nBufferSize is read-only. */
+        /** @todo Keep it for now as it's needed for TI. */
         {
             OMX_COLOR_FORMATTYPE color_format;
 
