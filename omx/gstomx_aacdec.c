@@ -185,7 +185,6 @@ sink_setcaps (GstPad *pad,
         OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioAac, param);
 
         param->eAACStreamFormat = OMX_AUDIO_AACStreamFormatRAW;
-        param->eAACStreamFormat = OMX_AUDIO_AACStreamFormatMP4ADTS;
 
         OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioAac, param);
 
@@ -202,8 +201,6 @@ type_instance_init (GTypeInstance *instance,
     GstOmxBaseFilter *omx_base;
 
     omx_base = GST_OMX_BASE_FILTER (instance);
-
-    GST_DEBUG_OBJECT (omx_base, "start");
 
     omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
 
