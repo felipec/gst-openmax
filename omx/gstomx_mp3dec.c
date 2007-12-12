@@ -56,6 +56,7 @@ generate_sink_template ()
                                 "layer", GST_TYPE_INT_RANGE, 1, 3,
                                 "rate", GST_TYPE_INT_RANGE, 8000, 48000,
                                 "channels", GST_TYPE_INT_RANGE, 1, 8,
+                                "parsed", G_TYPE_BOOLEAN, TRUE,
                                 NULL);
 
     return caps;
