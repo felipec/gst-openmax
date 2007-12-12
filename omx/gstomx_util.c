@@ -342,7 +342,11 @@ g_omx_core_finish (GOmxCore *core)
 
                 omx_buffer = port->buffers[i];
 
+#if 0
+                /** @todo GStreamer should notify us when a buffer is
+                 * destroyed. */
                 g_free (omx_buffer->pBuffer);
+#endif
 
                 OMX_FreeBuffer (core->omx_handle, index, omx_buffer);
             }
