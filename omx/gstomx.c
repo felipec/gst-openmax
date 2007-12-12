@@ -79,12 +79,12 @@ plugin_init (GstPlugin *plugin)
         return false;
     }
 
-    if (!gst_element_register (plugin, "omx_amrnbdec", GST_RANK_NONE, GST_OMX_AMRNBDEC_TYPE))
+    if (!gst_element_register (plugin, "omx_amrnbdec", DEFAULT_RANK, GST_OMX_AMRNBDEC_TYPE))
     {
         return false;
     }
 
-    if (!gst_element_register (plugin, "omx_aacdec", GST_RANK_NONE, GST_OMX_AACDEC_TYPE))
+    if (!gst_element_register (plugin, "omx_aacdec", DEFAULT_RANK, GST_OMX_AACDEC_TYPE))
     {
         return false;
     }
