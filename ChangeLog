@@ -1,0 +1,89 @@
+
+2007-12-12	Felipe Contreras <felipe.contreras@gmail.com>
+	* Update ChangeLog.
+	* Fixes for non-zero-copy behavior.
+	* Upgrade the rank of AAC and AMR-NB decoders.
+	* Modify the MP3 decoder to use parsed input stream.
+	* Don't crash if the GStreamer input buffer are owned by the previous element.
+	* Modify AAC decoder temporarily to allow decoding without a parser.
+	* Add omx_setup to set some component configurations early.
+
+2007-12-07	Felipe Contreras <felipe.contreras@gmail.com>
+	* Small cleanups for AAC decoder.
+	* Add compilation time flag for zero-copy.
+	* Add AMR-NB decoder wrapper.
+
+2007-11-23	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add multiple new component wrappers.
+	* Add comment about wring to a read-only parameter.
+	* Make logging level 4(DEBUG) more verbose.
+
+2007-11-09	Felipe Contreras <felipe.contreras@gmail.com>
+	* Generate ChangeLog.
+
+2007-10-31	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add more missing files.
+	* Bump version.
+	* Add more missing files.
+
+2007-10-30	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add missing files to the tarball.
+
+2007-10-29	Felipe Contreras <felipe.contreras@gmail.com>
+	* Update to first pre-release version.
+	* Include common release make commands.
+	* Update the README.
+	* Make some elements primary by default.
+	* Update README.
+
+2007-10-22	Felipe Contreras <felipe.contreras@gmail.com>
+	* Allow multiple OpenMAX IL implementations at the same time.
+
+2007-10-16	Felipe Contreras <felipe.contreras@gmail.com>
+	* Whitespace fixes
+	* Fix description for video decoder elements
+	* New H.263 video decoder
+	* Fixes for new Bellagio versions
+	* Add more debugging stuff to the base filter
+	* Add flush support for seeking on the base filter
+	* Use timestamps by default on the base filter
+	* Specify the srcpad capabilities of the videosink.
+	* Don't hang if not properly initialized.
+	* More proper autoconf.
+
+2007-08-28	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add video sink.
+	* Add property for the OpenMAX component name.
+	* Add use-timestamps property.
+	* Add more capabilities for MPEG-4 video dec.
+	* Whitespace fixes.
+	* Add timestamp information.
+	* More readable.
+	* This looks better.
+	* Implement zerocopy on the base sink.
+	* Fix zerocopy.
+	* Fix a small memory leak.
+	* Improve logging.
+
+2007-07-10	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add ALSA sink.
+	* Add missing files.
+	* Rename Base to BaseFilter.
+	* Set omx parameters from gst caps.
+
+2007-07-06	Felipe Contreras <felipe.contreras@gmail.com>
+	* Now the ports are extensible.
+
+2007-07-03	Felipe Contreras <felipe.contreras@gmail.com>
+	* New MPEG4v decoder.
+	* Remove base "set_caps" and use "settings_changed_cb".
+
+2007-07-02	Felipe Contreras <felipe.contreras@gmail.com>
+	* Set version to 1.1 for now.
+
+2007-06-29	Felipe Contreras <felipe.contreras@gmail.com>
+	* Add some sample gst-launch pipelines.
+	* Generate proper capabilities for the output buffer in the vorbis decoder.
+	* Add some error handling.
+	* Add GNU standard files.
+	* Use GStreamer's common autotools macros.
