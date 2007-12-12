@@ -362,9 +362,10 @@ output_thread (gpointer cb_data)
                         GST_BUFFER_TIMESTAMP (buf) = omx_buffer->nTimeStamp * (GST_SECOND / OMX_TICKS_PER_SECOND);
                     }
 
+                    omx_buffer->nFilledLen = 0;
+
 #if defined(ZERO_COPY)
                     GST_WARNING_OBJECT (self, "couldn't zero-copy");
-                    omx_buffer->nFilledLen = 0;
                     g_free (omx_buffer->pBuffer);
                     omx_buffer->pBuffer = NULL;
 #endif /* defined(ZERO_COPY) */
