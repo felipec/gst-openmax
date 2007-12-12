@@ -132,12 +132,6 @@ settings_changed_cb (GOmxCore *core)
 
         rate = param->nSamplingRate;
         channels = param->nChannels;
-        if (rate == 0)
-        {
-            /** @todo: this shouldn't happen. */
-            GST_WARNING_OBJECT (omx_base, "Bad samplerate");
-            rate = 44100;
-        }
 
         free (param);
     }
@@ -159,6 +153,8 @@ settings_changed_cb (GOmxCore *core)
     }
 }
 
+static void omx_setup (GstOmxBaseFilter *omx_base);
+
 static gboolean
 sink_setcaps (GstPad *pad,
               GstCaps *caps)
@@ -172,6 +168,16 @@ sink_setcaps (GstPad *pad,
 
     GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
 
+    return gst_pad_set_caps (pad, caps);
+}
+
+static void
+omx_setup (GstOmxBaseFilter *omx_base)
+{
+    GOmxCore *gomx;
+
+    gomx = (GOmxCore *) omx_base->gomx;
+
     /* Format configuration. */
     {
         OMX_AUDIO_PARAM_AACPROFILETYPE *param;
@@ -184,14 +190,12 @@ sink_setcaps (GstPad *pad,
         param->nPortIndex = 0;
         OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioAac, param);
 
-        param->eAACStreamFormat = OMX_AUDIO_AACStreamFormatRAW;
+        param->eAACStreamFormat = OMX_AUDIO_AACStreamFormatMP4ADTS;
 
         OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioAac, param);
 
         free (param);
     }
-
-    return gst_pad_set_caps (pad, caps);
 }
 
 static void
@@ -203,6 +207,7 @@ type_instance_init (GTypeInstance *instance,
     omx_base = GST_OMX_BASE_FILTER (instance);
 
     omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
+    omx_base->omx_setup = omx_setup;
 
     omx_base->gomx->settings_changed_cb = settings_changed_cb;
 
