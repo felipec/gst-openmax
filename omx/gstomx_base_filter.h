@@ -53,6 +53,8 @@ struct GstOmxBaseFilter
     char *omx_library;
     gboolean use_timestamps;
     gboolean initialized;
+
+    GstOmxBaseFilterCb omx_setup;
 };
 
 struct GstOmxBaseFilterClass

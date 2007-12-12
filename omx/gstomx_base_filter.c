@@ -447,6 +447,12 @@ pad_chain (GstPad *pad,
     {
         GST_INFO_OBJECT (self, "omx: prepare");
 
+        /** @todo this should probably go after doing preparations. */
+        if (self->omx_setup)
+        {
+            self->omx_setup (self);
+        }
+
         setup_ports (self);
         g_omx_core_prepare (self->gomx);
 
