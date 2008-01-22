@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef __GST_OMX_H263DEC_H__
-#define __GST_OMX_H263DEC_H__
+#ifndef GSTOMX_H263DEC_H
+#define GSTOMX_H263DEC_H
 
 #include <gst/gst.h>
 
@@ -50,4 +50,4 @@ GType gst_omx_h263dec_get_type (void);
 
 G_END_DECLS
 
-#endif /* __GST_OMX_H263DEC_H__ */
+#endif /* GSTOMX_H263DEC_H */

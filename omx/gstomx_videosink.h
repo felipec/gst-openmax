@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef __GST_OMX_VIDEOSINK_H__
-#define __GST_OMX_VIDEOSINK_H__
+#ifndef GSTOMX_VIDEOSINK_H
+#define GSTOMX_VIDEOSINK_H
 
 #include <gst/gst.h>
 
@@ -53,4 +53,4 @@ GType gst_omx_videosink_get_type (void);
 
 G_END_DECLS
 
-#endif /* __GST_OMX_VIDEOSINK_H__ */
+#endif /* GSTOMX_VIDEOSINK_H */

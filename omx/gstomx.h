@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef __GST_OMX_H__
-#define __GST_OMX_H__
+#ifndef GSTOMX_H
+#define GSTOMX_H
 
 #include <gst/gst.h>
 
@@ -33,4 +33,4 @@ G_BEGIN_DECLS
 
 G_END_DECLS
 
-#endif /* __GST_OMX_H__ */
+#endif /* GSTOMX_H */

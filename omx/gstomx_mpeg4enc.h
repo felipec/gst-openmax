@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef __GST_OMX_MPEG4ENC_H__
-#define __GST_OMX_MPEG4ENC_H__
+#ifndef GSTOMX_MPEG4ENC_H
+#define GSTOMX_MPEG4ENC_H
 
 #include <gst/gst.h>
 
@@ -50,4 +50,4 @@ GType gst_omx_mpeg4enc_get_type (void);
 
 G_END_DECLS
 
-#endif /* __GST_OMX_MPEG4ENC_H__ */
+#endif /* GSTOMX_MPEG4ENC_H */

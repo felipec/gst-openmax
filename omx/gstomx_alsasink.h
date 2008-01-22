@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef __GST_OMX_ALSASINK_H__
-#define __GST_OMX_ALSASINK_H__
+#ifndef GSTOMX_ALSASINK_H
+#define GSTOMX_ALSASINK_H
 
 #include <gst/gst.h>
 
@@ -50,4 +50,4 @@ GType gst_omx_alsasink_get_type (void);
 
 G_END_DECLS
 
-#endif /* __GST_OMX_ALSASINK_H__ */
+#endif /* GSTOMX_ALSASINK_H */

@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef __GST_OMX_BASE_SRC_H__
-#define __GST_OMX_BASE_SRC_H__
+#ifndef GSTOMX_BASE_SRC_H
+#define GSTOMX_BASE_SRC_H
 
 #include <gst/gst.h>
 #include <gst/base/gstbasesrc.h>
@@ -60,4 +60,4 @@ GType gst_omx_base_src_get_type (void);
 
 G_END_DECLS
 
-#endif /* __GST_OMX_BASE_SRC_H__ */
+#endif /* GSTOMX_BASE_SRC_H */

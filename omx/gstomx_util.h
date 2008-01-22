@@ -20,8 +20,8 @@
  *
  */
 
-#ifndef __GST_OMX_UTIL_H__
-#define __GST_OMX_UTIL_H__
+#ifndef GSTOMX_UTIL_H
+#define GSTOMX_UTIL_H
 
 #include <stdbool.h>
 #include <glib.h>
@@ -141,4 +141,4 @@ void g_omx_sem_free (GOmxSem *sem);
 void g_omx_sem_down (GOmxSem *sem);
 void g_omx_sem_up (GOmxSem *sem);
 
-#endif /* __GST_OMX_UTIL_H__ */
+#endif /* GSTOMX_UTIL_H */

@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef __GST_OMX_MP3DEC_H__
-#define __GST_OMX_MP3DEC_H__
+#ifndef GSTOMX_MP3DEC_H
+#define GSTOMX_MP3DEC_H
 
 #include <gst/gst.h>
 
@@ -50,4 +50,4 @@ GType gst_omx_mp3dec_get_type (void);
 
 G_END_DECLS
 
-#endif /* __GST_OMX_MP3DEC_H__ */
+#endif /* GSTOMX_MP3DEC_H */

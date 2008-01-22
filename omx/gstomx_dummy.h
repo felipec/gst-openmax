@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef __GST_OMX_DUMMY_H__
-#define __GST_OMX_DUMMY_H__
+#ifndef GSTOMX_DUMMY_H
+#define GSTOMX_DUMMY_H
 
 #include <gst/gst.h>
 
@@ -50,4 +50,4 @@ GType gst_omx_dummy_get_type (void);
 
 G_END_DECLS
 
-#endif /* __GST_OMX_DUMMY_H__ */
+#endif /* GSTOMX_DUMMY_H */

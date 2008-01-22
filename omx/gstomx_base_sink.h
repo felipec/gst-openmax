@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef __GST_OMX_BASE_SINK_H__
-#define __GST_OMX_BASE_SINK_H__
+#ifndef GSTOMX_BASE_SINK_H
+#define GSTOMX_BASE_SINK_H
 
 #include <gst/gst.h>
 #include <gst/base/gstbasesink.h>
@@ -61,4 +61,4 @@ GType gst_omx_base_sink_get_type (void);
 
 G_END_DECLS
 
-#endif /* __GST_OMX_BASE_SINK_H__ */
+#endif /* GSTOMX_BASE_SINK_H */

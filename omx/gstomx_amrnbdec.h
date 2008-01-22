@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef __GST_OMX_AMRNBDEC_H__
-#define __GST_OMX_AMRNBDEC_H__
+#ifndef GSTOMX_AMRNBDEC_H
+#define GSTOMX_AMRNBDEC_H
 
 #include <gst/gst.h>
 
@@ -50,4 +50,4 @@ GType gst_omx_amrnbdec_get_type (void);
 
 G_END_DECLS
 
-#endif /* __GST_OMX_AMRNBDEC_H__ */
+#endif /* GSTOMX_AMRNBDEC_H */

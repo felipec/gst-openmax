@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef __GST_OMX_VORBISDEC_H__
-#define __GST_OMX_VORBISDEC_H__
+#ifndef GSTOMX_VORBISDEC_H
+#define GSTOMX_VORBISDEC_H
 
 #include <gst/gst.h>
 
@@ -50,4 +50,4 @@ GType gst_omx_vorbisdec_get_type (void);
 
 G_END_DECLS
 
-#endif /* __GST_OMX_VORBISDEC_H__ */
+#endif /* GSTOMX_VORBISDEC_H */
