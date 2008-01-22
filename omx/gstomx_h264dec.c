@@ -247,6 +247,7 @@ sink_setcaps (GstPad *pad,
         param->format.video.nFrameWidth = width;
         param->format.video.nFrameHeight = height;
 
+#if 0
         /* This is against the standard. nBufferSize is read-only. */
         /** @todo Keep it for now as it's needed for TI. */
         {
@@ -267,6 +268,7 @@ sink_setcaps (GstPad *pad,
                     break;
             }
         }
+#endif
 
         OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
     }
@@ -274,6 +276,79 @@ sink_setcaps (GstPad *pad,
     free (param);
 
     return gst_pad_set_caps (pad, caps);
+}
+
+static void
+omx_setup (GstOmxBaseFilter *omx_base)
+{
+    GOmxCore *gomx;
+
+    gomx = (GOmxCore *) omx_base->gomx;
+
+    GST_INFO_OBJECT (omx_base, "begin");
+
+    {
+        OMX_PARAM_PORTDEFINITIONTYPE *param;
+		OMX_COLOR_FORMATTYPE color_format;
+
+        param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
+        param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
+        param->nVersion.s.nVersionMajor = 1;
+        param->nVersion.s.nVersionMinor = 1;
+
+		color_format = OMX_COLOR_FormatCbYCrY;
+
+		param->nPortIndex = 1;
+        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+
+        param->format.video.eColorFormat = color_format;
+
+        /* This is against the standard. nBufferSize is read-only. */
+        /** @todo Keep it for now as it's needed for TI. */
+        {
+            gint width, height;
+
+            width = param->format.video.nFrameWidth;
+            height = param->format.video.nFrameHeight;
+
+            switch (color_format)
+            {
+                case OMX_COLOR_FormatYCbYCr:
+                case OMX_COLOR_FormatCbYCrY:
+                    param->nBufferSize = (width * height) * 2;
+                    break;
+                case OMX_COLOR_FormatYUV420Planar:
+                    param->nBufferSize = (width * height) * 1.5;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+
+        free (param);
+    }
+
+#if 0
+	{
+		OMX_VIDEO_PARAM_AVCTYPE *param;
+
+		param = calloc (1, sizeof (OMX_VIDEO_PARAM_AVCTYPE));
+        param->nSize = sizeof (OMX_VIDEO_PARAM_AVCTYPE);
+        param->nVersion.s.nVersionMajor = 1;
+        param->nVersion.s.nVersionMinor = 1;
+
+        param->nPortIndex = 1;
+        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamVideoAvc, param);
+
+		param->eLevel = OMX_VIDEO_AVCLevel3;
+
+		OMX_SetParameter (gomx->omx_handle, OMX_IndexParamVideoAvc, param);
+	}
+#endif
+
+    GST_INFO_OBJECT (omx_base, "end");
 }
 
 static void
@@ -285,6 +360,7 @@ type_instance_init (GTypeInstance *instance,
     omx_base = GST_OMX_BASE_FILTER (instance);
 
     omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
+	omx_base->omx_setup = omx_setup;
 
     omx_base->gomx->settings_changed_cb = settings_changed_cb;
 
