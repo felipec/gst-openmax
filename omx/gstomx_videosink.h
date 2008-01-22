@@ -39,6 +39,7 @@ struct GstOmxVideoSink
     GstOmxBaseSink omx_base;
     guint x_scale;
     guint y_scale;
+    guint rotation;
 };
 
 struct GstOmxVideoSinkClass

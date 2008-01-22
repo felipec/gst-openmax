@@ -33,7 +33,8 @@ enum
 {
     ARG_0,
     ARG_X_SCALE,
-    ARG_Y_SCALE
+    ARG_Y_SCALE,
+    ARG_ROTATION
 };
 
 static GstCaps *
@@ -201,7 +202,25 @@ setcaps (GstBaseSink *gst_sink,
             free (param);
         }
 
-        {
+		{
+			OMX_CONFIG_ROTATIONTYPE *config;
+
+			config = calloc (1, sizeof (OMX_CONFIG_ROTATIONTYPE));
+            config->nSize = sizeof (OMX_CONFIG_ROTATIONTYPE);
+            config->nVersion.s.nVersionMajor = 1;
+            config->nVersion.s.nVersionMinor = 1;
+
+			config->nPortIndex = 0;
+            OMX_GetConfig (gomx->omx_handle, OMX_IndexConfigCommonScale, config);
+
+			config->nRotation = self->rotation;
+
+			OMX_SetConfig (gomx->omx_handle, OMX_IndexConfigCommonRotate, config);
+
+            free (config);
+		}
+
+		{
             OMX_CONFIG_SCALEFACTORTYPE *config;
 
             config = calloc (1, sizeof (OMX_CONFIG_SCALEFACTORTYPE));
@@ -242,6 +261,9 @@ set_property (GObject *object,
         case ARG_Y_SCALE:
             self->y_scale = g_value_get_uint (value);
             break;
+        case ARG_ROTATION:
+            self->rotation = g_value_get_uint (value);
+            break;
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
             break;
@@ -265,6 +287,9 @@ get_property (GObject *object,
             break;
         case ARG_Y_SCALE:
             g_value_set_uint (value, self->y_scale);
+            break;
+        case ARG_ROTATION:
+            g_value_set_uint (value, self->rotation);
             break;
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -298,6 +323,12 @@ type_class_init (gpointer g_class,
                                      g_param_spec_uint ("y-scale", "Y Scale",
                                                         "How much to scale the image in the Y axis (100 means nothing)",
                                                         0, G_MAXUINT, 100, G_PARAM_READWRITE));
+
+	g_object_class_install_property (gobject_class, ARG_ROTATION,
+									 g_param_spec_uint ("rotation", "Rotation",
+														"Rotation angle",
+														0, G_MAXUINT, 360, G_PARAM_READWRITE));
+
 }
 
 static void
