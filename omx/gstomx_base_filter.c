@@ -28,7 +28,7 @@
 
 #define OMX_LIBRARY_NAME "libomxil.so"
 
-#define ZERO_COPY
+/* #define ZERO_COPY */
 
 enum
 {

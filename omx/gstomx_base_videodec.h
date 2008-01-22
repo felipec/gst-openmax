@@ -30,6 +30,7 @@ G_BEGIN_DECLS
 
 #define GST_OMX_BASE_VIDEODEC(obj) (GstOmxBaseVideoDec *) (obj)
 #define GST_OMX_BASE_VIDEODEC_TYPE (gst_omx_base_videodec_get_type ())
+#define GST_OMX_BASE_VIDEODEC_CLASS(c) (G_TYPE_CHECK_CLASS_CAST ((c), GST_OMX_BASE_VIDEODEC_TYPE, GstOmxBaseVideoDecClass))
 
 typedef struct GstOmxBaseVideoDec GstOmxBaseVideoDec;
 typedef struct GstOmxBaseVideoDecClass GstOmxBaseVideoDecClass;

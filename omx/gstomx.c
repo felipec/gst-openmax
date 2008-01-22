@@ -91,7 +91,7 @@ plugin_init (GstPlugin *plugin)
         return false;
     }
 
-    if (!gst_element_register (plugin, "omx_audiosink", GST_RANK_NONE, GST_OMX_AUDIO_TYPE))
+    if (!gst_element_register (plugin, "omx_audiosink", GST_RANK_NONE, GST_OMX_AUDIOSINK_TYPE))
     {
         return false;
     }

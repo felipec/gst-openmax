@@ -233,7 +233,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
         param->nVersion.s.nVersionMajor = 1;
         param->nVersion.s.nVersionMinor = 1;
 
-        color_format = OMX_COLOR_FormatCbYCrY;
+        /* color_format = OMX_COLOR_FormatCbYCrY; */
 
         param->nPortIndex = 1;
         OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
