@@ -29,7 +29,7 @@
 #include "gstomx_mp3dec.h"
 #include "gstomx_aacdec.h"
 #include "gstomx_amrnbdec.h"
-#include "gstomx_alsasink.h"
+#include "gstomx_audiosink.h"
 #include "gstomx_videosink.h"
 #include "gstomx_filereadersrc.h"
 
@@ -91,7 +91,7 @@ plugin_init (GstPlugin *plugin)
         return false;
     }
 
-    if (!gst_element_register (plugin, "omx_alsasink", GST_RANK_NONE, GST_OMX_ALSASINK_TYPE))
+    if (!gst_element_register (plugin, "omx_audiosink", GST_RANK_NONE, GST_OMX_AUDIO_TYPE))
     {
         return false;
     }

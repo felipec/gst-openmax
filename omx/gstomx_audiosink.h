@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef GSTOMX_ALSASINK_H
-#define GSTOMX_ALSASINK_H
+#ifndef GSTOMX_AUDIOSINK_H
+#define GSTOMX_AUDIOSINK_H
 
 #include <gst/gst.h>
 
@@ -28,26 +28,26 @@
 
 G_BEGIN_DECLS
 
-#define GST_OMX_ALSASINK(obj) (GstOmxAlsaSink *) (obj)
-#define GST_OMX_ALSASINK_TYPE (gst_omx_alsasink_get_type ())
+#define GST_OMX_AUDIOSINK(obj) (GstOmxAudioSink *) (obj)
+#define GST_OMX_AUDIOSINK_TYPE (gst_omx_audiosink_get_type ())
 
-typedef struct GstOmxAlsaSink GstOmxAlsaSink;
-typedef struct GstOmxAlsaSinkClass GstOmxAlsaSinkClass;
+typedef struct GstOmxAudioSink GstOmxAudioSink;
+typedef struct GstOmxAudioSinkClass GstOmxAudioSinkClass;
 
 #include "gstomx_base_sink.h"
 
-struct GstOmxAlsaSink
+struct GstOmxAudioSink
 {
     GstOmxBaseSink omx_base;
 };
 
-struct GstOmxAlsaSinkClass
+struct GstOmxAudioSinkClass
 {
     GstOmxBaseSinkClass parent_class;
 };
 
-GType gst_omx_alsasink_get_type (void);
+GType gst_omx_audiosink_get_type (void);
 
 G_END_DECLS
 
-#endif /* GSTOMX_ALSASINK_H */
+#endif /* GSTOMX_AUDIOSINK_H */

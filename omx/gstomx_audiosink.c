@@ -19,8 +19,7 @@
  *
  */
 
-#include "gstomx_alsasink.h"
-#include "gstomx_base_sink.h"
+#include "gstomx_audiosink.h"
 #include "gstomx.h"
 
 #include <string.h>
@@ -53,7 +52,7 @@ type_base_init (gpointer g_class)
     {
         GstElementDetails details;
 
-        details.longname = "OpenMAX IL alsasink element";
+        details.longname = "OpenMAX IL audiosink element";
         details.klass = "None";
         details.description = "Does nothing";
         details.author = "Felipe Contreras";
@@ -156,7 +155,7 @@ type_instance_init (GTypeInstance *instance,
 }
 
 GType
-gst_omx_alsasink_get_type (void)
+gst_omx_audiosink_get_type (void)
 {
     static GType type = 0;
 
@@ -165,13 +164,13 @@ gst_omx_alsasink_get_type (void)
         GTypeInfo *type_info;
 
         type_info = g_new0 (GTypeInfo, 1);
-        type_info->class_size = sizeof (GstOmxAlsaSinkClass);
+        type_info->class_size = sizeof (GstOmxAudioSinkClass);
         type_info->base_init = type_base_init;
         type_info->class_init = type_class_init;
-        type_info->instance_size = sizeof (GstOmxAlsaSink);
+        type_info->instance_size = sizeof (GstOmxAudioSink);
         type_info->instance_init = type_instance_init;
 
-        type = g_type_register_static (GST_OMX_BASE_SINK_TYPE, "GstOmxAlsaSink", type_info, 0);
+        type = g_type_register_static (GST_OMX_BASE_SINK_TYPE, "GstOmxAudioSink", type_info, 0);
 
         g_free (type_info);
     }
