@@ -320,7 +320,7 @@ output_thread (gpointer cb_data)
                 }
                 else
                 {
-                    GST_LOG_OBJECT (self, "caps already fixed");
+                    GST_LOG_OBJECT (self, "caps already fixed: %" GST_PTR_FORMAT, caps);
                     gst_caps_unref (caps);
                 }
             }
