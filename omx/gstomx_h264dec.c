@@ -289,16 +289,16 @@ omx_setup (GstOmxBaseFilter *omx_base)
 
     {
         OMX_PARAM_PORTDEFINITIONTYPE *param;
-		OMX_COLOR_FORMATTYPE color_format;
+        OMX_COLOR_FORMATTYPE color_format;
 
         param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
         param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
         param->nVersion.s.nVersionMajor = 1;
         param->nVersion.s.nVersionMinor = 1;
 
-		color_format = OMX_COLOR_FormatCbYCrY;
+        color_format = OMX_COLOR_FormatCbYCrY;
 
-		param->nPortIndex = 1;
+        param->nPortIndex = 1;
         OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
 
         param->format.video.eColorFormat = color_format;
@@ -331,10 +331,10 @@ omx_setup (GstOmxBaseFilter *omx_base)
     }
 
 #if 0
-	{
-		OMX_VIDEO_PARAM_AVCTYPE *param;
+    {
+        OMX_VIDEO_PARAM_AVCTYPE *param;
 
-		param = calloc (1, sizeof (OMX_VIDEO_PARAM_AVCTYPE));
+        param = calloc (1, sizeof (OMX_VIDEO_PARAM_AVCTYPE));
         param->nSize = sizeof (OMX_VIDEO_PARAM_AVCTYPE);
         param->nVersion.s.nVersionMajor = 1;
         param->nVersion.s.nVersionMinor = 1;
@@ -342,10 +342,10 @@ omx_setup (GstOmxBaseFilter *omx_base)
         param->nPortIndex = 1;
         OMX_GetParameter (gomx->omx_handle, OMX_IndexParamVideoAvc, param);
 
-		param->eLevel = OMX_VIDEO_AVCLevel3;
+        param->eLevel = OMX_VIDEO_AVCLevel3;
 
-		OMX_SetParameter (gomx->omx_handle, OMX_IndexParamVideoAvc, param);
-	}
+        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamVideoAvc, param);
+    }
 #endif
 
     GST_INFO_OBJECT (omx_base, "end");
@@ -360,7 +360,7 @@ type_instance_init (GTypeInstance *instance,
     omx_base = GST_OMX_BASE_FILTER (instance);
 
     omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
-	omx_base->omx_setup = omx_setup;
+    omx_base->omx_setup = omx_setup;
 
     omx_base->gomx->settings_changed_cb = settings_changed_cb;
 

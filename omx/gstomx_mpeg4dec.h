@@ -36,12 +36,12 @@ typedef struct GstOmxMpeg4DecClass GstOmxMpeg4DecClass;
 
 struct GstOmxMpeg4Dec
 {
-    GstOmxBaseFilter omx_base;
+	GstOmxBaseFilter omx_base;
 };
 
 struct GstOmxMpeg4DecClass
 {
-    GstOmxBaseFilterClass parent_class;
+	GstOmxBaseFilterClass parent_class;
 };
 
 GType gst_omx_mpeg4dec_get_type (void);
