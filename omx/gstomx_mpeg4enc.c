@@ -266,18 +266,7 @@ sink_setcaps (GstPad *pad,
 
             compression_format = OMX_VIDEO_CodingMPEG4;
 
-            switch (compression_format)
-            {
-                case OMX_VIDEO_CodingAVC:
-                    param->nBufferSize = 26250; /** @todo keep an eye on that */
-                    break;
-                case OMX_VIDEO_CodingMPEG4:
-                case OMX_VIDEO_CodingH263:
-                    param->nBufferSize = (width * height / 2); /** @todo keep an eye on that */
-                    break;
-                default:
-                    break;
-            }
+			param->nBufferSize = (width * height / 2); /** @todo keep an eye on that */
 
             param->format.video.eCompressionFormat = compression_format;
         }
@@ -318,10 +307,7 @@ sink_setcaps (GstPad *pad,
         param->nPortIndex = 1;
 		OMX_GetParameter (gomx->omx_handle, OMX_IndexParamVideoMpeg4, param);
 
-#if 0
-		param->eLevel = OMX_VIDEO_MPEG4Level0; /** @todo calculate this automatically */
-#endif
-		param->eLevel = 0; /** @todo TI bug */
+		param->eLevel = OMX_VIDEO_MPEG4Level4; /** @todo calculate this automatically */
 
 		OMX_SetParameter (gomx->omx_handle, OMX_IndexParamVideoMpeg4, param);
 
@@ -339,7 +325,7 @@ type_instance_init (GTypeInstance *instance,
 
     omx_base = GST_OMX_BASE_FILTER (instance);
 
-    omx_base->omx_component = OMX_COMPONENT_NAME;
+    omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
 
     omx_base->gomx->settings_changed_cb = settings_changed_cb;
 
