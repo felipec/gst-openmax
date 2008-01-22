@@ -59,12 +59,12 @@ plugin_init (GstPlugin *plugin)
         return false;
     }
 
-    if (!gst_element_register (plugin, "omx_h264dec", DEFAULT_RANK, GST_OMX_H263DEC_TYPE))
+    if (!gst_element_register (plugin, "omx_h264dec", DEFAULT_RANK, GST_OMX_H264DEC_TYPE))
     {
         return false;
     }
 
-    if (!gst_element_register (plugin, "omx_mpeg4dec", DEFAULT_RANK, GST_OMX_H263DEC_TYPE))
+    if (!gst_element_register (plugin, "omx_mpeg4enc", DEFAULT_RANK, GST_OMX_MPEG4ENC_TYPE))
     {
         return false;
     }
