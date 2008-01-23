@@ -260,7 +260,7 @@ type_class_init (gpointer g_class,
     }
 }
 
-G_INLINE_FUNC void
+inline void
 push_buffer (GstOmxBaseFilter *self,
              GstBuffer *buf)
 {

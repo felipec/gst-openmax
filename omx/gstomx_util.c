@@ -27,27 +27,27 @@
  * Forward declarations
  */
 
-G_INLINE_FUNC void
+inline void
 change_state (GOmxCore *core,
               OMX_STATETYPE state);
 
-G_INLINE_FUNC void
+inline void
 wait_for_state (GOmxCore *core,
                 OMX_STATETYPE state);
 
-G_INLINE_FUNC void
+inline void
 send_eos_buffer (GOmxCore *core,
                  OMX_BUFFERHEADERTYPE *omx_buffer);
 
-G_INLINE_FUNC void
+inline void
 in_port_cb (GOmxPort *port,
             OMX_BUFFERHEADERTYPE *omx_buffer);
 
-G_INLINE_FUNC void
+inline void
 out_port_cb (GOmxPort *port,
              OMX_BUFFERHEADERTYPE *omx_buffer);
 
-G_INLINE_FUNC void
+inline void
 got_buffer (GOmxCore *core,
             GOmxPort *port,
             OMX_BUFFERHEADERTYPE *omx_buffer);
@@ -70,7 +70,7 @@ FillBufferDone (OMX_HANDLETYPE omx_handle,
                 OMX_PTR app_data,
                 OMX_BUFFERHEADERTYPE *omx_buffer);
 
-G_INLINE_FUNC GOmxPort *
+inline GOmxPort *
 g_omx_core_get_port (GOmxCore *core,
                      guint index);
 
@@ -398,7 +398,7 @@ g_omx_core_setup_port (GOmxCore *core,
     return port;
 }
 
-G_INLINE_FUNC GOmxPort *
+inline GOmxPort *
 g_omx_core_get_port (GOmxCore *core,
                      guint index)
 {
@@ -590,21 +590,21 @@ g_omx_sem_up (GOmxSem *sem)
  * Helper functions.
  */
 
-G_INLINE_FUNC void
+inline void
 change_state (GOmxCore *core,
               OMX_STATETYPE state)
 {
     OMX_SendCommand (core->omx_handle, OMX_CommandStateSet, state, NULL);
 }
 
-G_INLINE_FUNC void
+inline void
 wait_for_state (GOmxCore *core,
                 OMX_STATETYPE state)
 {
     g_omx_sem_down (core->state_sem);
 }
 
-G_INLINE_FUNC void
+inline void
 send_eos_buffer (GOmxCore *core,
                  OMX_BUFFERHEADERTYPE *omx_buffer)
 {
@@ -623,7 +623,7 @@ send_eos_buffer (GOmxCore *core,
  * Callbacks
  */
 
-G_INLINE_FUNC void
+inline void
 in_port_cb (GOmxPort *port,
             OMX_BUFFERHEADERTYPE *omx_buffer)
 {
@@ -640,7 +640,7 @@ in_port_cb (GOmxPort *port,
     }
 }
 
-G_INLINE_FUNC void
+inline void
 out_port_cb (GOmxPort *port,
              OMX_BUFFERHEADERTYPE *omx_buffer)
 {
@@ -658,7 +658,7 @@ out_port_cb (GOmxPort *port,
 #endif
 }
 
-G_INLINE_FUNC void
+inline void
 got_buffer (GOmxCore *core,
             GOmxPort *port,
             OMX_BUFFERHEADERTYPE *omx_buffer)
