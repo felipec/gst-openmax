@@ -24,8 +24,6 @@
 
 #include <string.h>
 
-#include <stdbool.h>
-
 #define OMX_LIBRARY_NAME "libomxil.so"
 
 static gboolean share_input_buffer = FALSE;
@@ -66,14 +64,14 @@ setup_ports (GstOmxBaseFilter *self)
     param->nPortIndex = 0;
     OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, param);
     self->in_port = g_omx_core_setup_port (core, param);
-    self->in_port->enable_queue = true;
+    self->in_port->enable_queue = TRUE;
 
     /* Output port configuration. */
 
     param->nPortIndex = 1;
     OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, param);
     self->out_port = g_omx_core_setup_port (core, param);
-    self->out_port->enable_queue = true;
+    self->out_port->enable_queue = TRUE;
     self->out_port->done_cb = out_port_done_cb;
 
     free (param);
@@ -264,7 +262,7 @@ type_class_init (gpointer g_class,
     }
 }
 
-static void
+G_INLINE_FUNC void
 push_buffer (GstOmxBaseFilter *self,
              GstBuffer *buf)
 {
@@ -287,7 +285,7 @@ output_thread (gpointer cb_data)
 
     out_port = self->out_port;
 
-    while (!out_port->done)
+    while (G_LIKELY (!out_port->done))
     {
         OMX_BUFFERHEADERTYPE *omx_buffer;
 
@@ -296,7 +294,7 @@ output_thread (gpointer cb_data)
 
         GST_LOG_OBJECT (self, "omx_buffer: %p", omx_buffer);
 
-        if (!omx_buffer)
+        if (G_UNLIKELY (!omx_buffer))
         {
             GST_WARNING_OBJECT (self, "null buffer");
             continue;
@@ -305,11 +303,12 @@ output_thread (gpointer cb_data)
         GST_DEBUG_OBJECT (self, "buffer: size=%lu, len=%lu, flags=%lu",
                           omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nFlags);
 
-        if (omx_buffer->nFilledLen > 0)
+        if (G_LIKELY (omx_buffer->nFilledLen > 0))
         {
             GstBuffer *buf;
 
-            if (!self->in_port->done)
+            /** @todo remove this check */
+            if (G_LIKELY (!self->in_port->done))
             {
                 GstCaps *caps = NULL;
 
@@ -358,7 +357,7 @@ output_thread (gpointer cb_data)
                                                    GST_PAD_CAPS (self->srcpad),
                                                    &buf);
 
-                if (buf)
+                if (G_LIKELY (buf))
                 {
                     memcpy (GST_BUFFER_DATA (buf), omx_buffer->pBuffer + omx_buffer->nOffset, omx_buffer->nFilledLen);
                     if (self->use_timestamps)
@@ -388,7 +387,7 @@ output_thread (gpointer cb_data)
             GST_WARNING_OBJECT (self, "empty buffer");
         }
 
-        if (omx_buffer->nFlags & OMX_BUFFERFLAG_EOS)
+        if (G_UNLIKELY (omx_buffer->nFlags & OMX_BUFFERFLAG_EOS))
         {
             GST_INFO_OBJECT (self, "set_done: out_port");
             g_omx_port_set_done (out_port);
@@ -409,7 +408,7 @@ output_thread (gpointer cb_data)
                                                         GST_PAD_CAPS (self->srcpad),
                                                         &buf);
 
-            if (result == GST_FLOW_OK)
+            if (G_LIKELY (result == GST_FLOW_OK))
             {
                 gst_buffer_ref (buf);
                 omx_buffer->pAppPrivate = buf;
@@ -460,7 +459,7 @@ pad_chain (GstPad *pad,
 
     GST_LOG_OBJECT (self, "state: %d", gomx->omx_state);
 
-    if (gomx->omx_state == OMX_StateLoaded)
+    if (G_UNLIKELY (gomx->omx_state == OMX_StateLoaded))
     {
         GST_INFO_OBJECT (self, "omx: prepare");
 
@@ -475,43 +474,32 @@ pad_chain (GstPad *pad,
 
         self->thread = g_thread_create (output_thread, gomx, TRUE, NULL);
 
-        self->initialized = true;
+        self->initialized = TRUE;
     }
 
     in_port = self->in_port;
 
-    if (!in_port->done)
+    if (G_LIKELY (!in_port->done))
     {
-        switch (gomx->omx_state)
+        if (G_UNLIKELY (gomx->omx_state == OMX_StateIdle))
         {
-            case OMX_StateIdle:
-                {
-                    GST_INFO_OBJECT (self, "omx: play");
-                    g_omx_core_start (gomx);
-                }
-                break;
-            default:
-                break;
+            GST_INFO_OBJECT (self, "omx: play");
+            g_omx_core_start (gomx);
         }
 
-        switch (gomx->omx_state)
+        if (G_UNLIKELY (gomx->omx_state != OMX_StateExecuting))
         {
-            case OMX_StateExecuting:
-                /* OK */
-                break;
-            default:
-                GST_ERROR_OBJECT (self, "Whoa! very wrong");
-                break;
+            GST_ERROR_OBJECT (self, "Whoa! very wrong");
         }
 
-        while (buffer_offset < GST_BUFFER_SIZE (buf))
+        while (G_LIKELY (buffer_offset < GST_BUFFER_SIZE (buf)))
         {
             OMX_BUFFERHEADERTYPE *omx_buffer;
 
             GST_LOG_OBJECT (self, "request buffer");
             omx_buffer = g_omx_port_request_buffer (in_port);
 
-            if (omx_buffer)
+            if (G_LIKELY (omx_buffer))
             {
                 GST_DEBUG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, offset=%lu",
                                   omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nOffset);
@@ -633,7 +621,7 @@ type_instance_init (GTypeInstance *instance,
 
     GST_LOG_OBJECT (self, "begin");
 
-    self->use_timestamps = true;
+    self->use_timestamps = TRUE;
 
     /* GOmx */
     {
@@ -666,7 +654,7 @@ gst_omx_base_filter_get_type (void)
 {
     static GType type = 0;
 
-    if (type == 0)
+    if (G_UNLIKELY (type == 0))
     {
         GTypeInfo *type_info;
 
