@@ -39,7 +39,6 @@ typedef enum GOmxPortType GOmxPortType;
 
 typedef void (*GOmxCb) (GOmxCore *core);
 typedef void (*GOmxPortCb) (GOmxPort *port);
-typedef void (*GOmxBufferCb) (GOmxPort *port, OMX_BUFFERHEADERTYPE *omx_buffer);
 
 /* Enums. */
 
@@ -95,11 +94,8 @@ struct GOmxPort
     gint num_buffers;
     gint buffer_size;
     GOmxPortCb done_cb;
-    GOmxBufferCb callback;
-    GOmxBufferCb user_cb;
     OMX_BUFFERHEADERTYPE **buffers;
 
-    gboolean enable_queue;
     GOmxSem *sem;
     GQueue *queue;
     GMutex *mutex;
@@ -124,8 +120,6 @@ void g_omx_core_prepare (GOmxCore *core);
 void g_omx_core_start (GOmxCore *core);
 void g_omx_core_finish (GOmxCore *core);
 void g_omx_core_wait_for_done (GOmxCore *core);
-void g_omx_core_set_port_cb (GOmxCore *core, guint index, GOmxBufferCb cb);
-GOmxPort *g_omx_core_get_port (GOmxCore *core, guint index);
 GOmxPort *g_omx_core_setup_port (GOmxCore *core, OMX_PARAM_PORTDEFINITIONTYPE *omx_port);
 
 GOmxPort *g_omx_port_new (GOmxCore *core);

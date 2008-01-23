@@ -27,27 +27,27 @@
  * Forward declarations
  */
 
-static void
+G_INLINE_FUNC void
 change_state (GOmxCore *core,
               OMX_STATETYPE state);
 
-static void
+G_INLINE_FUNC void
 wait_for_state (GOmxCore *core,
                 OMX_STATETYPE state);
 
-static void
+G_INLINE_FUNC void
 send_eos_buffer (GOmxCore *core,
                  OMX_BUFFERHEADERTYPE *omx_buffer);
 
-static void
+G_INLINE_FUNC void
 in_port_cb (GOmxPort *port,
             OMX_BUFFERHEADERTYPE *omx_buffer);
 
-static void
+G_INLINE_FUNC void
 out_port_cb (GOmxPort *port,
              OMX_BUFFERHEADERTYPE *omx_buffer);
 
-static void
+G_INLINE_FUNC void
 got_buffer (GOmxCore *core,
             GOmxPort *port,
             OMX_BUFFERHEADERTYPE *omx_buffer);
@@ -70,11 +70,15 @@ FillBufferDone (OMX_HANDLETYPE omx_handle,
                 OMX_PTR app_data,
                 OMX_BUFFERHEADERTYPE *omx_buffer);
 
+G_INLINE_FUNC GOmxPort *
+g_omx_core_get_port (GOmxCore *core,
+                     guint index);
+
 GOmxImp *
 g_omx_imp_new (const gchar *name);
 
 void
-g_omx_imp_free (GOmxImp *imp);
+g_omx_imp_free (gpointer data);
 
 static OMX_CALLBACKTYPE callbacks = { EventHandler, EmptyBufferDone, FillBufferDone };
 
@@ -115,7 +119,7 @@ g_omx_request_imp (const gchar *name)
         imp = g_omx_imp_new (name);
         if (!imp)
             return NULL;
-        g_hash_table_insert (implementations, name, imp);
+        g_hash_table_insert (implementations, (gpointer) name, imp);
     }
     if (imp->client_count == 0)
     {
@@ -168,8 +172,9 @@ g_omx_imp_new (const gchar *name)
 }
 
 void
-g_omx_imp_free (GOmxImp *imp)
+g_omx_imp_free (gpointer data)
 {
+    GOmxImp *imp = data;
     if (imp->dl_handle)
     {
         dlclose (imp->dl_handle);
@@ -393,26 +398,16 @@ g_omx_core_setup_port (GOmxCore *core,
     return port;
 }
 
-GOmxPort *
+G_INLINE_FUNC GOmxPort *
 g_omx_core_get_port (GOmxCore *core,
                      guint index)
 {
-    if (index < core->ports->len)
+    if (G_LIKELY (index < core->ports->len))
     {
         return g_ptr_array_index (core->ports, index);
     }
 
     return NULL;
-}
-
-void
-g_omx_core_set_port_cb (GOmxCore *core,
-                        guint index,
-                        GOmxBufferCb cb)
-{
-    GOmxPort *port;
-    port = g_omx_core_get_port (core, index);
-    port->user_cb = cb;
 }
 
 void
@@ -460,24 +455,20 @@ g_omx_port_setup (GOmxPort *port,
                   OMX_PARAM_PORTDEFINITIONTYPE *omx_port)
 {
     GOmxPortType type;
-    GOmxBufferCb callback;
 
     switch (omx_port->eDir)
     {
         case OMX_DirInput:
             type = GOMX_PORT_INPUT;
-            callback = in_port_cb;
             break;
         case OMX_DirOutput:
             type = GOMX_PORT_OUTPUT;
-            callback = out_port_cb;
             break;
         default:
             break;
     }
 
     port->type = type;
-    port->callback = callback;
     port->num_buffers = omx_port->nBufferCountActual;
     port->buffer_size = omx_port->nBufferSize;
 
@@ -599,52 +590,47 @@ g_omx_sem_up (GOmxSem *sem)
  * Helper functions.
  */
 
-static void
+G_INLINE_FUNC void
 change_state (GOmxCore *core,
               OMX_STATETYPE state)
 {
     OMX_SendCommand (core->omx_handle, OMX_CommandStateSet, state, NULL);
 }
 
-static void
+G_INLINE_FUNC void
 wait_for_state (GOmxCore *core,
                 OMX_STATETYPE state)
 {
     g_omx_sem_down (core->state_sem);
 }
 
-static void
+G_INLINE_FUNC void
 send_eos_buffer (GOmxCore *core,
                  OMX_BUFFERHEADERTYPE *omx_buffer)
 {
-    omx_buffer->nFlags = OMX_BUFFERFLAG_EOS;
-    omx_buffer->nFilledLen = 0;
+    if (G_UNLIKELY (!core->eos_sent))
+    {
+        omx_buffer->nFlags = OMX_BUFFERFLAG_EOS;
+        omx_buffer->nFilledLen = 0;
 
-    core->eos_sent = true;
+        core->eos_sent = true;
 
-    OMX_EmptyThisBuffer (core->omx_handle, omx_buffer);
+        OMX_EmptyThisBuffer (core->omx_handle, omx_buffer);
+    }
 }
 
 /*
  * Callbacks
  */
 
-static void
+G_INLINE_FUNC void
 in_port_cb (GOmxPort *port,
             OMX_BUFFERHEADERTYPE *omx_buffer)
 {
     if (port->done)
     {
-        if (!port->core->eos_sent)
-        {
-            send_eos_buffer (port->core, omx_buffer);
-        }
+        send_eos_buffer (port->core, omx_buffer);
         return;
-    }
-
-    if (port->user_cb)
-    {
-        port->user_cb (port, omx_buffer);
     }
 
     if (port->done)
@@ -654,18 +640,13 @@ in_port_cb (GOmxPort *port,
     }
 }
 
-static void
+G_INLINE_FUNC void
 out_port_cb (GOmxPort *port,
              OMX_BUFFERHEADERTYPE *omx_buffer)
 {
     if (port->done)
     {
         return;
-    }
-
-    if (port->user_cb)
-    {
-        port->user_cb (port, omx_buffer);
     }
 
 #if 0
@@ -677,31 +658,30 @@ out_port_cb (GOmxPort *port,
 #endif
 }
 
-static void
+G_INLINE_FUNC void
 got_buffer (GOmxCore *core,
             GOmxPort *port,
             OMX_BUFFERHEADERTYPE *omx_buffer)
 {
-    if (!omx_buffer)
+    if (G_UNLIKELY (!omx_buffer))
     {
         return;
     }
 
-    if (port)
+    if (G_LIKELY (port))
     {
-        if (port->enable_queue)
-        {
-            g_omx_port_push_buffer (port, omx_buffer);
-        }
+		g_omx_port_push_buffer (port, omx_buffer);
 
-        if (port->callback)
+        switch (port->type)
         {
-            port->callback (port, omx_buffer);
-        }
-
-        if (!port->enable_queue)
-        {
-            g_omx_port_release_buffer (port, omx_buffer);
+            case GOMX_PORT_INPUT:
+                in_port_cb (port, omx_buffer);
+                break;
+            case GOMX_PORT_OUTPUT:
+                out_port_cb (port, omx_buffer);
+                break;
+            default:
+                break;
         }
     }
 }

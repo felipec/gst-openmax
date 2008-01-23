@@ -55,7 +55,6 @@ setup_ports (GstOmxBaseSink *self)
     param->nPortIndex = 0;
     OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, param);
     self->in_port = g_omx_core_setup_port (core, param);
-    self->in_port->enable_queue = true;
 
     free (param);
 }
