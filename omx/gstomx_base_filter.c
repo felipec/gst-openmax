@@ -28,7 +28,8 @@
 
 #define OMX_LIBRARY_NAME "libomxil.so"
 
-/* #define ZERO_COPY */
+static gboolean share_input_buffer = FALSE;
+static gboolean share_output_buffer = FALSE;
 
 enum
 {
@@ -327,6 +328,7 @@ output_thread (gpointer cb_data)
                 }
             }
 
+            /* buf is always null when the output buffer pointer isn't shared. */
             buf = omx_buffer->pAppPrivate;
 
             if (buf && !(omx_buffer->nFlags & OMX_BUFFERFLAG_EOS))
@@ -366,13 +368,18 @@ output_thread (gpointer cb_data)
 
                     omx_buffer->nFilledLen = 0;
 
-#if defined(ZERO_COPY)
-                    GST_WARNING_OBJECT (self, "couldn't zero-copy");
-                    g_free (omx_buffer->pBuffer);
-                    omx_buffer->pBuffer = NULL;
-#endif /* defined(ZERO_COPY) */
+                    if (share_output_buffer)
+                    {
+                        GST_WARNING_OBJECT (self, "couldn't zero-copy");
+                        g_free (omx_buffer->pBuffer);
+                        omx_buffer->pBuffer = NULL;
+                    }
 
                     push_buffer (self, buf);
+                }
+                else
+                {
+                    GST_WARNING_OBJECT (self, "couldn't allocate buffer");
                 }
             }
         }
@@ -388,8 +395,9 @@ output_thread (gpointer cb_data)
             break;
         }
 
-#if defined(ZERO_COPY)
-        if (!omx_buffer->pBuffer)
+        if (share_output_buffer &&
+            !omx_buffer->pBuffer &&
+            omx_buffer->nOffset == 0)
         {
             GstBuffer *buf;
             GstFlowReturn result;
@@ -411,11 +419,16 @@ output_thread (gpointer cb_data)
             }
             else
             {
-                GST_WARNING_OBJECT (self, "could not allocate buffer");
+                GST_WARNING_OBJECT (self, "could not pad allocate buffer, using malloc");
                 omx_buffer->pBuffer = g_malloc (omx_buffer->nAllocLen);
             }
         }
-#endif /* defined(ZERO_COPY) */
+
+        if (share_output_buffer &&
+            !omx_buffer->pBuffer)
+        {
+            GST_WARNING_OBJECT (self, "no input buffer to share");
+        }
 
         GST_LOG_OBJECT (self, "release_buffer");
         g_omx_port_release_buffer (out_port, omx_buffer);
@@ -436,6 +449,7 @@ pad_chain (GstPad *pad,
     GOmxPort *in_port;
     GstOmxBaseFilter *self;
     GstFlowReturn ret = GST_FLOW_OK;
+    guint buffer_offset = 0;
 
     self = GST_OMX_BASE_FILTER (GST_OBJECT_PARENT (pad));
 
@@ -490,6 +504,7 @@ pad_chain (GstPad *pad,
                 break;
         }
 
+        while (buffer_offset < GST_BUFFER_SIZE (buf))
         {
             OMX_BUFFERHEADERTYPE *omx_buffer;
 
@@ -501,30 +516,34 @@ pad_chain (GstPad *pad,
                 GST_DEBUG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, offset=%lu",
                                   omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nOffset);
 
-#if defined(ZERO_COPY)
+                if (omx_buffer->nOffset == 0 &&
+                    share_input_buffer)
                 {
-                    GstBuffer *old_buf;
-                    old_buf = omx_buffer->pAppPrivate;
+                    {
+                        GstBuffer *old_buf;
+                        old_buf = omx_buffer->pAppPrivate;
 
-                    if (old_buf)
-                    {
-                        gst_buffer_unref (old_buf);
+                        if (old_buf)
+                        {
+                            gst_buffer_unref (old_buf);
+                        }
+                        else if (omx_buffer->pBuffer)
+                        {
+                            g_free (omx_buffer->pBuffer);
+                        }
                     }
-                    else if (omx_buffer->pBuffer)
-                    {
-                        g_free (omx_buffer->pBuffer);
-                    }
+
+                    omx_buffer->pBuffer = GST_BUFFER_DATA (buf);
+                    omx_buffer->nAllocLen = GST_BUFFER_SIZE (buf);
+                    omx_buffer->nFilledLen = GST_BUFFER_SIZE (buf);
+                    omx_buffer->pAppPrivate = buf;
                 }
-
-                omx_buffer->nOffset = 0;
-                omx_buffer->pBuffer = GST_BUFFER_DATA (buf);
-                omx_buffer->nAllocLen = GST_BUFFER_SIZE (buf);
-                omx_buffer->nFilledLen = GST_BUFFER_SIZE (buf);
-                omx_buffer->pAppPrivate = buf;
-#elif !defined(ZERO_COPY)
-                memcpy (omx_buffer->pBuffer + omx_buffer->nOffset, GST_BUFFER_DATA (buf), GST_BUFFER_SIZE (buf));
-                omx_buffer->nFilledLen = GST_BUFFER_SIZE (buf);
-#endif /* !defined(ZERO_COPY) */
+                else
+                {
+                    omx_buffer->nFilledLen = MIN (GST_BUFFER_SIZE (buf) - buffer_offset,
+                                                  omx_buffer->nAllocLen - omx_buffer->nOffset);
+                    memcpy (omx_buffer->pBuffer + omx_buffer->nOffset, GST_BUFFER_DATA (buf) + buffer_offset, omx_buffer->nFilledLen);
+                }
 
                 if (self->use_timestamps)
                 {
@@ -533,11 +552,14 @@ pad_chain (GstPad *pad,
 
                 GST_LOG_OBJECT (self, "release_buffer");
                 g_omx_port_release_buffer (in_port, omx_buffer);
+
+                buffer_offset += omx_buffer->nFilledLen;
             }
             else
             {
                 GST_WARNING_OBJECT (self, "null buffer");
                 /* ret = GST_FLOW_ERROR; */
+                break;
             }
         }
     }
@@ -547,9 +569,12 @@ pad_chain (GstPad *pad,
         ret = GST_FLOW_UNEXPECTED;
     }
 
-#if !defined(ZERO_COPY)
-    gst_buffer_unref (buf);
-#endif /* !defined(ZERO_COPY) */
+leave:
+
+    if (!share_input_buffer)
+    {
+        gst_buffer_unref (buf);
+    }
 
     GST_LOG_OBJECT (self, "end");
 
