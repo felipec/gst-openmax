@@ -307,6 +307,7 @@ output_thread (gpointer cb_data)
         {
             GstBuffer *buf;
 
+#if 0
             /** @todo remove this check */
             if (G_LIKELY (!self->in_port->done))
             {
@@ -326,6 +327,7 @@ output_thread (gpointer cb_data)
                     gst_caps_unref (caps);
                 }
             }
+#endif
 
             /* buf is always null when the output buffer pointer isn't shared. */
             buf = omx_buffer->pAppPrivate;
