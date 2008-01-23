@@ -233,12 +233,14 @@ omx_setup (GstOmxBaseFilter *omx_base)
         param->nVersion.s.nVersionMajor = 1;
         param->nVersion.s.nVersionMinor = 1;
 
-        /* color_format = OMX_COLOR_FormatCbYCrY; */
+#if 0
+        /* TI specific hack. */
+        color_format = OMX_COLOR_FormatCbYCrY;
+        param->format.video.eColorFormat = color_format;
+#endif
 
         param->nPortIndex = 1;
         OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
-
-        param->format.video.eColorFormat = color_format;
 
         /* This is against the standard. nBufferSize is read-only. */
         /** @todo Keep it for now as it's needed for TI. */
