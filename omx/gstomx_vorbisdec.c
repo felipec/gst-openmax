@@ -37,11 +37,12 @@ generate_src_template ()
     GstCaps *caps = NULL;
 
     caps = gst_caps_new_simple ("audio/x-raw-int",
-                                "width", GST_TYPE_INT_RANGE, 8, 32,
-                                "depth", GST_TYPE_INT_RANGE, 8, 32,
                                 "rate", GST_TYPE_INT_RANGE, 8000, 48000,
                                 "signed", G_TYPE_BOOLEAN, TRUE,
                                 "channels", GST_TYPE_INT_RANGE, 1, 8,
+                                "endianness", G_TYPE_INT, G_BYTE_ORDER ? 1234 : 4321,
+                                "width", GST_TYPE_INT_RANGE, 8, 32,
+                                "depth", GST_TYPE_INT_RANGE, 8, 32,
                                 NULL);
 
     return caps;
@@ -138,12 +139,12 @@ settings_changed_cb (GOmxCore *core)
         GstCaps *new_caps;
 
         new_caps = gst_caps_new_simple ("audio/x-raw-int",
-                                        "width", G_TYPE_INT, 16,
-                                        "depth", G_TYPE_INT, 16,
                                         "rate", G_TYPE_INT, rate,
                                         "signed", G_TYPE_BOOLEAN, TRUE,
-                                        "endianness", G_TYPE_INT, G_BYTE_ORDER ? 1234 : 4321,
                                         "channels", G_TYPE_INT, channels,
+                                        "endianness", G_TYPE_INT, G_BYTE_ORDER ? 1234 : 4321,
+                                        "width", G_TYPE_INT, 16,
+                                        "depth", G_TYPE_INT, 16,
                                         NULL);
 
         GST_INFO_OBJECT (omx_base, "caps are: %" GST_PTR_FORMAT, new_caps);
@@ -164,6 +165,7 @@ type_instance_init (GTypeInstance *instance,
     GST_DEBUG_OBJECT (omx_base, "start");
 
     omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
+    omx_base->use_timestamps = FALSE;
 
     omx_base->gomx->settings_changed_cb = settings_changed_cb;
 }
