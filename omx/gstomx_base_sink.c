@@ -26,8 +26,6 @@
 
 #include <stdbool.h>
 
-#define OMX_LIBRARY_NAME "libomxil.so"
-
 enum
 {
     ARG_0,
@@ -365,7 +363,7 @@ type_instance_init (GTypeInstance *instance,
         gomx->client_data = self;
     }
 
-    self->omx_library = g_strdup (OMX_LIBRARY_NAME);
+    self->omx_library = g_strdup (DEFAULT_LIBRARY_NAME);
 
     GST_LOG_OBJECT (self, "end");
 }

@@ -24,8 +24,6 @@
 
 #include <string.h>
 
-#define OMX_LIBRARY_NAME "libomxil.so"
-
 static gboolean share_input_buffer = FALSE;
 static gboolean share_output_buffer = FALSE;
 
@@ -652,7 +650,7 @@ type_instance_init (GTypeInstance *instance,
     gst_element_add_pad (GST_ELEMENT (self), self->sinkpad);
     gst_element_add_pad (GST_ELEMENT (self), self->srcpad);
 
-    self->omx_library = g_strdup (OMX_LIBRARY_NAME);
+    self->omx_library = g_strdup (DEFAULT_LIBRARY_NAME);
 
     GST_LOG_OBJECT (self, "end");
 }

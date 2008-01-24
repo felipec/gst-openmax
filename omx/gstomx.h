@@ -26,10 +26,12 @@
 
 #include <config.h>
 
+G_BEGIN_DECLS
+
+#define DEFAULT_LIBRARY_NAME "libomxil.so.0"
+
 GST_DEBUG_CATEGORY_EXTERN (gstomx_debug);
 #define GST_CAT_DEFAULT gstomx_debug
-
-G_BEGIN_DECLS
 
 G_END_DECLS
 
