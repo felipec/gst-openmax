@@ -298,8 +298,9 @@ output_thread (gpointer cb_data)
             continue;
         }
 
-        GST_DEBUG_OBJECT (self, "buffer: size=%lu, len=%lu, flags=%lu",
-                          omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nFlags);
+        GST_DEBUG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, flags=%lu, offset=%lu, timestamp=%lld",
+                          omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nFlags,
+                          omx_buffer->nOffset, omx_buffer->nTimeStamp);
 
         if (G_LIKELY (omx_buffer->nFilledLen > 0))
         {
@@ -335,7 +336,9 @@ output_thread (gpointer cb_data)
                 GST_BUFFER_SIZE (buf) = omx_buffer->nFilledLen;
                 if (self->use_timestamps)
                 {
-                    GST_BUFFER_TIMESTAMP (buf) = omx_buffer->nTimeStamp * (GST_SECOND / OMX_TICKS_PER_SECOND);
+                    GST_BUFFER_TIMESTAMP (buf) = gst_util_uint64_scale_int (omx_buffer->nTimeStamp,
+                                                                            GST_SECOND,
+                                                                            OMX_TICKS_PER_SECOND);
                 }
 
                 omx_buffer->pAppPrivate = NULL;
@@ -362,7 +365,9 @@ output_thread (gpointer cb_data)
                     memcpy (GST_BUFFER_DATA (buf), omx_buffer->pBuffer + omx_buffer->nOffset, omx_buffer->nFilledLen);
                     if (self->use_timestamps)
                     {
-                        GST_BUFFER_TIMESTAMP (buf) = omx_buffer->nTimeStamp * (GST_SECOND / OMX_TICKS_PER_SECOND);
+                        GST_BUFFER_TIMESTAMP (buf) = gst_util_uint64_scale (omx_buffer->nTimeStamp,
+                                                                            GST_SECOND,
+                                                                            OMX_TICKS_PER_SECOND);
                     }
 
                     omx_buffer->nFilledLen = 0;
@@ -501,8 +506,9 @@ pad_chain (GstPad *pad,
 
             if (G_LIKELY (omx_buffer))
             {
-                GST_DEBUG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, offset=%lu",
-                                  omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nOffset);
+                GST_DEBUG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, flags=%lu, offset=%lu, timestamp=%lld",
+                                  omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nFlags,
+                                  omx_buffer->nOffset, omx_buffer->nTimeStamp);
 
                 if (omx_buffer->nOffset == 0 &&
                     share_input_buffer)
@@ -535,7 +541,9 @@ pad_chain (GstPad *pad,
 
                 if (self->use_timestamps)
                 {
-                    omx_buffer->nTimeStamp = GST_BUFFER_TIMESTAMP (buf) / (GST_SECOND / OMX_TICKS_PER_SECOND);
+                    omx_buffer->nTimeStamp = gst_util_uint64_scale_int (GST_BUFFER_TIMESTAMP (buf),
+                                                                        OMX_TICKS_PER_SECOND,
+                                                                        GST_SECOND);
                 }
 
                 GST_LOG_OBJECT (self, "release_buffer");
