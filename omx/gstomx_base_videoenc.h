@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef GSTOMX_MPEG4ENC_H
-#define GSTOMX_MPEG4ENC_H
+#ifndef GSTOMX_BASE_VIDEOENC_H
+#define GSTOMX_BASE_VIDEOENC_H
 
 #include <gst/gst.h>
 
@@ -28,26 +28,26 @@
 
 G_BEGIN_DECLS
 
-#define GST_OMX_MPEG4ENC(obj) (GstOmxMpeg4Enc *) (obj)
-#define GST_OMX_MPEG4ENC_TYPE (gst_omx_mpeg4enc_get_type ())
+#define GST_OMX_BASE_VIDEOENC(obj) (GstOmxBaseVideoEnc *) (obj)
+#define GST_OMX_BASE_VIDEOENC_TYPE (gst_omx_base_videoenc_get_type ())
 
-typedef struct GstOmxMpeg4Enc GstOmxMpeg4Enc;
-typedef struct GstOmxMpeg4EncClass GstOmxMpeg4EncClass;
+typedef struct GstOmxBaseVideoEnc GstOmxBaseVideoEnc;
+typedef struct GstOmxBaseVideoEncClass GstOmxBaseVideoEncClass;
 
-#include "gstomx_base_videoenc.h"
+#include "gstomx_base_filter.h"
 
-struct GstOmxMpeg4Enc
+struct GstOmxBaseVideoEnc
 {
-    GstOmxBaseVideoEnc omx_base;
+    GstOmxBaseFilter omx_base;
 };
 
-struct GstOmxMpeg4EncClass
+struct GstOmxBaseVideoEncClass
 {
-    GstOmxBaseVideoEncClass parent_class;
+    GstOmxBaseFilterClass parent_class;
 };
 
-GType gst_omx_mpeg4enc_get_type (void);
+GType gst_omx_base_videoenc_get_type (void);
 
 G_END_DECLS
 
-#endif /* GSTOMX_MPEG4ENC_H */
+#endif /* GSTOMX_BASE_VIDEOENC_H */
