@@ -108,7 +108,7 @@ settings_changed_cb (GOmxCore *core)
     {
         OMX_PARAM_PORTDEFINITIONTYPE *param;
 
-        param = (OMX_PARAM_PORTDEFINITIONTYPE *) calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
+        param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
 
         param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
         param->nVersion.s.nVersionMajor = 1;
@@ -155,19 +155,19 @@ sink_setcaps (GstPad *pad,
               GstCaps *caps)
 {
     GstStructure *structure;
-    GstOmxBaseVideoDec *omx_base;
-    GstOmxBaseFilter *omx_base_filter;
+    GstOmxBaseVideoDec *self;
+    GstOmxBaseFilter *omx_base;
     GOmxCore *gomx;
     OMX_PARAM_PORTDEFINITIONTYPE *param;
     gint width = 0;
     gint height = 0;
 
-    omx_base = GST_OMX_BASE_VIDEODEC (GST_PAD_PARENT (pad));
-    omx_base_filter = GST_OMX_BASE_FILTER (omx_base);
+    self = GST_OMX_BASE_VIDEODEC (GST_PAD_PARENT (pad));
+    omx_base = GST_OMX_BASE_FILTER (self);
 
-    gomx = (GOmxCore *) omx_base_filter->gomx;
+    gomx = (GOmxCore *) omx_base->gomx;
 
-    GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
+    GST_INFO_OBJECT (self, "setcaps (sink): %" GST_PTR_FORMAT, caps);
 
     g_return_val_if_fail (gst_caps_get_size (caps) == 1, FALSE);
 
@@ -189,24 +189,6 @@ sink_setcaps (GstPad *pad,
         param->format.video.nFrameWidth = width;
         param->format.video.nFrameHeight = height;
 
-        /* This is against the standard. nBufferSize is read-only. */
-        /** @todo the component should do this instead */
-        param->nBufferSize = width * height * 4;
-
-        param->format.video.eCompressionFormat = omx_base->compression_format;
-
-        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
-    }
-
-    /** @todo the component should do this instead */
-    /* Output port configuration. */
-    {
-        param->nPortIndex = 1;
-        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
-
-        param->format.video.nFrameWidth = width;
-        param->format.video.nFrameHeight = height;
-
         OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
     }
 
@@ -218,8 +200,10 @@ sink_setcaps (GstPad *pad,
 static void
 omx_setup (GstOmxBaseFilter *omx_base)
 {
+    GstOmxBaseVideoDec *self;
     GOmxCore *gomx;
 
+    self = GST_OMX_BASE_VIDEODEC (omx_base);
     gomx = (GOmxCore *) omx_base->gomx;
 
     GST_INFO_OBJECT (omx_base, "begin");
@@ -227,29 +211,50 @@ omx_setup (GstOmxBaseFilter *omx_base)
     {
         OMX_PARAM_PORTDEFINITIONTYPE *param;
         OMX_COLOR_FORMATTYPE color_format;
+        gint width, height;
 
         param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
         param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
         param->nVersion.s.nVersionMajor = 1;
         param->nVersion.s.nVersionMinor = 1;
 
-#if 0
-        /* TI specific hack. */
-        color_format = OMX_COLOR_FormatCbYCrY;
-        param->format.video.eColorFormat = color_format;
-#endif
-
-        param->nPortIndex = 1;
-        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
-
-        /* This is against the standard. nBufferSize is read-only. */
-        /** @todo Keep it for now as it's needed for TI. */
+        /* Input port configuration. */
         {
-            gint width, height;
+            param->nPortIndex = 0;
+            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+
+            param->format.video.eCompressionFormat = self->compression_format;
+
+            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+        }
+
+        /* TI specific hacks. */
+#if 0
+        {
+            param->nPortIndex = 0;
+            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
 
             width = param->format.video.nFrameWidth;
             height = param->format.video.nFrameHeight;
 
+            /* this is against the standard; nBufferSize is read-only. */
+            param->nBufferSize = (width * height) / 2;
+
+            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+        }
+
+        /* the component should do this instead */
+        {
+            param->nPortIndex = 1;
+            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+
+            param->format.video.nFrameWidth = width;
+            param->format.video.nFrameHeight = height;
+
+            color_format = OMX_COLOR_FormatCbYCrY;
+            param->format.video.eColorFormat = color_format;
+
+            /* this is against the standard; nBufferSize is read-only. */
             switch (color_format)
             {
                 case OMX_COLOR_FormatYCbYCr:
@@ -262,9 +267,10 @@ omx_setup (GstOmxBaseFilter *omx_base)
                 default:
                     break;
             }
-        }
 
-        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+        }
+#endif
 
         free (param);
     }

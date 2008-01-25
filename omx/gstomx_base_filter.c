@@ -381,7 +381,8 @@ output_thread (gpointer cb_data)
                 }
                 else
                 {
-                    GST_WARNING_OBJECT (self, "couldn't allocate buffer");
+                    GST_WARNING_OBJECT (self, "couldn't allocate buffer of size %d",
+                                        omx_buffer->nFilledLen);
                 }
             }
         }
