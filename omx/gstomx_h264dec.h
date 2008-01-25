@@ -38,12 +38,12 @@ typedef struct GstOmxH264DecClass GstOmxH264DecClass;
 
 struct GstOmxH264Dec
 {
-	GstOmxBaseVideoDec omx_base;
+    GstOmxBaseVideoDec omx_base;
 };
 
 struct GstOmxH264DecClass
 {
-	GstOmxBaseVideoDecClass parent_class;
+    GstOmxBaseVideoDecClass parent_class;
 };
 
 GType gst_omx_h264dec_get_type (void);

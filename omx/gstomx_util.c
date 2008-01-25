@@ -670,7 +670,7 @@ got_buffer (GOmxCore *core,
 
     if (G_LIKELY (port))
     {
-		g_omx_port_push_buffer (port, omx_buffer);
+        g_omx_port_push_buffer (port, omx_buffer);
 
         switch (port->type)
         {

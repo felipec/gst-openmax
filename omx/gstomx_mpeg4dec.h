@@ -38,12 +38,12 @@ typedef struct GstOmxMpeg4DecClass GstOmxMpeg4DecClass;
 
 struct GstOmxMpeg4Dec
 {
-	GstOmxBaseVideoDec omx_base;
+    GstOmxBaseVideoDec omx_base;
 };
 
 struct GstOmxMpeg4DecClass
 {
-	GstOmxBaseVideoDecClass parent_class;
+    GstOmxBaseVideoDecClass parent_class;
 };
 
 GType gst_omx_mpeg4dec_get_type (void);

@@ -224,15 +224,15 @@ sink_setcaps (GstPad *pad,
 
     /* Input port configuration. */
     {
-		param->nPortIndex = 0;
-		OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+        param->nPortIndex = 0;
+        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
 
-		param->format.video.nBitrate = 512000;
-		param->format.video.nBitrate = 64000 * 4;
+        param->format.video.nBitrate = 512000;
+        param->format.video.nBitrate = 64000 * 4;
 
-		param->format.video.nFrameWidth = width;
-		param->format.video.nFrameHeight = height;
-		param->format.video.xFramerate = framerate;
+        param->format.video.nFrameWidth = width;
+        param->format.video.nFrameHeight = height;
+        param->format.video.xFramerate = framerate;
 
         {
             OMX_COLOR_FORMATTYPE color_format;
@@ -255,66 +255,66 @@ sink_setcaps (GstPad *pad,
             param->format.video.eColorFormat = color_format;
         }
 
-		OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
-	}
+        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+    }
 
     /* Output port configuration. */
-	{
-		param->nPortIndex = 1;
-		OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+    {
+        param->nPortIndex = 1;
+        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
 
         {
             OMX_VIDEO_CODINGTYPE compression_format;
 
             compression_format = OMX_VIDEO_CodingMPEG4;
 
-			param->nBufferSize = (width * height / 2); /** @todo keep an eye on that */
+            param->nBufferSize = (width * height / 2); /** @todo keep an eye on that */
 
             param->format.video.eCompressionFormat = compression_format;
         }
 
-		param->format.video.nFrameWidth = width;
-		param->format.video.nFrameHeight = height;
-		param->format.video.xFramerate = framerate;
+        param->format.video.nFrameWidth = width;
+        param->format.video.nFrameHeight = height;
+        param->format.video.xFramerate = framerate;
 
-		OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
-	}
+        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+    }
 
     free (param);
 
     /* Control Rate */
     {
-		OMX_VIDEO_PARAM_BITRATETYPE *param;
-		param = (OMX_VIDEO_PARAM_BITRATETYPE *) calloc (1, sizeof (OMX_VIDEO_PARAM_BITRATETYPE));
+        OMX_VIDEO_PARAM_BITRATETYPE *param;
+        param = (OMX_VIDEO_PARAM_BITRATETYPE *) calloc (1, sizeof (OMX_VIDEO_PARAM_BITRATETYPE));
 
-		param->nSize = sizeof (OMX_VIDEO_PARAM_BITRATETYPE);
-		param->nPortIndex = 1;
+        param->nSize = sizeof (OMX_VIDEO_PARAM_BITRATETYPE);
+        param->nPortIndex = 1;
 
-		OMX_GetParameter (gomx->omx_handle, OMX_IndexParamVideoBitrate, param);
+        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamVideoBitrate, param);
 
-		param->eControlRate = OMX_Video_ControlRateVariable;
+        param->eControlRate = OMX_Video_ControlRateVariable;
 
-		OMX_SetParameter (gomx->omx_handle, OMX_IndexParamVideoBitrate, param);
+        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamVideoBitrate, param);
 
-		free (param);
-	}
+        free (param);
+    }
 
     /* MPEG4 Level */
-	{
-		OMX_VIDEO_PARAM_MPEG4TYPE *param;
-		param = (OMX_VIDEO_PARAM_MPEG4TYPE *) calloc (1, sizeof (OMX_VIDEO_PARAM_MPEG4TYPE));
+    {
+        OMX_VIDEO_PARAM_MPEG4TYPE *param;
+        param = (OMX_VIDEO_PARAM_MPEG4TYPE *) calloc (1, sizeof (OMX_VIDEO_PARAM_MPEG4TYPE));
 
-		param->nSize = sizeof (OMX_VIDEO_PARAM_MPEG4TYPE);
+        param->nSize = sizeof (OMX_VIDEO_PARAM_MPEG4TYPE);
 
         param->nPortIndex = 1;
-		OMX_GetParameter (gomx->omx_handle, OMX_IndexParamVideoMpeg4, param);
+        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamVideoMpeg4, param);
 
-		param->eLevel = OMX_VIDEO_MPEG4Level4; /** @todo calculate this automatically */
+        param->eLevel = OMX_VIDEO_MPEG4Level4; /** @todo calculate this automatically */
 
-		OMX_SetParameter (gomx->omx_handle, OMX_IndexParamVideoMpeg4, param);
+        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamVideoMpeg4, param);
 
-		free (param);
-	}
+        free (param);
+    }
 
     return gst_pad_set_caps (pad, caps);
 }

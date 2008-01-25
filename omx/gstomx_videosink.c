@@ -204,25 +204,25 @@ setcaps (GstBaseSink *gst_sink,
             free (param);
         }
 
-		{
-			OMX_CONFIG_ROTATIONTYPE *config;
+        {
+            OMX_CONFIG_ROTATIONTYPE *config;
 
-			config = calloc (1, sizeof (OMX_CONFIG_ROTATIONTYPE));
+            config = calloc (1, sizeof (OMX_CONFIG_ROTATIONTYPE));
             config->nSize = sizeof (OMX_CONFIG_ROTATIONTYPE);
             config->nVersion.s.nVersionMajor = 1;
             config->nVersion.s.nVersionMinor = 1;
 
-			config->nPortIndex = 0;
+            config->nPortIndex = 0;
             OMX_GetConfig (gomx->omx_handle, OMX_IndexConfigCommonScale, config);
 
-			config->nRotation = self->rotation;
+            config->nRotation = self->rotation;
 
-			OMX_SetConfig (gomx->omx_handle, OMX_IndexConfigCommonRotate, config);
+            OMX_SetConfig (gomx->omx_handle, OMX_IndexConfigCommonRotate, config);
 
             free (config);
-		}
+        }
 
-		{
+        {
             OMX_CONFIG_SCALEFACTORTYPE *config;
 
             config = calloc (1, sizeof (OMX_CONFIG_SCALEFACTORTYPE));
@@ -326,11 +326,10 @@ type_class_init (gpointer g_class,
                                                         "How much to scale the image in the Y axis (100 means nothing)",
                                                         0, G_MAXUINT, 100, G_PARAM_READWRITE));
 
-	g_object_class_install_property (gobject_class, ARG_ROTATION,
-									 g_param_spec_uint ("rotation", "Rotation",
-														"Rotation angle",
-														0, G_MAXUINT, 360, G_PARAM_READWRITE));
-
+    g_object_class_install_property (gobject_class, ARG_ROTATION,
+                                     g_param_spec_uint ("rotation", "Rotation",
+                                                        "Rotation angle",
+                                                        0, G_MAXUINT, 360, G_PARAM_READWRITE));
 }
 
 static void

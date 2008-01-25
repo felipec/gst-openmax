@@ -165,7 +165,7 @@ sink_setcaps (GstPad *pad,
     omx_base = GST_OMX_BASE_VIDEODEC (GST_PAD_PARENT (pad));
     omx_base_filter = GST_OMX_BASE_FILTER (omx_base);
 
-	gomx = (GOmxCore *) omx_base_filter->gomx;
+    gomx = (GOmxCore *) omx_base_filter->gomx;
 
     GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
 
@@ -190,15 +190,15 @@ sink_setcaps (GstPad *pad,
         param->format.video.nFrameHeight = height;
 
         /* This is against the standard. nBufferSize is read-only. */
-		/** @todo the component should do this instead */
+        /** @todo the component should do this instead */
         param->nBufferSize = width * height * 4;
 
-		param->format.video.eCompressionFormat = omx_base->compression_format;
+        param->format.video.eCompressionFormat = omx_base->compression_format;
 
         OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
     }
 
-	/** @todo the component should do this instead */
+    /** @todo the component should do this instead */
     /* Output port configuration. */
     {
         param->nPortIndex = 1;

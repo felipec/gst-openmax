@@ -39,14 +39,14 @@ typedef struct GstOmxBaseVideoDecClass GstOmxBaseVideoDecClass;
 
 struct GstOmxBaseVideoDec
 {
-	GstOmxBaseFilter omx_base;
+    GstOmxBaseFilter omx_base;
 
-	OMX_VIDEO_CODINGTYPE compression_format;
+    OMX_VIDEO_CODINGTYPE compression_format;
 };
 
 struct GstOmxBaseVideoDecClass
 {
-	GstOmxBaseFilterClass parent_class;
+    GstOmxBaseFilterClass parent_class;
 };
 
 GType gst_omx_base_videodec_get_type (void);
