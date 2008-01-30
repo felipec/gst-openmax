@@ -304,7 +304,6 @@ output_thread (gpointer cb_data)
         {
             GstBuffer *buf;
 
-#if 0
             /** @todo remove this check */
             if (G_LIKELY (!self->in_port->done))
             {
@@ -315,7 +314,7 @@ output_thread (gpointer cb_data)
                 if (!caps)
                 {
                     /** @todo We shouldn't be doing this. */
-                    GST_WARNING_OBJECT (self, "somebody didn't do his work");
+                    GST_WARNING_OBJECT (self, "faking settings changed notification");
                     gomx->settings_changed_cb (gomx);
                 }
                 else
@@ -324,7 +323,6 @@ output_thread (gpointer cb_data)
                     gst_caps_unref (caps);
                 }
             }
-#endif
 
             /* buf is always null when the output buffer pointer isn't shared. */
             buf = omx_buffer->pAppPrivate;
