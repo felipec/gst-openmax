@@ -22,9 +22,7 @@
 #include "gstomx_base_sink.h"
 #include "gstomx.h"
 
-#include <string.h>
-
-#include <stdbool.h>
+static gboolean share_input_buffer = FALSE;
 
 enum
 {
@@ -72,7 +70,7 @@ start (GstBaseSink *gst_base)
 
     GST_LOG_OBJECT (self, "end");
 
-    return true;
+    return TRUE;
 }
 
 static gboolean
@@ -92,7 +90,7 @@ stop (GstBaseSink *gst_base)
 
     GST_LOG_OBJECT (self, "end");
 
-    return true;
+    return TRUE;
 }
 
 static void
@@ -128,7 +126,7 @@ render (GstBaseSink *gst_base,
 
     GST_LOG_OBJECT (self, "state: %d", gomx->omx_state);
 
-    if (gomx->omx_state == OMX_StateLoaded)
+    if (G_UNLIKELY (gomx->omx_state == OMX_StateLoaded))
     {
         GST_INFO_OBJECT (self, "omx: prepare");
 
@@ -138,66 +136,70 @@ render (GstBaseSink *gst_base,
 
     in_port = self->in_port;
 
-    if (!in_port->done)
+    if (G_LIKELY (!in_port->done))
     {
-        switch (gomx->omx_state)
+        guint buffer_offset = 0;
+
+        if (G_UNLIKELY (gomx->omx_state == OMX_StateIdle))
         {
-            case OMX_StateIdle:
-                {
-                    GST_INFO_OBJECT (self, "omx: play");
-                    g_omx_core_start (gomx);
-                }
-                break;
-            default:
-                break;
+            GST_INFO_OBJECT (self, "omx: play");
+            g_omx_core_start (gomx);
         }
 
-        switch (gomx->omx_state)
+        if (G_UNLIKELY (gomx->omx_state != OMX_StateExecuting))
         {
-            case OMX_StateExecuting:
-                /* OK */
-                break;
-            default:
-                GST_ERROR_OBJECT (self, "Whoa! very wrong");
-                break;
+            GST_ERROR_OBJECT (self, "Whoa! very wrong");
         }
 
+        while (G_LIKELY (buffer_offset < GST_BUFFER_SIZE (buf)))
         {
             OMX_BUFFERHEADERTYPE *omx_buffer;
 
             GST_LOG_OBJECT (self, "request_buffer");
             omx_buffer = g_omx_port_request_buffer (in_port);
 
-            if (omx_buffer)
+            if (G_LIKELY (omx_buffer))
             {
-                GST_DEBUG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, offset=%lu",
-                                  omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nOffset);
+                GST_DEBUG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, flags=%lu, offset=%lu, timestamp=%lld",
+                                  omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nFlags,
+                                  omx_buffer->nOffset, omx_buffer->nTimeStamp);
 
+                if (omx_buffer->nOffset == 0 &&
+                    share_input_buffer)
                 {
-                    GstBuffer *old_buf;
-                    old_buf = omx_buffer->pAppPrivate;
+                    {
+                        GstBuffer *old_buf;
+                        old_buf = omx_buffer->pAppPrivate;
 
-                    if (old_buf)
-                    {
-                        gst_buffer_unref (old_buf);
+                        if (old_buf)
+                        {
+                            gst_buffer_unref (old_buf);
+                        }
+                        else if (omx_buffer->pBuffer)
+                        {
+                            g_free (omx_buffer->pBuffer);
+                        }
                     }
-                    else if (omx_buffer->pBuffer)
-                    {
-                        g_free (omx_buffer->pBuffer);
-                    }
+
+                    /* We are going to use this. */
+                    gst_buffer_ref (buf);
+
+                    omx_buffer->pBuffer = GST_BUFFER_DATA (buf);
+                    omx_buffer->nAllocLen = GST_BUFFER_SIZE (buf);
+                    omx_buffer->nFilledLen = GST_BUFFER_SIZE (buf);
+                    omx_buffer->pAppPrivate = buf;
                 }
-
-                /* We are going to use this. */
-                gst_buffer_ref (buf);
-
-                omx_buffer->nOffset = 0;
-                omx_buffer->pBuffer = GST_BUFFER_DATA (buf);
-                omx_buffer->nAllocLen = GST_BUFFER_SIZE (buf);
-                omx_buffer->nFilledLen = GST_BUFFER_SIZE (buf);
-                omx_buffer->pAppPrivate = buf;
+                else
+                {
+                    omx_buffer->nFilledLen = MIN (GST_BUFFER_SIZE (buf) - buffer_offset,
+                                                  omx_buffer->nAllocLen - omx_buffer->nOffset);
+                    memcpy (omx_buffer->pBuffer + omx_buffer->nOffset, GST_BUFFER_DATA (buf) + buffer_offset, omx_buffer->nFilledLen);
+                }
 
                 GST_LOG_OBJECT (self, "release_buffer");
                 g_omx_port_release_buffer (in_port, omx_buffer);
+
+                buffer_offset += omx_buffer->nFilledLen;
             }
             else
             {
@@ -245,7 +247,7 @@ event (GstBaseSink *gst_base,
 
     GST_LOG_OBJECT (self, "end");
 
-    return true;
+    return TRUE;
 }
 
 static void

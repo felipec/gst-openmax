@@ -22,8 +22,6 @@
 #include "gstomx_base_filter.h"
 #include "gstomx.h"
 
-#include <string.h>
-
 static gboolean share_input_buffer = FALSE;
 static gboolean share_output_buffer = FALSE;
 
@@ -450,7 +448,6 @@ pad_chain (GstPad *pad,
     GOmxPort *in_port;
     GstOmxBaseFilter *self;
     GstFlowReturn ret = GST_FLOW_OK;
-    guint buffer_offset = 0;
 
     self = GST_OMX_BASE_FILTER (GST_OBJECT_PARENT (pad));
 
@@ -483,6 +480,8 @@ pad_chain (GstPad *pad,
 
     if (G_LIKELY (!in_port->done))
     {
+        guint buffer_offset = 0;
+
         if (G_UNLIKELY (gomx->omx_state == OMX_StateIdle))
         {
             GST_INFO_OBJECT (self, "omx: play");

@@ -22,10 +22,6 @@
 #include "gstomx_audiosink.h"
 #include "gstomx.h"
 
-#include <string.h>
-
-#include <stdbool.h>
-
 #define OMX_COMPONENT_NAME "OMX.st.alsa.alsasink"
 
 static GstOmxBaseSinkClass *parent_class = NULL;
@@ -35,7 +31,14 @@ generate_sink_template ()
 {
     GstCaps *caps;
 
-    caps = gst_caps_new_any ();
+    caps = gst_caps_new_simple ("audio/x-raw-int",
+                                "endianness", G_TYPE_INT, G_BYTE_ORDER,
+                                "width", GST_TYPE_INT_RANGE, 8, 32,
+                                "depth", GST_TYPE_INT_RANGE, 8, 32,
+                                "rate", GST_TYPE_INT_RANGE, 8000, 48000,
+                                "signed", G_TYPE_BOOLEAN, TRUE,
+                                "channels", GST_TYPE_INT_RANGE, 1, 8,
+                                NULL);
 
     return caps;
 }
@@ -54,7 +57,7 @@ type_base_init (gpointer g_class)
 
         details.longname = "OpenMAX IL audiosink element";
         details.klass = "None";
-        details.description = "Does nothing";
+        details.description = "Autputs audio";
         details.author = "Felipe Contreras";
 
         gst_element_class_set_details (element_class, &details);
@@ -102,7 +105,7 @@ setcaps (GstBaseSink *gst_sink,
         {
             gint endianness;
             gst_structure_get_int (structure, "endianness", &endianness);
-            is_bigendian = (endianness == 1234) ? false : true;
+            is_bigendian = (endianness == 1234) ? FALSE : TRUE;
         }
 
         {
@@ -126,7 +129,7 @@ setcaps (GstBaseSink *gst_sink,
         }
     }
 
-    return true;
+    return TRUE;
 }
 
 static void
