@@ -119,7 +119,7 @@ g_omx_request_imp (const gchar *name)
         imp = g_omx_imp_new (name);
         if (!imp)
             return NULL;
-        g_hash_table_insert (implementations, (gpointer) name, imp);
+        g_hash_table_insert (implementations, g_strdup (name), imp);
     }
     if (imp->client_count == 0)
     {
