@@ -18,7 +18,41 @@
 	* Add comment about wring to a read-only parameter.
 	* Make logging level 4(DEBUG) more verbose.
 
+2008-02-01	Felipe Contreras <felipe.contreras@gmail.com>
+	* Update ChangeLog.
+	* Fix amrnbdec default component name.
+
+2008-01-30	Felipe Contreras <felipe.contreras@gmail.com>
+	* Update audiosink and other cleanups.
+	* Allow fake settings changed notification for now.
+	* Properly allocate memory that would eventually be freed.
+	* Free pBuffer data.
+
+2008-01-25	Felipe Contreras <felipe.contreras@gmail.com>
+	* New base videoenc class.
+	* Set OpenMAX parameters more properly for video elements.
+	* Whitespace fixes.
+
+2008-01-24	Felipe Contreras <felipe.contreras@gmail.com>
+	* Use "libomx.so.0" by default.
+	* Improve timestamp handling on base filter.
+	* Fix vorbisdec.
+
+2008-01-23	Felipe Contreras <felipe.contreras@gmail.com>
+	* Use proper inline keywords.
+	* Remove unneeded stuff on util, and use inline.
+	* Enforce OpenMAX components to call the settings changed event.
+	* Add GLib misc macros for base filter.
+	* More zero-copy flexibility and fixes on base filter.
+	* Don't try to set wrong color format on base videodec.
+
 2008-01-22	Felipe Contreras <felipe.contreras@gmail.com>
+	* Dumb fixes.
+	* Rename alsasink to audiosink.
+	* Don't use reserved prefix on header definitions.
+	* Update copyright.
+	* New videodec base element.
+	* Reorganize parameters's setup for H.263 decoder.
 	* Update ChangeLog.
 
 2008-01-21	Felipe Contreras <felipe.contreras@gmail.com>
