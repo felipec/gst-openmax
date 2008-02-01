@@ -27,7 +27,7 @@
 
 #include <stdbool.h>
 
-#define OMX_COMPONENT_NAME "OMX.Nokia.audio_decoder.amrnb.mcu"
+#define OMX_COMPONENT_NAME "OMX.st.audio_decoder.amrnb"
 
 static GstOmxBaseFilterClass *parent_class = NULL;
 
