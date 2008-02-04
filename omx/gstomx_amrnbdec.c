@@ -53,7 +53,7 @@ generate_sink_template ()
 {
     GstCaps *caps;
 
-    caps = gst_caps_new_simple ("audio/x-amr-nb-sh",
+    caps = gst_caps_new_simple ("audio/AMR",
                                 "rate", GST_TYPE_INT_RANGE, 8000, 48000,
                                 "channels", GST_TYPE_INT_RANGE, 1, 8,
                                 NULL);
