@@ -23,3 +23,5 @@ libgstomx_la_SOURCES = gstomx.c gstomx.h \
 libgstomx_la_CFLAGS = -I$(srcdir)/headers $(GST_CFLAGS) $(GST_BASE_CFLAGS)
 libgstomx_la_LIBADD = $(GST_LIBS) $(GST_BASE_LIBS)
 libgstomx_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
+
+EXTRA_DIST = headers
