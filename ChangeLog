@@ -18,6 +18,11 @@
 	* Add comment about wring to a read-only parameter.
 	* Make logging level 4(DEBUG) more verbose.
 
+2008-02-04	Felipe Contreras <felipe.contreras@gmail.com>
+	* Update ChangeLog.
+	* Add Khronos headers to the distribution.
+	* Update README.
+
 2008-02-01	Felipe Contreras <felipe.contreras@gmail.com>
 	* Update ChangeLog.
 	* Fix amrnbdec default component name.
