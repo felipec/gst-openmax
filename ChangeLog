@@ -1,23 +1,4 @@
 
-2007-12-12	Felipe Contreras <felipe.contreras@gmail.com>
-	* Update ChangeLog.
-	* Fixes for non-zero-copy behavior.
-	* Upgrade the rank of AAC and AMR-NB decoders.
-	* Modify the MP3 decoder to use parsed input stream.
-	* Don't crash if the GStreamer input buffer are owned by the previous element.
-	* Modify AAC decoder temporarily to allow decoding without a parser.
-	* Add omx_setup to set some component configurations early.
-
-2007-12-07	Felipe Contreras <felipe.contreras@gmail.com>
-	* Small cleanups for AAC decoder.
-	* Add compilation time flag for zero-copy.
-	* Add AMR-NB decoder wrapper.
-
-2007-11-23	Felipe Contreras <felipe.contreras@gmail.com>
-	* Add multiple new component wrappers.
-	* Add comment about wring to a read-only parameter.
-	* Make logging level 4(DEBUG) more verbose.
-
 2008-02-04	Felipe Contreras <felipe.contreras@gmail.com>
 	* Update ChangeLog.
 	* Add Khronos headers to the distribution.
