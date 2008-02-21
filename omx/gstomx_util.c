@@ -209,17 +209,6 @@ g_omx_core_free (GOmxCore *core)
     g_omx_sem_free (core->done_sem);
     g_omx_sem_free (core->state_sem);
 
-    {
-        gint index;
-        for (index = 0; index < core->ports->len; index++)
-        {
-            GOmxPort *port;
-            port = g_omx_core_get_port (core, index);
-            g_omx_port_free (port);
-        }
-        g_ptr_array_free (core->ports, TRUE);
-    }
-
     g_free (core);
 }
 
@@ -357,6 +346,18 @@ g_omx_core_finish (GOmxCore *core)
     }
 
     wait_for_state (core, OMX_StateLoaded);
+
+    {
+        gint index;
+        for (index = 0; index < core->ports->len; index++)
+        {
+            GOmxPort *port;
+            port = g_omx_core_get_port (core, index);
+            g_omx_port_free (port);
+        }
+        g_ptr_array_free (core->ports, TRUE);
+        core->ports = NULL;
+    }
 }
 
 static void
