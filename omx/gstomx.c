@@ -24,6 +24,7 @@
 #include "gstomx_mpeg4dec.h"
 #include "gstomx_h263dec.h"
 #include "gstomx_h264dec.h"
+#include "gstomx_wmvdec.h"
 #include "gstomx_mpeg4enc.h"
 #include "gstomx_h263enc.h"
 #include "gstomx_vorbisdec.h"
@@ -64,6 +65,11 @@ plugin_init (GstPlugin *plugin)
     }
 
     if (!gst_element_register (plugin, "omx_h264dec", DEFAULT_RANK, GST_OMX_H264DEC_TYPE))
+    {
+        return false;
+    }
+
+    if (!gst_element_register (plugin, "omx_wmvdec", DEFAULT_RANK, GST_OMX_WMVDEC_TYPE))
     {
         return false;
     }
