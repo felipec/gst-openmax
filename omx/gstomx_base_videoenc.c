@@ -48,13 +48,11 @@ generate_sink_template ()
         gst_value_set_fourcc (&val, GST_MAKE_FOURCC ('I', '4', '2', '0'));
         gst_value_list_append_value (&list, &val);
 
-#if 0
         gst_value_set_fourcc (&val, GST_MAKE_FOURCC ('Y', 'U', 'Y', '2'));
         gst_value_list_append_value (&list, &val);
 
         gst_value_set_fourcc (&val, GST_MAKE_FOURCC ('U', 'Y', 'V', 'Y'));
         gst_value_list_append_value (&list, &val);
-#endif
 
         gst_structure_set_value (struc, "format", &list);
 
@@ -141,6 +139,9 @@ sink_setcaps (GstPad *pad,
                 case GST_MAKE_FOURCC ('Y', 'U', 'Y', '2'):
                     color_format = OMX_COLOR_FormatYCbYCr;
                     break;
+                case GST_MAKE_FOURCC ('U', 'Y', 'V', 'Y'):
+                    color_format = OMX_COLOR_FormatCbYCrY;
+                    break;
             }
         }
     }
@@ -156,9 +157,6 @@ sink_setcaps (GstPad *pad,
         {
             param->nPortIndex = 0;
             OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
-
-            /** @todo properly read this from properties */
-            param->format.video.nBitrate = 512000;
 
             param->format.video.nFrameWidth = width;
             param->format.video.nFrameHeight = height;
@@ -203,11 +201,16 @@ omx_setup (GstOmxBaseFilter *omx_base)
 
             param->format.video.eCompressionFormat = self->compression_format;
 
+            /** @todo this should be set with a property */
+            param->format.video.nBitrate = 512000;
+
             OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
         }
 
-        /* TI specific hacks. */
-#if 0
+        /* some workarounds. */
+        /* required for TI components. */
+#if 1
+        /* the component should do this instead */
         {
             param->nPortIndex = 0;
             OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
@@ -225,7 +228,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
                     param->nBufferSize = (width * height) * 2;
                     break;
                 case OMX_COLOR_FormatYUV420Planar:
-                    param->nBufferSize = (width * height) * 1.5;
+                    param->nBufferSize = (width * height) * 3 / 2;
                     break;
                 default:
                     break;

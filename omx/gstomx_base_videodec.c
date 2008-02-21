@@ -228,8 +228,9 @@ omx_setup (GstOmxBaseFilter *omx_base)
             OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
         }
 
-        /* TI specific hacks. */
-#if 0
+        /* some workarounds. */
+        /* required for TI components. */
+#if 1
         {
             param->nPortIndex = 0;
             OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
@@ -262,7 +263,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
                     param->nBufferSize = (width * height) * 2;
                     break;
                 case OMX_COLOR_FormatYUV420Planar:
-                    param->nBufferSize = (width * height) * 1.5;
+                    param->nBufferSize = (width * height) * 3 / 2;
                     break;
                 default:
                     break;
