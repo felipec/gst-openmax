@@ -163,6 +163,7 @@ sink_setcaps (GstPad *pad,
             param->format.video.nFrameWidth = width;
             param->format.video.nFrameHeight = height;
             param->format.video.xFramerate = framerate;
+            param->format.video.eColorFormat = color_format;
 
             OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
         }
@@ -214,6 +215,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
             width = param->format.video.nFrameWidth;
             height = param->format.video.nFrameHeight;
             framerate = param->format.video.xFramerate;
+            color_format = param->format.video.eColorFormat;
 
             /* this is against the standard; nBufferSize is read-only. */
             switch (color_format)
