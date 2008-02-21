@@ -29,6 +29,7 @@
 #include "gstomx_mp3dec.h"
 #include "gstomx_aacdec.h"
 #include "gstomx_amrnbdec.h"
+#include "gstomx_amrwbdec.h"
 #include "gstomx_audiosink.h"
 #include "gstomx_videosink.h"
 #include "gstomx_filereadersrc.h"
@@ -82,6 +83,11 @@ plugin_init (GstPlugin *plugin)
     }
 
     if (!gst_element_register (plugin, "omx_amrnbdec", DEFAULT_RANK, GST_OMX_AMRNBDEC_TYPE))
+    {
+        return false;
+    }
+
+    if (!gst_element_register (plugin, "omx_amrwbdec", DEFAULT_RANK, GST_OMX_AMRWBDEC_TYPE))
     {
         return false;
     }
