@@ -131,13 +131,16 @@ static void
 type_instance_init (GTypeInstance *instance,
                     gpointer g_class)
 {
-    GstOmxBaseFilter *omx_base;
+    GstOmxBaseFilter *omx_base_filter;
+    GstOmxBaseVideoEnc *omx_base;
 
-    omx_base = GST_OMX_BASE_FILTER (instance);
+    omx_base_filter = GST_OMX_BASE_FILTER (instance);
+    omx_base = GST_OMX_BASE_VIDEOENC (instance);
 
-    omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
+    omx_base_filter->omx_component = g_strdup (OMX_COMPONENT_NAME);
+    omx_base->compression_format = OMX_VIDEO_CodingMPEG4;
 
-    omx_base->gomx->settings_changed_cb = settings_changed_cb;
+    omx_base_filter->gomx->settings_changed_cb = settings_changed_cb;
 }
 
 GType

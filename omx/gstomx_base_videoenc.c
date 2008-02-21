@@ -176,8 +176,10 @@ sink_setcaps (GstPad *pad,
 static void
 omx_setup (GstOmxBaseFilter *omx_base)
 {
+    GstOmxBaseVideoEnc *self;
     GOmxCore *gomx;
 
+    self = GST_OMX_BASE_VIDEOENC (omx_base);
     gomx = (GOmxCore *) omx_base->gomx;
 
     GST_INFO_OBJECT (omx_base, "begin");
@@ -198,7 +200,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
             param->nPortIndex = 1;
             OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
 
-            param->format.video.eCompressionFormat = OMX_VIDEO_CodingMPEG4;
+            param->format.video.eCompressionFormat = self->compression_format;
 
             OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
         }

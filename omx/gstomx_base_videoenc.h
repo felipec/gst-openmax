@@ -39,6 +39,8 @@ typedef struct GstOmxBaseVideoEncClass GstOmxBaseVideoEncClass;
 struct GstOmxBaseVideoEnc
 {
     GstOmxBaseFilter omx_base;
+
+    OMX_VIDEO_CODINGTYPE compression_format;
 };
 
 struct GstOmxBaseVideoEncClass
