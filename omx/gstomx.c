@@ -26,6 +26,7 @@
 #include "gstomx_h264dec.h"
 #include "gstomx_wmvdec.h"
 #include "gstomx_mpeg4enc.h"
+#include "gstomx_avcenc.h"
 #include "gstomx_h263enc.h"
 #include "gstomx_vorbisdec.h"
 #include "gstomx_mp3dec.h"
@@ -75,6 +76,11 @@ plugin_init (GstPlugin *plugin)
     }
 
     if (!gst_element_register (plugin, "omx_mpeg4enc", DEFAULT_RANK, GST_OMX_MPEG4ENC_TYPE))
+    {
+        return false;
+    }
+
+    if (!gst_element_register (plugin, "omx_avcenc", DEFAULT_RANK, GST_OMX_AVCENC_TYPE))
     {
         return false;
     }
