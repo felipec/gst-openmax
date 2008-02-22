@@ -94,6 +94,10 @@ change_state (GstElement *element,
                 return GST_STATE_CHANGE_FAILURE;
             break;
 
+        case GST_STATE_CHANGE_READY_TO_PAUSED:
+            self->last_pad_push_return = GST_FLOW_OK;
+            break;
+
         case GST_STATE_CHANGE_PLAYING_TO_PAUSED:
             break;
 
@@ -261,7 +265,7 @@ push_buffer (GstOmxBaseFilter *self,
              GstBuffer *buf)
 {
     GST_LOG_OBJECT (self, "pad push begin");
-    gst_pad_push (self->srcpad, buf);
+    self->last_pad_push_return = gst_pad_push (self->srcpad, buf);
     GST_LOG_OBJECT (self, "pad push end");
 }
 
@@ -290,7 +294,7 @@ output_thread (gpointer cb_data)
 
         if (G_UNLIKELY (!omx_buffer))
         {
-            GST_WARNING_OBJECT (self, "null buffer");
+            GST_WARNING_OBJECT (self, "null buffer: retrying");
             continue;
         }
 
@@ -387,6 +391,12 @@ output_thread (gpointer cb_data)
             GST_WARNING_OBJECT (self, "empty buffer");
         }
 
+        if (G_UNLIKELY (self->last_pad_push_return != GST_FLOW_OK))
+        {
+            GST_LOG_OBJECT (self, "pad push error: retrying");
+            continue;
+        }
+
         if (G_UNLIKELY (omx_buffer->nFlags & OMX_BUFFERFLAG_EOS))
         {
             GST_INFO_OBJECT (self, "set_done: out_port");
@@ -455,6 +465,13 @@ pad_chain (GstPad *pad,
 
     GST_LOG_OBJECT (self, "begin");
     GST_LOG_OBJECT (self, "gst_buffer: size=%lu", GST_BUFFER_SIZE (buf));
+
+    if (G_UNLIKELY (self->last_pad_push_return != GST_FLOW_OK))
+    {
+        GST_LOG_OBJECT (self, "pad push error: leaving");
+        ret = self->last_pad_push_return;
+        goto leave;
+    }
 
     GST_LOG_OBJECT (self, "state: %d", gomx->omx_state);
 
@@ -600,6 +617,10 @@ pad_event (GstPad *pad,
             g_omx_sem_up (self->in_port->sem);
             OMX_SendCommand (self->gomx->omx_handle, OMX_CommandFlush, 0, NULL);
             ret = gst_pad_push_event (self->srcpad, event);
+            break;
+
+        case GST_EVENT_NEWSEGMENT:
+            self->last_pad_push_return = GST_FLOW_OK;
             break;
 
         default:

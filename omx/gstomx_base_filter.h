@@ -57,6 +57,7 @@ struct GstOmxBaseFilter
     gboolean initialized;
 
     GstOmxBaseFilterCb omx_setup;
+    GstFlowReturn last_pad_push_return;
 };
 
 struct GstOmxBaseFilterClass
