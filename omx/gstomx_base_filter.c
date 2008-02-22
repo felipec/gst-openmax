@@ -394,7 +394,7 @@ output_thread (gpointer cb_data)
         if (G_UNLIKELY (self->last_pad_push_return != GST_FLOW_OK))
         {
             GST_LOG_OBJECT (self, "pad push error: retrying");
-            continue;
+            goto retry;
         }
 
         if (G_UNLIKELY (omx_buffer->nFlags & OMX_BUFFERFLAG_EOS))
@@ -439,6 +439,7 @@ output_thread (gpointer cb_data)
             GST_WARNING_OBJECT (self, "no input buffer to share");
         }
 
+retry:
         GST_LOG_OBJECT (self, "release_buffer");
         g_omx_port_release_buffer (out_port, omx_buffer);
     }
@@ -621,6 +622,7 @@ pad_event (GstPad *pad,
 
         case GST_EVENT_NEWSEGMENT:
             self->last_pad_push_return = GST_FLOW_OK;
+            ret = gst_pad_push_event (self->srcpad, event);
             break;
 
         default:
