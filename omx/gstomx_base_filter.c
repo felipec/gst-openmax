@@ -264,9 +264,9 @@ inline void
 push_buffer (GstOmxBaseFilter *self,
              GstBuffer *buf)
 {
-    GST_LOG_OBJECT (self, "pad push begin");
+    GST_LOG_OBJECT (self, "begin");
     self->last_pad_push_return = gst_pad_push (self->srcpad, buf);
-    GST_LOG_OBJECT (self, "pad push end");
+    GST_LOG_OBJECT (self, "end");
 }
 
 static gpointer
@@ -317,7 +317,8 @@ output_thread (gpointer cb_data)
                 {
                     /** @todo We shouldn't be doing this. */
                     GST_WARNING_OBJECT (self, "faking settings changed notification");
-                    gomx->settings_changed_cb (gomx);
+                    if (gomx->settings_changed_cb)
+                        gomx->settings_changed_cb (gomx);
                 }
                 else
                 {
@@ -393,7 +394,7 @@ output_thread (gpointer cb_data)
 
         if (G_UNLIKELY (self->last_pad_push_return != GST_FLOW_OK))
         {
-            GST_LOG_OBJECT (self, "pad push error: retrying");
+            GST_WARNING_OBJECT (self, "pad push error: retrying");
             goto retry;
         }
 
@@ -469,7 +470,7 @@ pad_chain (GstPad *pad,
 
     if (G_UNLIKELY (self->last_pad_push_return != GST_FLOW_OK))
     {
-        GST_LOG_OBJECT (self, "pad push error: leaving");
+        GST_WARNING_OBJECT (self, "pad push error: leaving");
         ret = self->last_pad_push_return;
         goto leave;
     }
@@ -602,12 +603,12 @@ pad_event (GstPad *pad,
 
     GST_LOG_OBJECT (self, "begin");
 
-    GST_DEBUG_OBJECT (self, "event: %s", GST_EVENT_TYPE_NAME (event));
+    GST_INFO_OBJECT (self, "event: %s", GST_EVENT_TYPE_NAME (event));
 
     switch (GST_EVENT_TYPE (event))
     {
         case GST_EVENT_EOS:
-            /* Close the inpurt port. */
+            /* Close the input port. */
             g_omx_port_set_done (self->in_port);
             /* Wait for the output port to get the EOS. */
             g_omx_core_wait_for_done (self->gomx);
@@ -616,7 +617,7 @@ pad_event (GstPad *pad,
 
         case GST_EVENT_FLUSH_START:
             g_omx_sem_up (self->in_port->sem);
-            OMX_SendCommand (self->gomx->omx_handle, OMX_CommandFlush, 0, NULL);
+            OMX_SendCommand (self->gomx->omx_handle, OMX_CommandFlush, OMX_ALL, NULL);
             ret = gst_pad_push_event (self->srcpad, event);
             break;
 
