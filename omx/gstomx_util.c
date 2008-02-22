@@ -85,6 +85,27 @@ static OMX_CALLBACKTYPE callbacks = { EventHandler, EmptyBufferDone, FillBufferD
 static GHashTable *implementations;
 static gboolean initialized;
 
+static void
+g_ptr_array_clear (GPtrArray *array)
+{
+    gint index;
+    for (index = 0; index < array->len; index++)
+        array->pdata[index] = NULL;
+}
+
+static void
+g_ptr_array_insert (GPtrArray *array,
+                    guint index,
+                    gpointer data)
+{
+    if (index + 1 > array->len)
+    {
+        g_ptr_array_set_size (array, index + 1);
+    }
+
+    array->pdata[index] = data;
+}
+
 /*
  * Main
  */
@@ -208,6 +229,8 @@ g_omx_core_free (GOmxCore *core)
 {
     g_omx_sem_free (core->done_sem);
     g_omx_sem_free (core->state_sem);
+
+    g_ptr_array_free (core->ports, TRUE);
 
     g_free (core);
 }
@@ -355,22 +378,8 @@ g_omx_core_finish (GOmxCore *core)
             port = g_omx_core_get_port (core, index);
             g_omx_port_free (port);
         }
-        g_ptr_array_free (core->ports, TRUE);
-        core->ports = NULL;
+        g_ptr_array_clear (core->ports);
     }
-}
-
-static void
-g_ptr_array_insert (GPtrArray *array,
-                    guint index,
-                    gpointer data)
-{
-    if (index + 1 > array->len)
-    {
-        g_ptr_array_set_size (array, index + 1);
-    }
-
-    array->pdata[index] = data;
 }
 
 GOmxPort *
