@@ -41,6 +41,7 @@ struct GstOmxBaseVideoEnc
     GstOmxBaseFilter omx_base;
 
     OMX_VIDEO_CODINGTYPE compression_format;
+    guint bitrate;
 };
 
 struct GstOmxBaseVideoEncClass

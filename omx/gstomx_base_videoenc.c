@@ -22,6 +22,14 @@
 #include "gstomx_base_videoenc.h"
 #include "gstomx.h"
 
+enum
+{
+    ARG_0,
+    ARG_BITRATE
+};
+
+#define DEFAULT_BITRATE 500000
+
 static GstOmxBaseFilterClass *parent_class = NULL;
 
 static GstCaps *
@@ -84,10 +92,68 @@ type_base_init (gpointer g_class)
 }
 
 static void
+set_property (GObject *obj,
+              guint prop_id,
+              const GValue *value,
+              GParamSpec *pspec)
+{
+    GstOmxBaseVideoEnc *self;
+
+    self = GST_OMX_BASE_FILTER (obj);
+
+    switch (prop_id)
+    {
+        case ARG_BITRATE:
+            self->bitrate = g_value_get_uint (value);
+            break;
+        default:
+            G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
+            break;
+    }
+}
+
+static void
+get_property (GObject *obj,
+              guint prop_id,
+              GValue *value,
+              GParamSpec *pspec)
+{
+    GstOmxBaseVideoEnc *self;
+
+    self = GST_OMX_BASE_FILTER (obj);
+
+    switch (prop_id)
+    {
+        case ARG_BITRATE:
+            /** @todo propagate this to OpenMAX when processing. */
+            g_value_set_uint (value, self->bitrate);
+            break;
+        default:
+            G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
+            break;
+    }
+}
+
+static void
 type_class_init (gpointer g_class,
                  gpointer class_data)
 {
+    GObjectClass *gobject_class;
+
+    gobject_class = G_OBJECT_CLASS (g_class);
+
     parent_class = g_type_class_ref (GST_OMX_BASE_FILTER_TYPE);
+
+    /* Properties stuff */
+    {
+        gobject_class->set_property = set_property;
+        gobject_class->get_property = get_property;
+
+        g_object_class_install_property (gobject_class, ARG_BITRATE,
+                                         g_param_spec_uint ("bitrate", "Bit-rate",
+                                                            "Encoding bit-rate",
+                                                            0, G_MAXUINT, DEFAULT_BITRATE, G_PARAM_READWRITE));
+    }
 }
 
 static gboolean
@@ -202,7 +268,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
             param->format.video.eCompressionFormat = self->compression_format;
 
             /** @todo this should be set with a property */
-            param->format.video.nBitrate = 512000;
+            param->format.video.nBitrate = self->bitrate;
 
             OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
         }
@@ -263,12 +329,16 @@ type_instance_init (GTypeInstance *instance,
                     gpointer g_class)
 {
     GstOmxBaseFilter *omx_base;
+    GstOmxBaseVideoEnc *self;
 
     omx_base = GST_OMX_BASE_FILTER (instance);
+    self = GST_OMX_BASE_VIDEOENC (instance);
 
     omx_base->omx_setup = omx_setup;
 
     gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);
+
+    self->bitrate = DEFAULT_BITRATE;
 }
 
 GType
