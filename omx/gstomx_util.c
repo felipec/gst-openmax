@@ -337,6 +337,14 @@ g_omx_core_start (GOmxCore *core)
 }
 
 void
+g_omx_core_pause (GOmxCore *core)
+{
+    change_state (core, OMX_StatePause);
+
+    wait_for_state (core, OMX_StatePause);
+}
+
+void
 g_omx_core_finish (GOmxCore *core)
 {
     change_state (core, OMX_StateIdle);
