@@ -238,7 +238,14 @@ event (GstBaseSink *gst_base,
             g_omx_port_set_done (self->in_port);
             break;
 
-        case GST_EVENT_NEWSEGMENT:
+        case GST_EVENT_FLUSH_START:
+            g_omx_sem_up (self->in_port->sem);
+            OMX_SendCommand (self->gomx->omx_handle, OMX_CommandStateSet, OMX_StatePause, NULL);
+            break;
+
+        case GST_EVENT_FLUSH_STOP:
+            OMX_SendCommand (self->gomx->omx_handle, OMX_CommandFlush, 0, NULL);
+            OMX_SendCommand (self->gomx->omx_handle, OMX_CommandStateSet, OMX_StateExecuting, NULL);
             break;
 
         default:
