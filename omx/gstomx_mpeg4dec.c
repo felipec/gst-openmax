@@ -24,14 +24,12 @@
 
 #include <string.h>
 
-#include <stdbool.h>
-
 #define OMX_COMPONENT_NAME "OMX.st.video_decoder.mpeg4"
 
 static GstOmxBaseVideoDecClass *parent_class = NULL;
 
 static GstCaps *
-generate_sink_template ()
+generate_sink_template (void)
 {
     GstCaps *caps;
     GstStructure *struc;
@@ -40,7 +38,7 @@ generate_sink_template ()
 
     struc = gst_structure_new ("video/mpeg",
                                "mpegversion", G_TYPE_INT, 4,
-                               "systemstream", G_TYPE_BOOLEAN, false,
+                               "systemstream", G_TYPE_BOOLEAN, FALSE,
                                "width", GST_TYPE_INT_RANGE, 16, 4096,
                                "height", GST_TYPE_INT_RANGE, 16, 4096,
                                "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,

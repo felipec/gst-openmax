@@ -29,7 +29,7 @@
 static GstOmxBaseVideoDecClass *parent_class = NULL;
 
 static GstCaps *
-generate_sink_template ()
+generate_sink_template (void)
 {
     GstCaps *caps;
     GstStructure *struc;
@@ -51,9 +51,7 @@ static void
 type_base_init (gpointer g_class)
 {
     GstElementClass *element_class;
-    GstOmxBaseVideoDecClass *omx_base_class;
 
-    omx_base_class = GST_OMX_BASE_VIDEODEC_CLASS (g_class);
     element_class = GST_ELEMENT_CLASS (g_class);
 
     {
