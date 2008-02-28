@@ -252,8 +252,10 @@ omx_setup (GstOmxBaseFilter *omx_base)
             param->format.video.nFrameWidth = width;
             param->format.video.nFrameHeight = height;
 
-            color_format = OMX_COLOR_FormatCbYCrY;
-            param->format.video.eColorFormat = color_format;
+            /** @todo get this from the srcpad. */
+            param->format.video.eColorFormat = OMX_COLOR_FormatCbYCrY;
+
+            color_format = param->format.video.eColorFormat;
 
             /* this is against the standard; nBufferSize is read-only. */
             switch (color_format)
