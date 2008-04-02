@@ -39,6 +39,7 @@ typedef struct GstOmxAmrNbEncClass GstOmxAmrNbEncClass;
 struct GstOmxAmrNbEnc
 {
     GstOmxBaseFilter omx_base;
+    guint bitrate;
 };
 
 struct GstOmxAmrNbEncClass
