@@ -32,7 +32,7 @@
 static GstOmxBaseFilterClass *parent_class = NULL;
 
 static GstCaps *
-generate_src_template ()
+generate_src_template (void)
 {
     GstCaps *caps;
 
@@ -44,7 +44,7 @@ generate_src_template ()
 }
 
 static GstCaps *
-generate_sink_template ()
+generate_sink_template (void)
 {
     GstCaps *caps;
 
@@ -64,9 +64,7 @@ static void
 type_base_init (gpointer g_class)
 {
     GstElementClass *element_class;
-    GstOmxBaseFilterClass *omx_base_class;
 
-    omx_base_class = GST_OMX_BASE_FILTER_CLASS (g_class);
     element_class = GST_ELEMENT_CLASS (g_class);
 
     {
