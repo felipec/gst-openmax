@@ -39,6 +39,7 @@ typedef struct GstOmxAacEncClass GstOmxAacEncClass;
 struct GstOmxAacEnc
 {
     GstOmxBaseFilter omx_base;
+    guint bitrate;
 };
 
 struct GstOmxAacEncClass

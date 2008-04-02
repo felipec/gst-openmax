@@ -29,6 +29,14 @@
 
 #define OMX_COMPONENT_NAME "OMX.st.audio_encoder.aac"
 
+enum
+{
+    ARG_0,
+    ARG_BITRATE
+};
+
+#define DEFAULT_BITRATE 64000
+
 static GstOmxBaseFilterClass *parent_class = NULL;
 
 static GstCaps *
@@ -102,10 +110,68 @@ type_base_init (gpointer g_class)
 }
 
 static void
+set_property (GObject *obj,
+              guint prop_id,
+              const GValue *value,
+              GParamSpec *pspec)
+{
+    GstOmxAacEnc *self;
+
+    self = GST_OMX_AACENC (obj);
+
+    switch (prop_id)
+    {
+        case ARG_BITRATE:
+            self->bitrate = g_value_get_uint (value);
+            break;
+        default:
+            G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
+            break;
+    }
+}
+
+static void
+get_property (GObject *obj,
+              guint prop_id,
+              GValue *value,
+              GParamSpec *pspec)
+{
+    GstOmxAacEnc *self;
+
+    self = GST_OMX_AACENC (obj);
+
+    switch (prop_id)
+    {
+        case ARG_BITRATE:
+            /** @todo propagate this to OpenMAX when processing. */
+            g_value_set_uint (value, self->bitrate);
+            break;
+        default:
+            G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
+            break;
+    }
+}
+
+static void
 type_class_init (gpointer g_class,
                  gpointer class_data)
 {
+    GObjectClass *gobject_class;
+
+    gobject_class = G_OBJECT_CLASS (g_class);
+
     parent_class = g_type_class_ref (GST_OMX_BASE_FILTER_TYPE);
+
+    /* Properties stuff */
+    {
+        gobject_class->set_property = set_property;
+        gobject_class->get_property = get_property;
+
+        g_object_class_install_property (gobject_class, ARG_BITRATE,
+                                         g_param_spec_uint ("bitrate", "Bit-rate",
+                                                            "Encoding bit-rate",
+                                                            0, G_MAXUINT, DEFAULT_BITRATE, G_PARAM_READWRITE));
+    }
 }
 
 static void
@@ -198,15 +264,41 @@ sink_setcaps (GstPad *pad,
 static void
 omx_setup (GstOmxBaseFilter *omx_base)
 {
+    GstOmxAacEnc *self;
     GOmxCore *gomx;
     gint rate, channels;
 
+    self = GST_OMX_AACENC (omx_base);
     gomx = (GOmxCore *) omx_base->gomx;
 
     GST_INFO_OBJECT (omx_base, "begin");
 
+#if 0
+    {
+        OMX_AUDIO_PARAM_AACPROFILETYPE *param;
+        OMX_COLOR_FORMATTYPE color_format;
+        gint width, height;
+        guint framerate;
+
+        param = calloc (1, sizeof (OMX_AUDIO_PARAM_AACPROFILETYPE));
+        param->nSize = sizeof (OMX_AUDIO_PARAM_AACPROFILETYPE);
+        param->nVersion.s.nVersionMajor = 1;
+        param->nVersion.s.nVersionMinor = 1;
+
+        /* Output port configuration. */
+        {
+            param->nPortIndex = 1;
+            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioAac, param);
+
+            param->nBitRate = self->bitrate;
+
+            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioAac, param);
+        }
+    }
+#endif
+
     /* some workarounds. */
-#if 1
+#if 0
     {
         OMX_AUDIO_PARAM_PCMMODETYPE *param;
 
@@ -252,8 +344,10 @@ type_instance_init (GTypeInstance *instance,
                     gpointer g_class)
 {
     GstOmxBaseFilter *omx_base;
+    GstOmxAacEnc *self;
 
     omx_base = GST_OMX_BASE_FILTER (instance);
+    self = GST_OMX_AACENC (instance);
 
     omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
     omx_base->omx_setup = omx_setup;
@@ -261,6 +355,8 @@ type_instance_init (GTypeInstance *instance,
     omx_base->gomx->settings_changed_cb = settings_changed_cb;
 
     gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);
+
+    self->bitrate = DEFAULT_BITRATE;
 }
 
 GType
