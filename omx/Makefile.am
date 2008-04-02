@@ -17,6 +17,7 @@ libgstomx_la_SOURCES = gstomx.c gstomx.h \
 		       gstomx_h263enc.c gstomx_h263enc.h \
 		       gstomx_vorbisdec.c gstomx_vorbisdec.h \
 		       gstomx_amrnbdec.c gstomx_amrnbdec.h \
+		       gstomx_amrnbenc.c gstomx_amrnbenc.h \
 		       gstomx_amrwbdec.c gstomx_amrwbdec.h \
 		       gstomx_aacdec.c gstomx_aacdec.h \
 		       gstomx_aacenc.c gstomx_aacenc.h \
