@@ -44,7 +44,7 @@ generate_src_template (void)
 {
     GstCaps *caps;
 
-    caps = gst_caps_new_simple ("audio/AMR",
+    caps = gst_caps_new_simple ("audio/AMR-WB",
                                 "channels", GST_TYPE_INT_RANGE, 1, 8,
                                 NULL);
 
@@ -293,7 +293,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
 #endif
 
     /* some workarounds. */
-#if 1
+#if 0
     {
         OMX_AUDIO_PARAM_PCMMODETYPE *param;
 

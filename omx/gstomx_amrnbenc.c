@@ -293,7 +293,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
 #endif
 
     /* some workarounds. */
-#if 1
+#if 0
     {
         OMX_AUDIO_PARAM_PCMMODETYPE *param;
 
@@ -309,7 +309,9 @@ omx_setup (GstOmxBaseFilter *omx_base)
 
         free (param);
     }
+#endif
 
+#if 0
     {
         OMX_AUDIO_PARAM_AMRTYPE *param;
 
@@ -322,6 +324,11 @@ omx_setup (GstOmxBaseFilter *omx_base)
         OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioAmr, param);
 
         param->nChannels = channels;
+#if 0
+        param->eAMRBandMode = OMX_AUDIO_AMRBandModeNB7;
+        param->eAMRDTXMode = OMX_AUDIO_AMRDTXModeOnAuto;
+        param->eAMRFrameFormat = OMX_AUDIO_AMRFrameFormatFSF;
+#endif
 
         OMX_SetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioAmr, param);
 
