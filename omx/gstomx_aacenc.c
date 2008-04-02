@@ -74,9 +74,9 @@ type_base_init (gpointer g_class)
     {
         GstElementDetails details;
 
-        details.longname = "OpenMAX IL AAC audio decoder";
-        details.klass = "Codec/Decoder/Audio";
-        details.description = "Decodes audio in AAC format with OpenMAX IL";
+        details.longname = "OpenMAX IL AAC audio encoder";
+        details.klass = "Codec/Encoder/Audio";
+        details.description = "Encodes audio in AAC format with OpenMAX IL";
         details.author = "Felipe Contreras";
 
         gst_element_class_set_details (element_class, &details);
@@ -122,17 +122,17 @@ settings_changed_cb (GOmxCore *core)
     GST_DEBUG_OBJECT (omx_base, "settings changed");
 
     {
-        OMX_AUDIO_PARAM_PCMMODETYPE *param;
+        OMX_AUDIO_PARAM_AACPROFILETYPE *param;
 
-        param = calloc (1, sizeof (OMX_AUDIO_PARAM_PCMMODETYPE));
-        param->nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
+        param = calloc (1, sizeof (OMX_AUDIO_PARAM_AACPROFILETYPE));
+        param->nSize = sizeof (OMX_AUDIO_PARAM_AACPROFILETYPE);
         param->nVersion.s.nVersionMajor = 1;
         param->nVersion.s.nVersionMinor = 1;
 
         param->nPortIndex = 1;
-        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, param);
+        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioAac, param);
 
-        rate = param->nSamplingRate;
+        rate = param->nSampleRate;
         channels = param->nChannels;
 
         free (param);
@@ -159,11 +159,40 @@ sink_setcaps (GstPad *pad,
     GstStructure *structure;
     GstOmxBaseFilter *omx_base;
     GOmxCore *gomx;
+    gint rate = 0;
+    gint channels = 0;
 
     omx_base = GST_OMX_BASE_FILTER (GST_PAD_PARENT (pad));
     gomx = (GOmxCore *) omx_base->gomx;
 
     GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
+
+    g_return_val_if_fail (gst_caps_get_size (caps) == 1, FALSE);
+
+    structure = gst_caps_get_structure (caps, 0);
+
+    gst_structure_get_int (structure, "rate", &rate);
+    gst_structure_get_int (structure, "channels", &channels);
+
+    /* Input port configuration. */
+    {
+        OMX_AUDIO_PARAM_PCMMODETYPE *param;
+
+        param = calloc (1, sizeof (OMX_AUDIO_PARAM_PCMMODETYPE));
+        param->nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
+        param->nVersion.s.nVersionMajor = 1;
+        param->nVersion.s.nVersionMinor = 1;
+
+        param->nPortIndex = 0;
+        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, param);
+
+        param->nSamplingRate = rate;
+        param->nChannels = channels;
+
+        OMX_SetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, param);
+
+        free (param);
+    }
 
     return gst_pad_set_caps (pad, caps);
 }
@@ -172,11 +201,31 @@ static void
 omx_setup (GstOmxBaseFilter *omx_base)
 {
     GOmxCore *gomx;
+    gint rate, channels;
 
     gomx = (GOmxCore *) omx_base->gomx;
 
-#if 0
-    /* Format configuration. */
+    GST_INFO_OBJECT (omx_base, "begin");
+
+    /* some workarounds. */
+#if 1
+    {
+        OMX_AUDIO_PARAM_PCMMODETYPE *param;
+
+        param = calloc (1, sizeof (OMX_AUDIO_PARAM_PCMMODETYPE));
+        param->nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
+        param->nVersion.s.nVersionMajor = 1;
+        param->nVersion.s.nVersionMinor = 1;
+
+        param->nPortIndex = 0;
+        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, param);
+
+        rate = param->nSamplingRate;
+        channels = param->nChannels;
+
+        free (param);
+    }
+
     {
         OMX_AUDIO_PARAM_AACPROFILETYPE *param;
 
@@ -185,16 +234,19 @@ omx_setup (GstOmxBaseFilter *omx_base)
         param->nVersion.s.nVersionMajor = 1;
         param->nVersion.s.nVersionMinor = 1;
 
-        param->nPortIndex = 0;
-        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioAac, param);
+        param->nPortIndex = 1;
+        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioAac, param);
 
-        param->eAACStreamFormat = OMX_AUDIO_AACStreamFormatMP4ADTS;
+        param->nSampleRate = rate;
+        param->nChannels = channels;
 
-        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioAac, param);
+        OMX_SetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioAac, param);
 
         free (param);
     }
 #endif
+
+    GST_INFO_OBJECT (omx_base, "end");
 }
 
 static void
