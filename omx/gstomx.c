@@ -31,6 +31,7 @@
 #include "gstomx_vorbisdec.h"
 #include "gstomx_mp3dec.h"
 #include "gstomx_aacdec.h"
+#include "gstomx_aacenc.h"
 #include "gstomx_amrnbdec.h"
 #include "gstomx_amrwbdec.h"
 #include "gstomx_audiosink.h"
@@ -111,6 +112,11 @@ plugin_init (GstPlugin *plugin)
     }
 
     if (!gst_element_register (plugin, "omx_aacdec", DEFAULT_RANK, GST_OMX_AACDEC_TYPE))
+    {
+        return false;
+    }
+
+    if (!gst_element_register (plugin, "omx_aacenc", DEFAULT_RANK, GST_OMX_AACENC_TYPE))
     {
         return false;
     }
