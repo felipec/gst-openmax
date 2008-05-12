@@ -99,7 +99,7 @@ settings_changed_cb (GOmxCore *core)
     guint width;
     guint height;
     guint framerate;
-    guint format;
+    guint32 format = 0;
 
     omx_base = core->client_data;
 

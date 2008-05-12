@@ -173,7 +173,6 @@ g_omx_imp_new (const gchar *name)
     /* Load the OpenMAX IL symbols */
     {
         void *handle;
-        char *error;
 
         imp->dl_handle = handle = dlopen (name, RTLD_LAZY);
         if (!handle)
@@ -468,7 +467,7 @@ void
 g_omx_port_setup (GOmxPort *port,
                   OMX_PARAM_PORTDEFINITIONTYPE *omx_port)
 {
-    GOmxPortType type;
+    GOmxPortType type = -1;
 
     switch (omx_port->eDir)
     {

@@ -22,9 +22,21 @@
 #ifndef GSTOMX_H
 #define GSTOMX_H
 
-#include <gst/gst.h>
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 
-#include <config.h>
+#ifdef HAVE_STDLIB_H
+#include <stdlib.h>
+#endif
+#ifdef HAVE_STRING_H
+#include <string.h>
+#endif
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
+#include <gst/gst.h>
 
 G_BEGIN_DECLS
 

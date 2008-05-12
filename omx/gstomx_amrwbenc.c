@@ -176,7 +176,6 @@ static void
 settings_changed_cb (GOmxCore *core)
 {
     GstOmxBaseFilter *omx_base;
-    guint rate;
     guint channels;
 
     omx_base = core->client_data;
@@ -261,7 +260,6 @@ omx_setup (GstOmxBaseFilter *omx_base)
 {
     GstOmxAmrWbEnc *self;
     GOmxCore *gomx;
-    gint channels;
 
     self = GST_OMX_AMRWBENC (omx_base);
     gomx = (GOmxCore *) omx_base->gomx;

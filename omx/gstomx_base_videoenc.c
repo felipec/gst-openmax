@@ -99,7 +99,7 @@ set_property (GObject *obj,
 {
     GstOmxBaseVideoEnc *self;
 
-    self = GST_OMX_BASE_FILTER (obj);
+    self = GST_OMX_BASE_VIDEOENC (obj);
 
     switch (prop_id)
     {
@@ -120,7 +120,7 @@ get_property (GObject *obj,
 {
     GstOmxBaseVideoEnc *self;
 
-    self = GST_OMX_BASE_FILTER (obj);
+    self = GST_OMX_BASE_VIDEOENC (obj);
 
     switch (prop_id)
     {
@@ -163,7 +163,7 @@ sink_setcaps (GstPad *pad,
     GstStructure *structure;
     GstOmxBaseFilter *omx_base;
     GOmxCore *gomx;
-    OMX_COLOR_FORMATTYPE color_format;
+    OMX_COLOR_FORMATTYPE color_format = OMX_COLOR_FormatUnused;
     gint width = 0;
     gint height = 0;
     gint framerate = 0;

@@ -132,7 +132,7 @@ setcaps (GstBaseSink *gst_sink,
         guint framerate = 15;
         gint width;
         gint height;
-        guint color_format;
+        OMX_COLOR_FORMATTYPE color_format = OMX_COLOR_FormatUnused;
 
         structure = gst_caps_get_structure (caps, 0);
 
@@ -191,6 +191,8 @@ setcaps (GstBaseSink *gst_sink,
                 case OMX_COLOR_FormatCbYCrY:
                     param->nBufferSize = (width * height * 2);
                     break;
+                default:
+                  break;
             }
 
             param->format.video.xFramerate = framerate;

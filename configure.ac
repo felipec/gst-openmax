@@ -24,6 +24,9 @@ AC_PROG_LIBTOOL
 dnl add GStreamer macros for aclocal
 AC_SUBST(ACLOCAL_AMFLAGS, ["-I common/m4"])
 
+dnl define an ERROR_CFLAGS Makefile variable
+AG_GST_SET_ERROR_CFLAGS($GST_CVS)
+
 dnl add GStreamer arguments
 AG_GST_ARG_DEBUG
 AG_GST_ARG_PROFILING

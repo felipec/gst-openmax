@@ -99,8 +99,6 @@ static void
 settings_changed_cb (GOmxCore *core)
 {
     GstOmxBaseSrc *omx_base;
-    guint rate;
-    guint channels;
 
     omx_base = core->client_data;
 

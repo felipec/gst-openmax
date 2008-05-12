@@ -159,7 +159,6 @@ static gboolean
 sink_setcaps (GstPad *pad,
               GstCaps *caps)
 {
-    GstStructure *structure;
     GstOmxBaseFilter *omx_base;
     GOmxCore *gomx;
 

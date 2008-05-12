@@ -266,7 +266,6 @@ omx_setup (GstOmxBaseFilter *omx_base)
 {
     GstOmxAacEnc *self;
     GOmxCore *gomx;
-    gint rate, channels;
 
     self = GST_OMX_AACENC (omx_base);
     gomx = (GOmxCore *) omx_base->gomx;
