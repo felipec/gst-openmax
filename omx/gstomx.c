@@ -38,6 +38,8 @@
 #include "gstomx_amrwbenc.h"
 #include "gstomx_adpcmdec.h"
 #include "gstomx_adpcmenc.h"
+#include "gstomx_g711dec.h"
+#include "gstomx_g711enc.h"
 #include "gstomx_audiosink.h"
 #include "gstomx_videosink.h"
 #include "gstomx_filereadersrc.h"
@@ -141,6 +143,16 @@ plugin_init (GstPlugin *plugin)
     }
 
     if (!gst_element_register (plugin, "omx_adpcmenc", DEFAULT_RANK, GST_OMX_ADPCMENC_TYPE))
+    {
+        return false;
+    }
+
+    if (!gst_element_register (plugin, "omx_g711dec", DEFAULT_RANK, GST_OMX_G711DEC_TYPE))
+    {
+        return false;
+    }
+
+    if (!gst_element_register (plugin, "omx_g711enc", DEFAULT_RANK, GST_OMX_G711ENC_TYPE))
     {
         return false;
     }
