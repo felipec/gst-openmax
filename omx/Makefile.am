@@ -23,6 +23,8 @@ libgstomx_la_SOURCES = gstomx.c gstomx.h \
 		       gstomx_aacdec.c gstomx_aacdec.h \
 		       gstomx_aacenc.c gstomx_aacenc.h \
 		       gstomx_mp3dec.c gstomx_mp3dec.h \
+		       gstomx_adpcmdec.c gstomx_adpcmdec.h \
+		       gstomx_adpcmenc.c gstomx_adpcmenc.h \
 		       gstomx_audiosink.c gstomx_audiosink.h \
 		       gstomx_videosink.c gstomx_videosink.h \
 		       gstomx_filereadersrc.c gstomx_filereadersrc.h
