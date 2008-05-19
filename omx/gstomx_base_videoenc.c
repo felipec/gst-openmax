@@ -33,7 +33,7 @@ enum
 static GstOmxBaseFilterClass *parent_class = NULL;
 
 static GstCaps *
-generate_sink_template ()
+generate_sink_template (void)
 {
     GstCaps *caps;
     GstStructure *struc;

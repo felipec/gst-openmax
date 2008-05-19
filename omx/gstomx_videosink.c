@@ -40,7 +40,7 @@ enum
 };
 
 static GstCaps *
-generate_sink_template ()
+generate_sink_template (void)
 {
     GstCaps *caps;
     GstStructure *struc;

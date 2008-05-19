@@ -27,7 +27,7 @@
 static GstOmxBaseFilterClass *parent_class = NULL;
 
 static GstCaps *
-generate_src_template ()
+generate_src_template (void)
 {
     GstCaps *caps;
     GstStructure *struc;
