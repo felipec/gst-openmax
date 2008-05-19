@@ -76,9 +76,9 @@ type_base_init (gpointer g_class)
     {
         GstElementDetails details;
 
-        details.longname = "OpenMAX IL G711 audio decoder";
+        details.longname = "OpenMAX IL G.711 audio decoder";
         details.klass = "Codec/Decoder/Audio";
-        details.description = "Decodes audio in G711 format with OpenMAX IL";
+        details.description = "Decodes audio in G.711 format with OpenMAX IL";
         details.author = "Felipe Contreras";
 
         gst_element_class_set_details (element_class, &details);
