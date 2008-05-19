@@ -4,7 +4,12 @@ AC_INIT([GstOpenMAX], [0.10.0.4], [http://freedesktop.org/wiki/GstOpenMAX], [gst
 AC_CONFIG_AUX_DIR([config])
 AM_INIT_AUTOMAKE
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([Makefile omx/Makefile common/Makefile common/m4/Makefile])
+AC_CONFIG_FILES([Makefile \
+		 omx/Makefile \
+		 check/Makefile \
+		 check/standalone/Makefile \
+		 common/Makefile \
+		 common/m4/Makefile])
 
 dnl versions of GStreamer
 GST_MAJORMINOR=0.10
@@ -18,6 +23,7 @@ AM_MAINTAINER_MODE
 
 dnl check for tools
 AC_PROG_CC
+AM_PROG_CC_C_O
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 
@@ -38,6 +44,9 @@ AG_GST_ARG_WITH_PACKAGE_NAME
 AG_GST_ARG_WITH_PACKAGE_ORIGIN
 
 dnl ** checks **
+
+dnl Check for GLib
+PKG_CHECK_MODULES([GLIB], [glib-2.0])
 
 dnl Check for GStreamer
 AG_GST_CHECK_GST($GST_MAJORMINOR, [$GST_REQUIRED])

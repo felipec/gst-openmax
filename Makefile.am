@@ -1,4 +1,4 @@
-SUBDIRS = omx common
+SUBDIRS = omx check common
 
 include $(top_srcdir)/common/release.mak
 
