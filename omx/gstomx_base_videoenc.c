@@ -308,6 +308,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
             param->nPortIndex = 1;
             OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
 
+            /* this is against the standard; nBufferSize is read-only. */
             param->nBufferSize = (width * height) / 2;
 
             param->format.video.nFrameWidth = width;
