@@ -37,8 +37,8 @@ generate_src_template (void)
     GstCaps *caps;
 
     caps = gst_caps_new_simple ("audio/x-adpcm",
-                                "rate", GST_TYPE_INT_RANGE, 8000, 48000,
-                                "channels", GST_TYPE_INT_RANGE, 1, 8,
+                                "rate", GST_TYPE_INT_RANGE, 8000, 16000,
+                                "channels", G_TYPE_INT, 1,
                                 NULL);
 
     return caps;
@@ -53,9 +53,9 @@ generate_sink_template (void)
                                 "endianness", G_TYPE_INT, G_BYTE_ORDER,
                                 "width", GST_TYPE_INT_RANGE, 8, 32,
                                 "depth", GST_TYPE_INT_RANGE, 8, 32,
-                                "rate", GST_TYPE_INT_RANGE, 8000, 48000,
+                                "rate", GST_TYPE_INT_RANGE, 8000, 16000,
                                 "signed", G_TYPE_BOOLEAN, TRUE,
-                                "channels", GST_TYPE_INT_RANGE, 1, 8,
+                                "channels", G_TYPE_INT, 1,
                                 NULL);
 
     return caps;
@@ -116,7 +116,6 @@ settings_changed_cb (GOmxCore *core)
 {
     GstOmxBaseFilter *omx_base;
     guint rate;
-    guint channels;
 
     omx_base = core->client_data;
 
@@ -134,7 +133,6 @@ settings_changed_cb (GOmxCore *core)
         OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioAdpcm, param);
 
         rate = param->nSampleRate;
-        channels = param->nChannels;
 
         free (param);
     }
@@ -144,7 +142,7 @@ settings_changed_cb (GOmxCore *core)
 
         new_caps = gst_caps_new_simple ("audio/x-adpcm",
                                         "rate", G_TYPE_INT, rate,
-                                        "channels", G_TYPE_INT, channels,
+                                        "channels", G_TYPE_INT, 1,
                                         NULL);
 
         GST_INFO_OBJECT (omx_base, "caps are: %" GST_PTR_FORMAT, new_caps);
@@ -160,7 +158,6 @@ sink_setcaps (GstPad *pad,
     GstOmxBaseFilter *omx_base;
     GOmxCore *gomx;
     gint rate = 0;
-    gint channels = 0;
 
     omx_base = GST_OMX_BASE_FILTER (GST_PAD_PARENT (pad));
     gomx = (GOmxCore *) omx_base->gomx;
@@ -172,7 +169,6 @@ sink_setcaps (GstPad *pad,
     structure = gst_caps_get_structure (caps, 0);
 
     gst_structure_get_int (structure, "rate", &rate);
-    gst_structure_get_int (structure, "channels", &channels);
 
     /* Input port configuration. */
     {
@@ -187,7 +183,6 @@ sink_setcaps (GstPad *pad,
         OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, param);
 
         param->nSamplingRate = rate;
-        param->nChannels = channels;
 
         OMX_SetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, param);
 
