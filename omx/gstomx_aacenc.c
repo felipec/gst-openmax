@@ -44,11 +44,36 @@ generate_src_template (void)
 {
     GstCaps *caps;
 
-    caps = gst_caps_new_simple ("audio/mpeg",
-                                "mpegversion", G_TYPE_INT, 4,
-                                "rate", GST_TYPE_INT_RANGE, 8000, 48000,
-                                "channels", GST_TYPE_INT_RANGE, 1, 8,
-                                NULL);
+    GstStructure *struc;
+
+    caps = gst_caps_new_empty ();
+
+    struc = gst_structure_new ("audio/mpeg",
+                               "mpegversion", G_TYPE_INT, 4,
+                               "rate", GST_TYPE_INT_RANGE, 8000, 48000,
+                               "channels", GST_TYPE_INT_RANGE, 1, 8,
+                               NULL);
+
+    {
+        GValue list = { 0 };
+        GValue val = { 0 };
+
+        g_value_init (&list, GST_TYPE_LIST);
+        g_value_init (&val, G_TYPE_INT);
+
+        g_value_set_int (&val, 2);
+        gst_value_list_append_value (&list, &val);
+
+        g_value_set_int (&val, 4);
+        gst_value_list_append_value (&list, &val);
+
+        gst_structure_set_value (struc, "mpegversion", &list);
+
+        g_value_unset (&val);
+        g_value_unset (&list);
+    }
+
+    gst_caps_append_structure (caps, struc);
 
     return caps;
 }
