@@ -561,10 +561,10 @@ pad_chain (GstPad *pad,
                                                                         GST_SECOND);
                 }
 
+                buffer_offset += omx_buffer->nFilledLen;
+
                 GST_LOG_OBJECT (self, "release_buffer");
                 g_omx_port_release_buffer (in_port, omx_buffer);
-
-                buffer_offset += omx_buffer->nFilledLen;
             }
             else
             {
