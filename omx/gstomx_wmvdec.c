@@ -39,7 +39,7 @@ generate_sink_template (void)
     struc = gst_structure_new ("video/x-wmv",
                                "width", GST_TYPE_INT_RANGE, 16, 4096,
                                "height", GST_TYPE_INT_RANGE, 16, 4096,
-                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
+                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 1000, 1,
                                NULL);
 
     gst_caps_append_structure (caps, struc);
