@@ -149,20 +149,22 @@ plugin_init (GstPlugin *plugin)
         return false;
     }
 
-<<<<<<< HEAD:omx/gstomx.c
     if (!gst_element_register (plugin, "omx_g711dec", DEFAULT_RANK, GST_OMX_G711DEC_TYPE))
-=======
-    if (!gst_element_register (plugin, "omx_g729dec", DEFAULT_RANK, GST_OMX_G729DEC_TYPE))
->>>>>>> Add new G.729 encoder and decoder.:omx/gstomx.c
     {
         return false;
     }
 
-<<<<<<< HEAD:omx/gstomx.c
     if (!gst_element_register (plugin, "omx_g711enc", DEFAULT_RANK, GST_OMX_G711ENC_TYPE))
-=======
+    {
+        return false;
+    }
+
+    if (!gst_element_register (plugin, "omx_g729dec", DEFAULT_RANK, GST_OMX_G729DEC_TYPE))
+    {
+        return false;
+    }
+
     if (!gst_element_register (plugin, "omx_g729enc", DEFAULT_RANK, GST_OMX_G729ENC_TYPE))
->>>>>>> Add new G.729 encoder and decoder.:omx/gstomx.c
     {
         return false;
     }
