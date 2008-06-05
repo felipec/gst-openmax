@@ -58,6 +58,7 @@ struct GstOmxBaseFilter
 
     GstOmxBaseFilterCb omx_setup;
     GstFlowReturn last_pad_push_return;
+    GstBuffer *codec_data;
 };
 
 struct GstOmxBaseFilterClass

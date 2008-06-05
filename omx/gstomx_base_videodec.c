@@ -181,6 +181,19 @@ sink_setcaps (GstPad *pad,
     param->nVersion.s.nVersionMajor = 1;
     param->nVersion.s.nVersionMinor = 1;
 
+    {
+        const GValue *codec_data;
+        GstBuffer *buffer;
+
+        codec_data = gst_structure_get_value (structure, "codec_data");
+        if (codec_data)
+        {
+            buffer = gst_value_get_buffer (codec_data);
+            omx_base->codec_data = buffer;
+            gst_buffer_ref (buffer);
+        }
+    }
+
     /* Input port configuration. */
     {
         param->nPortIndex = 0;
