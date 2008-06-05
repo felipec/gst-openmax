@@ -165,6 +165,10 @@ comp_SendCommand (OMX_HANDLETYPE handle,
                     }
                 }
                 g_mutex_unlock (private->flush_mutex);
+
+                private->callbacks->EventHandler (handle,
+                                                  private->app_data, OMX_EventCmdComplete,
+                                                  OMX_CommandFlush, param_1, data);
             }
             break;
         default:

@@ -662,6 +662,8 @@ pad_event (GstPad *pad,
             ret = gst_pad_push_event (self->srcpad, event);
             self->last_pad_push_return = GST_FLOW_OK;
 
+            g_omx_sem_down (self->gomx->flush_sem);
+
             gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
 
             g_omx_port_enable (self->in_port);
