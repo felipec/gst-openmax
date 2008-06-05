@@ -56,7 +56,14 @@ generate_sink_template (void)
 
     caps = gst_caps_new_empty ();
 
-    struc = gst_structure_new ("audio/g711",
+    struc = gst_structure_new ("audio/x-alaw",
+                               "rate", G_TYPE_INT, 8000,
+                               "channels", G_TYPE_INT, 1,
+                               NULL);
+
+    gst_caps_append_structure (caps, struc);
+
+    struc = gst_structure_new ("audio/x-mulaw",
                                "rate", G_TYPE_INT, 8000,
                                "channels", G_TYPE_INT, 1,
                                NULL);
