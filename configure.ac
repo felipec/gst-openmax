@@ -6,6 +6,7 @@ AM_INIT_AUTOMAKE
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile \
 		 omx/Makefile \
+		 util/Makefile \
 		 check/Makefile \
 		 check/standalone/Makefile \
 		 common/Makefile \
