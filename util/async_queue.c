@@ -99,6 +99,39 @@ leave:
     return data;
 }
 
+gpointer
+async_queue_pop_forced (AsyncQueue *queue)
+{
+    gpointer data = NULL;
+
+    g_mutex_lock (queue->mutex);
+
+    if (!queue->enabled)
+    {
+        /* g_warning ("not enabled!"); */
+        goto leave;
+    }
+
+    if (queue->tail)
+    {
+        GList *node = queue->tail;
+        data = node->data;
+
+        queue->tail = node->prev;
+        if (queue->tail)
+            queue->tail->next = NULL;
+        else
+            queue->head = NULL;
+        queue->length--;
+        g_list_free_1 (node);
+    }
+
+leave:
+    g_mutex_unlock (queue->mutex);
+
+    return data;
+}
+
 void
 async_queue_disable (AsyncQueue *queue)
 {

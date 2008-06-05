@@ -536,12 +536,6 @@ g_omx_port_disable (GOmxPort *port)
 }
 
 void
-g_omx_port_flush (GOmxPort *port)
-{
-    /** @todo tain the buffers */
-}
-
-void
 g_omx_port_finish (GOmxPort *port)
 {
     port->enabled = FALSE;

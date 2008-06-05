@@ -34,6 +34,7 @@ struct CompPrivate
     OMX_PTR app_data;
     CompPrivatePort *ports;
     gboolean done;
+    GMutex *flush_mutex;
 };
 
 struct CompPrivatePort
@@ -145,6 +146,27 @@ comp_SendCommand (OMX_HANDLETYPE handle,
                                                   OMX_CommandStateSet, private->state, data);
             }
             break;
+        case  OMX_CommandFlush:
+            {
+                g_mutex_lock (private->flush_mutex);
+                {
+                    OMX_BUFFERHEADERTYPE *buffer;
+
+                    while (buffer = async_queue_pop_forced (private->ports[0].queue))
+                    {
+                        private->callbacks->EmptyBufferDone (comp,
+                                                             private->app_data, buffer);
+                    }
+
+                    while (buffer = async_queue_pop_forced (private->ports[1].queue))
+                    {
+                        private->callbacks->FillBufferDone (comp,
+                                                            private->app_data, buffer);
+                    }
+                }
+                g_mutex_unlock (private->flush_mutex);
+            }
+            break;
         default:
             /* printf ("command: %d\n", command); */
             break;
@@ -222,6 +244,8 @@ foo_thread (gpointer cb_data)
             out_buffer->nFlags = in_buffer->nFlags;
         }
 
+        g_mutex_lock (private->flush_mutex);
+
         private->callbacks->FillBufferDone (comp,
                                             private->app_data, out_buffer);
         if (in_buffer->nFilledLen == 0)
@@ -229,6 +253,8 @@ foo_thread (gpointer cb_data)
             private->callbacks->EmptyBufferDone (comp,
                                                  private->app_data, in_buffer);
         }
+
+        g_mutex_unlock (private->flush_mutex);
     }
 
     return NULL;
@@ -297,6 +323,7 @@ OMX_GetHandle (OMX_HANDLETYPE *handle,
         private->callbacks = callbacks;
         private->app_data = data;
         private->ports = calloc (2, sizeof (CompPrivatePort));
+        private->flush_mutex = g_mutex_new ();
 
         private->ports[0].queue = async_queue_new ();
         private->ports[1].queue = async_queue_new ();
@@ -341,5 +368,6 @@ OMX_GetHandle (OMX_HANDLETYPE *handle,
 OMX_ERRORTYPE
 OMX_FreeHandle (OMX_HANDLETYPE handle)
 {
+    /** @todo Free private structure? */
     return OMX_ErrorNone;
 }

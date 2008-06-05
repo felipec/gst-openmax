@@ -646,8 +646,10 @@ pad_event (GstPad *pad,
             break;
 
         case GST_EVENT_FLUSH_START:
-            g_omx_port_flush (self->in_port);
-            g_omx_port_flush (self->out_port);
+            /* flush all buffers */
+            OMX_SendCommand (self->gomx->omx_handle, OMX_CommandFlush, OMX_ALL, NULL);
+
+            /* unlock loops */
             g_omx_port_disable (self->in_port);
             g_omx_port_disable (self->out_port);
 
@@ -712,9 +714,8 @@ activate_push (GstPad *pad,
 
         if (self->initialized)
         {
-            /* taint buffers */
-            g_omx_port_flush (self->in_port);
-            g_omx_port_flush (self->out_port);
+            /* flush all buffers */
+            OMX_SendCommand (self->gomx->omx_handle, OMX_CommandFlush, OMX_ALL, NULL);
 
             /* unlock loops */
             g_omx_port_disable (self->in_port);

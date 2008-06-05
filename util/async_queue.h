@@ -38,6 +38,7 @@ AsyncQueue *async_queue_new (void);
 void async_queue_free (AsyncQueue *queue);
 void async_queue_push (AsyncQueue *queue, gpointer data);
 gpointer async_queue_pop (AsyncQueue *queue);
+gpointer async_queue_pop_forced (AsyncQueue *queue);
 void async_queue_disable (AsyncQueue *queue);
 void async_queue_enable (AsyncQueue *queue);
 
