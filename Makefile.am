@@ -1,4 +1,4 @@
-SUBDIRS = omx util check common
+SUBDIRS = omx util tests common
 
 include $(top_srcdir)/common/release.mak
 

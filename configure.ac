@@ -7,8 +7,7 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile \
 		 omx/Makefile \
 		 util/Makefile \
-		 check/Makefile \
-		 check/standalone/Makefile \
+		 tests/Makefile \
 		 common/Makefile \
 		 common/m4/Makefile])
 
@@ -27,6 +26,7 @@ AC_PROG_CC
 AM_PROG_CC_C_O
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
+AM_PATH_CHECK
 
 dnl add GStreamer macros for aclocal
 AC_SUBST(ACLOCAL_AMFLAGS, ["-I common/m4"])

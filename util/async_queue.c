@@ -70,7 +70,7 @@ async_queue_pop (AsyncQueue *queue)
 
     if (!queue->enabled)
     {
-        g_warning ("not enabled!");
+        /* g_warning ("not enabled!"); */
         goto leave;
     }
 
