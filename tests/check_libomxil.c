@@ -42,12 +42,14 @@ START_TEST (test_handle)
 }
 END_TEST
 
-Suite *
+static Suite *
 util_suite (void)
 {
     Suite *s = suite_create ("libomxil");
+    TCase *tc_chain = tcase_create ("general");
 
-    lib_name = "./standalone/libomxil-foo.so";
+    lib_name = "libomxil-foo.so";
+
     {
         dl_handle = dlopen (lib_name, RTLD_LAZY);
         if (!dl_handle)
@@ -61,11 +63,9 @@ util_suite (void)
         free_handle = dlsym (dl_handle, "OMX_FreeHandle");
     }
 
-    /* Core test case */
-    TCase *tc_core = tcase_create ("Core");
-    tcase_add_test (tc_core, test_basic);
-    tcase_add_test (tc_core, test_handle);
-    suite_add_tcase (s, tc_core);
+    tcase_add_test (tc_chain, test_basic);
+    tcase_add_test (tc_chain, test_handle);
+    suite_add_tcase (s, tc_chain);
 
     return s;
 }

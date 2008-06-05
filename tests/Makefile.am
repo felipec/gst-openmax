@@ -3,6 +3,9 @@ SUBDIRS = standalone
 TESTS = check_async_queue \
 	check_libomxil
 
+TESTS_ENVIRONMENT = \
+	LD_LIBRARY_PATH=$(builddir)/standalone
+
 check_PROGRAMS =
 
 check_PROGRAMS += check_async_queue
