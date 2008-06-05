@@ -519,6 +519,8 @@ pad_chain (GstPad *pad,
             GST_LOG_OBJECT (self, "request buffer");
             omx_buffer = g_omx_port_request_buffer (in_port);
 
+            GST_LOG_OBJECT (self, "omx_buffer: %p", omx_buffer);
+
             if (G_LIKELY (omx_buffer))
             {
                 GST_DEBUG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, flags=%lu, offset=%lu, timestamp=%lld",
