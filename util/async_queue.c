@@ -106,12 +106,6 @@ async_queue_pop_forced (AsyncQueue *queue)
 
     g_mutex_lock (queue->mutex);
 
-    if (!queue->enabled)
-    {
-        /* g_warning ("not enabled!"); */
-        goto leave;
-    }
-
     if (queue->tail)
     {
         GList *node = queue->tail;
@@ -126,7 +120,6 @@ async_queue_pop_forced (AsyncQueue *queue)
         g_list_free_1 (node);
     }
 
-leave:
     g_mutex_unlock (queue->mutex);
 
     return data;
