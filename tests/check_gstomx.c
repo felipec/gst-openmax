@@ -19,8 +19,7 @@
  *
  */
 
-#include <glib.h>
-#include <gst/gst.h>
+#include <gst/check/gstcheck.h>
 
 typedef struct Core Core;
 
@@ -42,7 +41,7 @@ bus_cb (GstBus *bus,
     switch (GST_MESSAGE_TYPE (msg))
     {
         case GST_MESSAGE_EOS:
-            g_debug ("end-of-stream");
+            /* g_debug ("end-of-stream"); */
             g_main_loop_quit (core->loop);
             break;
         case GST_MESSAGE_ERROR:
@@ -65,7 +64,7 @@ bus_cb (GstBus *bus,
     return TRUE;
 }
 
-Core *
+static Core *
 core_new (void)
 {
     Core *core;
@@ -76,7 +75,7 @@ core_new (void)
     return core;
 }
 
-void
+static void
 core_free (Core *core)
 {
     gst_element_set_state (core->pipeline, GST_STATE_NULL);
@@ -87,17 +86,16 @@ core_free (Core *core)
     g_free (core);
 }
 
-int
-main (int argc,
-      char *argv[])
+GST_START_TEST (test_basic)
 {
     Core *core;
 
-    gst_init (&argc, &argv);
+    gst_init (NULL, NULL);
 
     core = core_new ();
 
     core->pipeline = gst_pipeline_new ("audio-player");
+    fail_if (!core->pipeline);
 
     {
         GstElement *src;
@@ -105,15 +103,18 @@ main (int argc,
         GstElement *sink;
 
         src = gst_element_factory_make ("filesrc", "src");
+        fail_if (!src);
         g_object_set (G_OBJECT (src), "location", "/tmp/test.mp3", NULL);
         gst_bin_add (GST_BIN (core->pipeline), src);
 
         filter = gst_element_factory_make ("omx_dummy", "dummy");
+        fail_if (!filter);
         g_object_set (G_OBJECT (filter), "library-name", "libomxil-foo.so", NULL);
         gst_bin_add (GST_BIN (core->pipeline), filter);
         gst_element_link (src, filter);
 
         sink = gst_element_factory_make ("filesink", "sink");
+        fail_if (!sink);
         g_object_set (G_OBJECT (sink), "location", "/tmp/test_out.mp3", NULL);
         gst_bin_add (GST_BIN (core->pipeline), sink);
         gst_element_link (filter, sink);
@@ -131,6 +132,19 @@ main (int argc,
     g_main_loop_run (core->loop);
 
     core_free (core);
-
-    return 0;
 }
+GST_END_TEST
+
+static Suite *
+gstomx_suite (void)
+{
+  Suite *s = suite_create ("gstomx");
+  TCase *tc_chain = tcase_create ("general");
+
+  tcase_add_test (tc_chain, test_basic);
+  suite_add_tcase (s, tc_chain);
+
+  return s;
+}
+
+GST_CHECK_MAIN (gstomx);
