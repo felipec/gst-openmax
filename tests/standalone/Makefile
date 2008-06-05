@@ -23,5 +23,9 @@ libomxil-foo.so: LIBS := $(libomxil_foo_so_LIBADD)
 %.so::
 	$(CC) $(LDFLAGS) -shared -o $@ $^ $(LIBS)
 
+.PHONY: clean install
+
 clean:
 	rm -rf *.o $(LIBRARIES)
+
+install:
