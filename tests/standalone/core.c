@@ -1,17 +1,9 @@
 #include <OMX_Core.h>
 #include <OMX_Component.h>
 
-#if 0
-#include "stdio.h"
-#endif
-#include "stdlib.h"
-#include "string.h"
-
 #include <glib.h>
 
 #include "async_queue.h"
-
-#define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
 static void *foo_thread (void *cb_data);
 
