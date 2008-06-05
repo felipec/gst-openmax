@@ -136,7 +136,7 @@ render (GstBaseSink *gst_base,
 
     in_port = self->in_port;
 
-    if (G_LIKELY (!in_port->done))
+    if (G_LIKELY (in_port->enabled))
     {
         guint buffer_offset = 0;
 
@@ -235,17 +235,21 @@ event (GstBaseSink *gst_base,
     {
         case GST_EVENT_EOS:
             /* Close the inpurt port. */
-            g_omx_port_set_done (self->in_port);
+            g_omx_core_set_done (self->gomx);
             break;
 
         case GST_EVENT_FLUSH_START:
-            g_omx_sem_up (self->in_port->sem);
-            g_omx_core_pause (self->gomx);
+            /* unlock loops */
+            g_omx_port_disable (self->in_port);
+
+            /* flush all buffers */
+            OMX_SendCommand (self->gomx->omx_handle, OMX_CommandFlush, OMX_ALL, NULL);
             break;
 
         case GST_EVENT_FLUSH_STOP:
-            OMX_SendCommand (self->gomx->omx_handle, OMX_CommandFlush, 0, NULL);
-            g_omx_core_start (self->gomx);
+            g_omx_sem_down (self->gomx->flush_sem);
+
+            g_omx_port_enable (self->in_port);
             break;
 
         default:

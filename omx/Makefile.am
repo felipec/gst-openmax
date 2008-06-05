@@ -26,12 +26,12 @@ libgstomx_la_SOURCES = gstomx.c gstomx.h \
 		       gstomx_g711dec.c gstomx_g711dec.h \
 		       gstomx_g711enc.c gstomx_g711enc.h \
 		       gstomx_g729dec.c gstomx_g729dec.h \
-		       gstomx_g729enc.c gstomx_g729enc.h
+		       gstomx_g729enc.c gstomx_g729enc.h \
+		       gstomx_base_sink.c gstomx_base_sink.h \
+		       gstomx_audiosink.c gstomx_audiosink.h \
+		       gstomx_videosink.c gstomx_videosink.h
 
-#      gstomx_base_sink.c gstomx_base_sink.h \
 #      gstomx_base_src.c gstomx_base_src.h \
-#      gstomx_audiosink.c gstomx_audiosink.h \
-#      gstomx_videosink.c gstomx_videosink.h \
 #      gstomx_filereadersrc.c gstomx_filereadersrc.h
 
 libgstomx_la_CFLAGS = -I$(srcdir)/headers $(GST_CFLAGS) $(GST_BASE_CFLAGS) -I$(top_srcdir)/util

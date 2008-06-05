@@ -42,9 +42,9 @@
 #include "gstomx_g711enc.h"
 #include "gstomx_g729dec.h"
 #include "gstomx_g729enc.h"
-#if 0
 #include "gstomx_audiosink.h"
 #include "gstomx_videosink.h"
+#if 0
 #include "gstomx_filereadersrc.h"
 #endif
 
@@ -171,7 +171,6 @@ plugin_init (GstPlugin *plugin)
         return false;
     }
 
-#if 0
     if (!gst_element_register (plugin, "omx_audiosink", GST_RANK_NONE, GST_OMX_AUDIOSINK_TYPE))
     {
         return false;
@@ -182,6 +181,7 @@ plugin_init (GstPlugin *plugin)
         return false;
     }
 
+#if 0
     if (!gst_element_register (plugin, "omx_filereadersrc", GST_RANK_NONE, GST_OMX_FILEREADERSRC_TYPE))
     {
         return false;
