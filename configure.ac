@@ -46,7 +46,7 @@ AG_GST_ARG_WITH_PACKAGE_ORIGIN
 dnl ** checks **
 
 dnl Check for GLib
-PKG_CHECK_MODULES([GLIB], [glib-2.0])
+PKG_CHECK_MODULES([GTHREAD], [gthread-2.0])
 
 dnl Check for GStreamer
 AG_GST_CHECK_GST($GST_MAJORMINOR, [$GST_REQUIRED])
