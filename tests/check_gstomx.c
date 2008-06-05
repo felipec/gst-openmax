@@ -141,6 +141,7 @@ gstomx_suite (void)
   Suite *s = suite_create ("gstomx");
   TCase *tc_chain = tcase_create ("general");
 
+  tcase_set_timeout (tc_chain, 10);
   tcase_add_test (tc_chain, test_basic);
   suite_add_tcase (s, tc_chain);
 
