@@ -47,7 +47,7 @@ async_queue_free (AsyncQueue *queue)
 
 void
 async_queue_push (AsyncQueue *queue,
-                gpointer data)
+                  gpointer data)
 {
     g_mutex_lock (queue->mutex);
 
@@ -70,7 +70,7 @@ async_queue_pop (AsyncQueue *queue)
 
     if (!queue->enabled)
     {
-        /* GST_WARNING ("not enabled!"); */
+        g_warning ("not enabled!");
         goto leave;
     }
 
