@@ -646,14 +646,15 @@ pad_event (GstPad *pad,
             break;
 
         case GST_EVENT_FLUSH_START:
-            /* flush all buffers */
-            OMX_SendCommand (self->gomx->omx_handle, OMX_CommandFlush, OMX_ALL, NULL);
-
             /* unlock loops */
             g_omx_port_disable (self->in_port);
             g_omx_port_disable (self->out_port);
 
             gst_pad_pause_task (self->srcpad);
+
+            /* flush all buffers */
+            OMX_SendCommand (self->gomx->omx_handle, OMX_CommandFlush, OMX_ALL, NULL);
+
             ret = gst_pad_push_event (self->srcpad, event);
             break;
 
@@ -661,10 +662,11 @@ pad_event (GstPad *pad,
             ret = gst_pad_push_event (self->srcpad, event);
             self->last_pad_push_return = GST_FLOW_OK;
 
+            gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
+
             g_omx_port_enable (self->in_port);
             g_omx_port_enable (self->out_port);
 
-            gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
             break;
 
         case GST_EVENT_NEWSEGMENT:
