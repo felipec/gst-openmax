@@ -35,13 +35,6 @@ enum
 
 static GstElementClass *parent_class = NULL;
 
-/** Finishes the processing. */
-static void
-out_port_done_cb (GOmxPort *port)
-{
-    g_omx_sem_up (port->core->done_sem);
-}
-
 static void
 setup_ports (GstOmxBaseFilter *self)
 {
@@ -66,7 +59,6 @@ setup_ports (GstOmxBaseFilter *self)
     param->nPortIndex = 1;
     OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, param);
     self->out_port = g_omx_core_setup_port (core, param);
-    self->out_port->done_cb = out_port_done_cb;
 
     free (param);
 }
@@ -94,18 +86,11 @@ change_state (GstElement *element,
                 return GST_STATE_CHANGE_FAILURE;
             break;
 
-        case GST_STATE_CHANGE_READY_TO_PAUSED:
-            self->last_pad_push_return = GST_FLOW_OK;
-            break;
-
-        case GST_STATE_CHANGE_PLAYING_TO_PAUSED:
-            break;
-
         case GST_STATE_CHANGE_PAUSED_TO_READY:
             if (self->initialized)
             {
-                g_omx_port_set_done (self->in_port);
-                g_omx_port_set_done (self->out_port);
+                g_omx_port_finish (self->in_port);
+                g_omx_port_finish (self->out_port);
             }
             break;
 
@@ -126,7 +111,6 @@ change_state (GstElement *element,
         case GST_STATE_CHANGE_PAUSED_TO_READY:
             if (self->initialized)
             {
-                g_thread_join (self->thread);
                 g_omx_core_finish (self->gomx);
             }
             break;
@@ -260,30 +244,44 @@ type_class_init (gpointer g_class,
     }
 }
 
-inline void
+inline GstFlowReturn
 push_buffer (GstOmxBaseFilter *self,
              GstBuffer *buf)
 {
+    GstFlowReturn ret;
+
+    /** @todo check if tainted */
     GST_LOG_OBJECT (self, "begin");
-    self->last_pad_push_return = gst_pad_push (self->srcpad, buf);
+    ret = gst_pad_push (self->srcpad, buf);
     GST_LOG_OBJECT (self, "end");
+
+    return ret;
 }
 
-static gpointer
-output_thread (gpointer cb_data)
+static void
+output_loop (gpointer data)
 {
+    GstPad *pad;
     GOmxCore *gomx;
     GOmxPort *out_port;
     GstOmxBaseFilter *self;
+    GstFlowReturn ret = GST_FLOW_OK;
 
-    gomx = (GOmxCore *) cb_data;
-    self = GST_OMX_BASE_FILTER (gomx->client_data);
+    pad = data;
+    self = GST_OMX_BASE_FILTER (gst_pad_get_parent (pad));
+    gomx = self->gomx;
 
     GST_LOG_OBJECT (self, "begin");
 
+    if (!self->initialized)
+    {
+        g_debug ("not initialized");
+        return;
+    }
+
     out_port = self->out_port;
 
-    while (G_LIKELY (!out_port->done))
+    if (G_LIKELY (out_port->enabled))
     {
         OMX_BUFFERHEADERTYPE *omx_buffer;
 
@@ -295,7 +293,7 @@ output_thread (gpointer cb_data)
         if (G_UNLIKELY (!omx_buffer))
         {
             GST_WARNING_OBJECT (self, "null buffer: retrying");
-            continue;
+            goto leave;
         }
 
         GST_DEBUG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, flags=%lu, offset=%lu, timestamp=%lld",
@@ -306,8 +304,9 @@ output_thread (gpointer cb_data)
         {
             GstBuffer *buf;
 
+#if 1
             /** @todo remove this check */
-            if (G_LIKELY (!self->in_port->done))
+            if (G_LIKELY (self->in_port->enabled))
             {
                 GstCaps *caps = NULL;
 
@@ -326,6 +325,7 @@ output_thread (gpointer cb_data)
                     gst_caps_unref (caps);
                 }
             }
+#endif
 
             /* buf is always null when the output buffer pointer isn't shared. */
             buf = omx_buffer->pAppPrivate;
@@ -344,7 +344,7 @@ output_thread (gpointer cb_data)
                 omx_buffer->pBuffer = NULL;
                 omx_buffer->nFilledLen = 0;
 
-                push_buffer (self, buf);
+                ret = push_buffer (self, buf);
 
                 gst_buffer_unref (buf);
             }
@@ -378,7 +378,7 @@ output_thread (gpointer cb_data)
                         omx_buffer->pBuffer = NULL;
                     }
 
-                    push_buffer (self, buf);
+                    ret = push_buffer (self, buf);
                 }
                 else
                 {
@@ -392,17 +392,14 @@ output_thread (gpointer cb_data)
             GST_WARNING_OBJECT (self, "empty buffer");
         }
 
-        if (G_UNLIKELY (self->last_pad_push_return != GST_FLOW_OK))
-        {
-            GST_WARNING_OBJECT (self, "pad push error: retrying");
-            goto retry;
-        }
+        if (G_UNLIKELY (ret != GST_FLOW_OK))
+            goto leave;
 
         if (G_UNLIKELY (omx_buffer->nFlags & OMX_BUFFERFLAG_EOS))
         {
-            GST_INFO_OBJECT (self, "set_done: out_port");
-            g_omx_port_set_done (out_port);
-            break;
+            GST_DEBUG_OBJECT (self, "got eos");
+            g_omx_core_set_done (gomx);
+            goto leave;
         }
 
         if (share_output_buffer &&
@@ -440,16 +437,24 @@ output_thread (gpointer cb_data)
             GST_WARNING_OBJECT (self, "no input buffer to share");
         }
 
-retry:
         GST_LOG_OBJECT (self, "release_buffer");
         g_omx_port_release_buffer (out_port, omx_buffer);
     }
 
-    GST_DEBUG_OBJECT (self, "finishing output thread");
+    self->last_pad_push_return = ret;
+
+leave:
+
+    if (ret != GST_FLOW_OK)
+    {
+        GST_INFO_OBJECT (self, "pause task, reason:  %s",
+                         gst_flow_get_name (self->last_pad_push_return));
+        gst_pad_pause_task (self->srcpad);
+    }
 
     GST_LOG_OBJECT (self, "end");
 
-    return NULL;
+    gst_object_unref (self);
 }
 
 static GstFlowReturn
@@ -468,13 +473,6 @@ pad_chain (GstPad *pad,
     GST_LOG_OBJECT (self, "begin");
     GST_LOG_OBJECT (self, "gst_buffer: size=%lu", GST_BUFFER_SIZE (buf));
 
-    if (G_UNLIKELY (self->last_pad_push_return != GST_FLOW_OK))
-    {
-        GST_WARNING_OBJECT (self, "pad push error: leaving");
-        ret = self->last_pad_push_return;
-        goto leave;
-    }
-
     GST_LOG_OBJECT (self, "state: %d", gomx->omx_state);
 
     if (G_UNLIKELY (gomx->omx_state == OMX_StateLoaded))
@@ -488,16 +486,16 @@ pad_chain (GstPad *pad,
         }
 
         setup_ports (self);
+
         g_omx_core_prepare (self->gomx);
 
-        self->thread = g_thread_create (output_thread, gomx, TRUE, NULL);
-
         self->initialized = TRUE;
+        gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
     }
 
     in_port = self->in_port;
 
-    if (G_LIKELY (!in_port->done))
+    if (G_LIKELY (in_port->enabled))
     {
         guint buffer_offset = 0;
 
@@ -515,6 +513,11 @@ pad_chain (GstPad *pad,
         while (G_LIKELY (buffer_offset < GST_BUFFER_SIZE (buf)))
         {
             OMX_BUFFERHEADERTYPE *omx_buffer;
+
+            if (self->last_pad_push_return != GST_FLOW_OK)
+            {
+                goto out_flushing;
+            }
 
             GST_LOG_OBJECT (self, "request buffer");
             omx_buffer = g_omx_port_request_buffer (in_port);
@@ -566,13 +569,13 @@ pad_chain (GstPad *pad,
                 buffer_offset += omx_buffer->nFilledLen;
 
                 GST_LOG_OBJECT (self, "release_buffer");
+                /** @todo untaint buffer */
                 g_omx_port_release_buffer (in_port, omx_buffer);
             }
             else
             {
                 GST_WARNING_OBJECT (self, "null buffer");
-                /* ret = GST_FLOW_ERROR; */
-                break;
+                goto out_flushing;
             }
         }
     }
@@ -582,8 +585,6 @@ pad_chain (GstPad *pad,
         ret = GST_FLOW_UNEXPECTED;
     }
 
-leave:
-
     if (!share_input_buffer)
     {
         gst_buffer_unref (buf);
@@ -592,6 +593,13 @@ leave:
     GST_LOG_OBJECT (self, "end");
 
     return ret;
+
+    /* special conditions */
+out_flushing:
+    {
+        gst_buffer_unref (buf);
+        return self->last_pad_push_return;
+    }
 }
 
 static gboolean
@@ -610,21 +618,54 @@ pad_event (GstPad *pad,
     switch (GST_EVENT_TYPE (event))
     {
         case GST_EVENT_EOS:
-            /* Close the input port. */
-            g_omx_port_set_done (self->in_port);
-            /* Wait for the output port to get the EOS. */
-            g_omx_core_wait_for_done (self->gomx);
+            {
+                GOmxCore *gomx;
+
+                gomx = self->gomx;
+
+                /* send buffer with eos flag */
+                /** @todo move to util */
+                {
+                    OMX_BUFFERHEADERTYPE *omx_buffer;
+
+                    GST_LOG_OBJECT (self, "request buffer");
+                    omx_buffer = g_omx_port_request_buffer (self->in_port);
+
+                    omx_buffer->nFlags |= OMX_BUFFERFLAG_EOS;
+
+                    GST_LOG_OBJECT (self, "release_buffer");
+                    /* foo_buffer_untaint (omx_buffer); */
+                    g_omx_port_release_buffer (self->in_port, omx_buffer);
+                }
+
+                /* Wait for the output port to get the EOS. */
+                g_omx_core_wait_for_done (gomx);
+            }
+
             ret = gst_pad_push_event (self->srcpad, event);
             break;
 
         case GST_EVENT_FLUSH_START:
-            g_omx_sem_up (self->in_port->sem);
-            OMX_SendCommand (self->gomx->omx_handle, OMX_CommandFlush, OMX_ALL, NULL);
+            g_omx_port_flush (self->in_port);
+            g_omx_port_flush (self->out_port);
+            g_omx_port_disable (self->in_port);
+            g_omx_port_disable (self->out_port);
+
+            gst_pad_pause_task (self->srcpad);
             ret = gst_pad_push_event (self->srcpad, event);
             break;
 
-        case GST_EVENT_NEWSEGMENT:
+        case GST_EVENT_FLUSH_STOP:
+            ret = gst_pad_push_event (self->srcpad, event);
             self->last_pad_push_return = GST_FLOW_OK;
+
+            g_omx_port_enable (self->in_port);
+            g_omx_port_enable (self->out_port);
+
+            gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
+            break;
+
+        case GST_EVENT_NEWSEGMENT:
             ret = gst_pad_push_event (self->srcpad, event);
             break;
 
@@ -636,6 +677,57 @@ pad_event (GstPad *pad,
     GST_LOG_OBJECT (self, "end");
 
     return ret;
+}
+
+static gboolean
+activate_push (GstPad *pad,
+               gboolean active)
+{
+    gboolean result = TRUE;
+    GstOmxBaseFilter *self;
+
+    self = GST_OMX_BASE_FILTER (gst_pad_get_parent (pad));
+
+    if (active)
+    {
+        GST_DEBUG_OBJECT (self, "activate");
+        self->last_pad_push_return = GST_FLOW_OK;
+
+        /* we do not start the task yet if the pad is not connected */
+        if (gst_pad_is_linked (pad))
+        {
+            if (self->initialized)
+            {
+                /** @todo link callback function also needed */
+                g_omx_port_enable (self->in_port);
+                g_omx_port_enable (self->out_port);
+
+                result = gst_pad_start_task (pad, output_loop, pad);
+            }
+        }
+    }
+    else
+    {
+        GST_DEBUG_OBJECT (self, "deactivate");
+
+        if (self->initialized)
+        {
+            /* taint buffers */
+            g_omx_port_flush (self->in_port);
+            g_omx_port_flush (self->out_port);
+
+            /* unlock loops */
+            g_omx_port_disable (self->in_port);
+            g_omx_port_disable (self->out_port);
+        }
+
+        /* make sure streaming finishes */
+        result = gst_pad_stop_task (pad);
+    }
+
+    gst_object_unref (self);
+
+    return result;
 }
 
 static void
@@ -668,6 +760,8 @@ type_instance_init (GTypeInstance *instance,
 
     self->srcpad =
         gst_pad_new_from_template (gst_element_class_get_pad_template (element_class, "src"), "src");
+
+    gst_pad_set_activatepush_function (self->srcpad, activate_push);
 
     gst_pad_use_fixed_caps (self->srcpad);
 

@@ -37,6 +37,7 @@ typedef struct GstOmxBaseFilterClass GstOmxBaseFilterClass;
 typedef void (*GstOmxBaseFilterCb) (GstOmxBaseFilter *self);
 
 #include <gstomx_util.h>
+#include <async_queue.h>
 
 struct GstOmxBaseFilter
 {
@@ -48,8 +49,6 @@ struct GstOmxBaseFilter
     GOmxCore *gomx;
     GOmxPort *in_port;
     GOmxPort *out_port;
-
-    GThread *thread;
 
     char *omx_component;
     char *omx_library;

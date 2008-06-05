@@ -36,10 +36,6 @@ wait_for_state (GOmxCore *core,
                 OMX_STATETYPE state);
 
 inline void
-send_eos_buffer (GOmxCore *core,
-                 OMX_BUFFERHEADERTYPE *omx_buffer);
-
-inline void
 in_port_cb (GOmxPort *port,
             OMX_BUFFERHEADERTYPE *omx_buffer);
 
@@ -424,6 +420,12 @@ g_omx_core_get_port (GOmxCore *core,
 }
 
 void
+g_omx_core_set_done (GOmxCore *core)
+{
+    g_omx_sem_up (core->done_sem);
+}
+
+void
 g_omx_core_wait_for_done (GOmxCore *core)
 {
     g_omx_sem_down (core->done_sem);
@@ -444,9 +446,9 @@ g_omx_port_new (GOmxCore *core)
     port->buffer_size = 0;
     port->buffers = NULL;
 
+    port->enabled = TRUE;
+    port->queue = async_queue_new ();
     port->mutex = g_mutex_new ();
-    port->sem = g_omx_sem_new ();
-    port->queue = g_queue_new ();
 
     return port;
 }
@@ -455,9 +457,7 @@ void
 g_omx_port_free (GOmxPort *port)
 {
     g_mutex_free (port->mutex);
-    g_queue_free (port->queue);
-
-    g_omx_sem_free (port->sem);
+    async_queue_free (port->queue);
 
     g_free (port->buffers);
     g_free (port);
@@ -497,25 +497,13 @@ void
 g_omx_port_push_buffer (GOmxPort *port,
                         OMX_BUFFERHEADERTYPE *omx_buffer)
 {
-    g_mutex_lock (port->mutex);
-    g_queue_push_tail (port->queue, omx_buffer);
-    g_mutex_unlock (port->mutex);
-
-    g_omx_sem_up (port->sem);
+    async_queue_push (port->queue, omx_buffer);
 }
 
 OMX_BUFFERHEADERTYPE *
 g_omx_port_request_buffer (GOmxPort *port)
 {
-    OMX_BUFFERHEADERTYPE *omx_buffer = NULL;
-
-    g_omx_sem_down (port->sem);
-
-    g_mutex_lock (port->mutex);
-    omx_buffer = g_queue_pop_head (port->queue);
-    g_mutex_unlock (port->mutex);
-
-    return omx_buffer;
+    return async_queue_pop (port->queue);
 }
 
 void
@@ -536,16 +524,28 @@ g_omx_port_release_buffer (GOmxPort *port,
 }
 
 void
-g_omx_port_set_done (GOmxPort *port)
+g_omx_port_enable (GOmxPort *port)
 {
-    port->done = true;
+    async_queue_enable (port->queue);
+}
 
-    g_omx_sem_up (port->sem);
+void
+g_omx_port_disable (GOmxPort *port)
+{
+    async_queue_disable (port->queue);
+}
 
-    if (port->done_cb)
-    {
-        port->done_cb (port);
-    }
+void
+g_omx_port_flush (GOmxPort *port)
+{
+    /** @todo tain the buffers */
+}
+
+void
+g_omx_port_finish (GOmxPort *port)
+{
+    port->enabled = FALSE;
+    async_queue_disable (port->queue);
 }
 
 /*
@@ -617,21 +617,6 @@ wait_for_state (GOmxCore *core,
     g_omx_sem_down (core->state_sem);
 }
 
-inline void
-send_eos_buffer (GOmxCore *core,
-                 OMX_BUFFERHEADERTYPE *omx_buffer)
-{
-    if (G_UNLIKELY (!core->eos_sent))
-    {
-        omx_buffer->nFlags = OMX_BUFFERFLAG_EOS;
-        omx_buffer->nFilledLen = 0;
-
-        core->eos_sent = true;
-
-        OMX_EmptyThisBuffer (core->omx_handle, omx_buffer);
-    }
-}
-
 /*
  * Callbacks
  */
@@ -640,27 +625,20 @@ inline void
 in_port_cb (GOmxPort *port,
             OMX_BUFFERHEADERTYPE *omx_buffer)
 {
-    if (port->done)
-    {
-        send_eos_buffer (port->core, omx_buffer);
-        return;
-    }
+    /** @todo remove this */
 
-    if (port->done)
-    {
-        omx_buffer->nFlags = OMX_BUFFERFLAG_EOS;
-        port->core->eos_sent = true;
-    }
+    if (!port->enabled)
+        return;
 }
 
 inline void
 out_port_cb (GOmxPort *port,
              OMX_BUFFERHEADERTYPE *omx_buffer)
 {
-    if (port->done)
-    {
+    /** @todo remove this */
+
+    if (!port->enabled)
         return;
-    }
 
 #if 0
     if (omx_buffer->nFlags & OMX_BUFFERFLAG_EOS)

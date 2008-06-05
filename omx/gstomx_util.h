@@ -28,6 +28,8 @@
 #include <OMX_Core.h>
 #include <OMX_Component.h>
 
+#include <async_queue.h>
+
 /* Typedefs. */
 
 typedef struct GOmxCore GOmxCore;
@@ -81,9 +83,10 @@ struct GOmxCore
     GOmxSem *state_sem;
     GOmxSem *done_sem;
 
-    gboolean eos_sent; /**< Determines if the EOS flag has been sent. */
     GOmxCb settings_changed_cb;
     GOmxImp *imp;
+
+    gboolean done;
 };
 
 struct GOmxPort
@@ -93,14 +96,11 @@ struct GOmxPort
 
     gint num_buffers;
     gint buffer_size;
-    GOmxPortCb done_cb;
     OMX_BUFFERHEADERTYPE **buffers;
 
-    GOmxSem *sem;
-    GQueue *queue;
     GMutex *mutex;
-
-    gboolean done;
+    gboolean enabled;
+    AsyncQueue *queue;
 };
 
 struct GOmxSem
@@ -123,6 +123,7 @@ void g_omx_core_prepare (GOmxCore *core);
 void g_omx_core_start (GOmxCore *core);
 void g_omx_core_pause (GOmxCore *core);
 void g_omx_core_finish (GOmxCore *core);
+void g_omx_core_set_done (GOmxCore *core);
 void g_omx_core_wait_for_done (GOmxCore *core);
 GOmxPort *g_omx_core_setup_port (GOmxCore *core, OMX_PARAM_PORTDEFINITIONTYPE *omx_port);
 
@@ -132,7 +133,10 @@ void g_omx_port_setup (GOmxPort *port, OMX_PARAM_PORTDEFINITIONTYPE *omx_port);
 void g_omx_port_push_buffer (GOmxPort *port, OMX_BUFFERHEADERTYPE *omx_buffer);
 OMX_BUFFERHEADERTYPE *g_omx_port_request_buffer (GOmxPort *port);
 void g_omx_port_release_buffer (GOmxPort *port, OMX_BUFFERHEADERTYPE *omx_buffer);
-void g_omx_port_set_done (GOmxPort *port);
+void g_omx_port_enable (GOmxPort *port);
+void g_omx_port_disable (GOmxPort *port);
+void g_omx_port_flush (GOmxPort *port);
+void g_omx_port_finish (GOmxPort *port);
 
 GOmxSem *g_omx_sem_new (void);
 void g_omx_sem_free (GOmxSem *sem);
