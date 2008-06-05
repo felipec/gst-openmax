@@ -29,10 +29,10 @@ libgstomx_la_SOURCES = gstomx.c gstomx.h \
 		       gstomx_g729enc.c gstomx_g729enc.h \
 		       gstomx_base_sink.c gstomx_base_sink.h \
 		       gstomx_audiosink.c gstomx_audiosink.h \
-		       gstomx_videosink.c gstomx_videosink.h
+		       gstomx_videosink.c gstomx_videosink.h \
+		       gstomx_base_src.c gstomx_base_src.h \
+		       gstomx_filereadersrc.c gstomx_filereadersrc.h
 
-#      gstomx_base_src.c gstomx_base_src.h \
-#      gstomx_filereadersrc.c gstomx_filereadersrc.h
 
 libgstomx_la_CFLAGS = -I$(srcdir)/headers $(GST_CFLAGS) $(GST_BASE_CFLAGS) -I$(top_srcdir)/util
 libgstomx_la_LIBADD = $(GST_LIBS) $(GST_BASE_LIBS) $(top_builddir)/util/libutil.la

@@ -44,9 +44,7 @@
 #include "gstomx_g729enc.h"
 #include "gstomx_audiosink.h"
 #include "gstomx_videosink.h"
-#if 0
 #include "gstomx_filereadersrc.h"
-#endif
 
 #include <stdbool.h>
 
@@ -181,12 +179,10 @@ plugin_init (GstPlugin *plugin)
         return false;
     }
 
-#if 0
     if (!gst_element_register (plugin, "omx_filereadersrc", GST_RANK_NONE, GST_OMX_FILEREADERSRC_TYPE))
     {
         return false;
     }
-#endif
 
     return true;
 }

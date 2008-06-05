@@ -144,7 +144,7 @@ create (GstBaseSrc *gst_base,
 
     out_port = self->out_port;
 
-    while (!out_port->done)
+    while (out_port->enabled)
     {
         switch (gomx->omx_state)
         {
@@ -181,8 +181,8 @@ create (GstBaseSrc *gst_base,
 
                 if (omx_buffer->nFlags & OMX_BUFFERFLAG_EOS)
                 {
-                    GST_INFO_OBJECT (self, "set_done: out_port");
-                    g_omx_port_set_done (out_port);
+                    GST_INFO_OBJECT (self, "got eos");
+                    g_omx_core_set_done (gomx);
                     break;
                 }
 
@@ -190,7 +190,7 @@ create (GstBaseSrc *gst_base,
                 {
                     GstBuffer *buf;
 
-                    if (!self->out_port->done)
+                    if (out_port->enabled)
                     {
                         GstCaps *caps = NULL;
 
@@ -311,7 +311,7 @@ create (GstBaseSrc *gst_base,
         }
     }
 
-    if (out_port->done)
+    if (!out_port->enabled)
     {
         GST_WARNING_OBJECT (self, "done");
         ret = GST_FLOW_UNEXPECTED;
@@ -338,7 +338,7 @@ event (GstBaseSrc *gst_base,
     {
         case GST_EVENT_EOS:
             /* Close the output port. */
-            g_omx_port_set_done (self->out_port);
+            g_omx_core_set_done (self->gomx);
             break;
 
         case GST_EVENT_NEWSEGMENT:
