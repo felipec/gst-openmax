@@ -18,6 +18,11 @@ static void *foo_thread (void *cb_data);
 OMX_ERRORTYPE
 OMX_Init (void)
 {
+    if (!g_thread_supported ())
+    {
+        g_thread_init (NULL);
+    }
+
     return OMX_ErrorNone;
 }
 

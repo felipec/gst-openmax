@@ -1,5 +1,3 @@
-SUBDIRS = standalone
-
 noinst_PROGRAMS = basic
 
 basic_SOURCES = basic.c
