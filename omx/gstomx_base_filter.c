@@ -275,7 +275,7 @@ output_loop (gpointer data)
 
     if (!self->initialized)
     {
-        g_debug ("not initialized");
+        g_error ("not initialized");
         return;
     }
 
@@ -292,7 +292,7 @@ output_loop (gpointer data)
 
         if (G_UNLIKELY (!omx_buffer))
         {
-            GST_WARNING_OBJECT (self, "null buffer: retrying");
+            GST_WARNING_OBJECT (self, "null buffer: leaving");
             goto leave;
         }
 
