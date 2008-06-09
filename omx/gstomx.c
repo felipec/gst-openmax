@@ -42,6 +42,8 @@
 #include "gstomx_g711enc.h"
 #include "gstomx_g729dec.h"
 #include "gstomx_g729enc.h"
+#include "gstomx_ilbcdec.h"
+#include "gstomx_ilbcenc.h"
 #include "gstomx_audiosink.h"
 #include "gstomx_videosink.h"
 #include "gstomx_filereadersrc.h"
@@ -165,6 +167,16 @@ plugin_init (GstPlugin *plugin)
     }
 
     if (!gst_element_register (plugin, "omx_g729enc", DEFAULT_RANK, GST_OMX_G729ENC_TYPE))
+    {
+        return false;
+    }
+
+    if (!gst_element_register (plugin, "omx_ilbcdec", DEFAULT_RANK, GST_OMX_ILBCDEC_TYPE))
+    {
+        return false;
+    }
+
+    if (!gst_element_register (plugin, "omx_ilbcenc", DEFAULT_RANK, GST_OMX_ILBCENC_TYPE))
     {
         return false;
     }
