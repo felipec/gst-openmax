@@ -47,6 +47,7 @@
 #include "gstomx_audiosink.h"
 #include "gstomx_videosink.h"
 #include "gstomx_filereadersrc.h"
+#include "gstomx_volume.h"
 
 #include "config.h"
 
@@ -194,6 +195,11 @@ plugin_init (GstPlugin *plugin)
     }
 
     if (!gst_element_register (plugin, "omx_filereadersrc", GST_RANK_NONE, GST_OMX_FILEREADERSRC_TYPE))
+    {
+        return false;
+    }
+
+    if (!gst_element_register (plugin, "omx_volume", GST_RANK_NONE, GST_OMX_VOLUME_TYPE))
     {
         return false;
     }
