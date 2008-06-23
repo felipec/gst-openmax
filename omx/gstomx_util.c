@@ -70,12 +70,6 @@ inline GOmxPort *
 g_omx_core_get_port (GOmxCore *core,
                      guint index);
 
-GOmxImp *
-g_omx_imp_new (const gchar *name);
-
-void
-g_omx_imp_free (gpointer data);
-
 static OMX_CALLBACKTYPE callbacks = { EventHandler, EmptyBufferDone, FillBufferDone };
 
 static GHashTable *implementations;
@@ -106,24 +100,45 @@ g_ptr_array_insert (GPtrArray *array,
  * Main
  */
 
-void
-g_omx_init (void)
+static GOmxImp *imp_new (const gchar *name);
+static void imp_free (GOmxImp *imp);
+
+static GOmxImp *
+imp_new (const gchar *name)
 {
-    if (!initialized)
+    GOmxImp *imp;
+
+    imp = g_new0 (GOmxImp, 1);
+
+    /* Load the OpenMAX IL symbols */
     {
-        implementations = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_omx_imp_free);
-        initialized = true;
+        void *handle;
+
+        imp->dl_handle = handle = dlopen (name, RTLD_LAZY);
+        if (!handle)
+        {
+            g_warning ("%s\n", dlerror ());
+            imp_free (imp);
+            return NULL;
+        }
+
+        imp->sym_table.init = dlsym (handle, "OMX_Init");
+        imp->sym_table.deinit = dlsym (handle, "OMX_Deinit");
+        imp->sym_table.get_handle = dlsym (handle, "OMX_GetHandle");
+        imp->sym_table.free_handle = dlsym (handle, "OMX_FreeHandle");
     }
+
+    return imp;
 }
 
-void
-g_omx_deinit (void)
+static void
+imp_free (GOmxImp *imp)
 {
-    if (initialized)
+    if (imp->dl_handle)
     {
-        g_hash_table_destroy (implementations);
-        initialized = false;
+        dlclose (imp->dl_handle);
     }
+    g_free (imp);
 }
 
 static inline GOmxImp *
@@ -133,7 +148,7 @@ request_imp (const gchar *name)
     imp = g_hash_table_lookup (implementations, name);
     if (!imp)
     {
-        imp = g_omx_imp_new (name);
+        imp = imp_new (name);
         if (!imp)
             return NULL;
         g_hash_table_insert (implementations, g_strdup (name), imp);
@@ -159,43 +174,24 @@ release_imp (GOmxImp *imp)
     }
 }
 
-GOmxImp *
-g_omx_imp_new (const gchar *name)
+void
+g_omx_init (void)
 {
-    GOmxImp *imp;
-
-    imp = g_new0 (GOmxImp, 1);
-
-    /* Load the OpenMAX IL symbols */
+    if (!initialized)
     {
-        void *handle;
-
-        imp->dl_handle = handle = dlopen (name, RTLD_LAZY);
-        if (!handle)
-        {
-            g_warning ("%s\n", dlerror ());
-            g_omx_imp_free (imp);
-            return NULL;
-        }
-
-        imp->sym_table.init = dlsym (handle, "OMX_Init");
-        imp->sym_table.deinit = dlsym (handle, "OMX_Deinit");
-        imp->sym_table.get_handle = dlsym (handle, "OMX_GetHandle");
-        imp->sym_table.free_handle = dlsym (handle, "OMX_FreeHandle");
+        implementations = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) imp_free);
+        initialized = true;
     }
-
-    return imp;
 }
 
 void
-g_omx_imp_free (gpointer data)
+g_omx_deinit (void)
 {
-    GOmxImp *imp = data;
-    if (imp->dl_handle)
+    if (initialized)
     {
-        dlclose (imp->dl_handle);
+        g_hash_table_destroy (implementations);
+        initialized = false;
     }
-    g_free (imp);
 }
 
 /*
