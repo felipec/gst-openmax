@@ -84,7 +84,7 @@ static gboolean initialized;
 static void
 g_ptr_array_clear (GPtrArray *array)
 {
-    gint index;
+    guint index;
     for (index = 0; index < array->len; index++)
         array->pdata[index] = NULL;
 }
@@ -271,8 +271,8 @@ g_omx_core_prepare (GOmxCore *core)
 
     /* Allocate buffers. */
     {
-        gint index;
-        gint i;
+        guint index;
+        guint i;
 
         for (index = 0; index < core->ports->len; index++)
         {
@@ -376,7 +376,7 @@ g_omx_core_finish (GOmxCore *core)
     wait_for_state (core, OMX_StateLoaded);
 
     {
-        gint index;
+        guint index;
         for (index = 0; index < core->ports->len; index++)
         {
             GOmxPort *port;

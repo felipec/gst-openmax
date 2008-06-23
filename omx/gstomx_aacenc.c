@@ -55,8 +55,8 @@ generate_src_template (void)
                                NULL);
 
     {
-        GValue list = { 0 };
-        GValue val = { 0 };
+        GValue list = { 0, 0 };
+        GValue val = { 0, 0 };
 
         g_value_init (&list, GST_TYPE_LIST);
         g_value_init (&val, G_TYPE_INT);

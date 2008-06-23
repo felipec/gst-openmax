@@ -95,8 +95,8 @@ struct GOmxPort
     GOmxCore *core;
     GOmxPortType type;
 
-    gint num_buffers;
-    gint buffer_size;
+    guint num_buffers;
+    gulong buffer_size;
     OMX_BUFFERHEADERTYPE **buffers;
 
     GMutex *mutex;
