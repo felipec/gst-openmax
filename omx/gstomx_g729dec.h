@@ -24,8 +24,6 @@
 
 #include <gst/gst.h>
 
-#include <config.h>
-
 G_BEGIN_DECLS
 
 #define GST_OMX_G729DEC(obj) (GstOmxG729Dec *) (obj)

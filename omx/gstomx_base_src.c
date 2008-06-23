@@ -22,8 +22,7 @@
 #include "gstomx_base_src.h"
 #include "gstomx.h"
 
-#include <string.h>
-
+#include <string.h> /* For memcpy */
 #include <stdbool.h>
 
 enum

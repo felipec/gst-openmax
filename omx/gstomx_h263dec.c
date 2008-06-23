@@ -22,8 +22,6 @@
 #include "gstomx_h263dec.h"
 #include "gstomx.h"
 
-#include <string.h>
-
 #define OMX_COMPONENT_NAME "OMX.st.video_decoder.h263"
 
 static GstOmxBaseVideoDecClass *parent_class = NULL;

@@ -23,10 +23,6 @@
 #include "gstomx_base_filter.h"
 #include "gstomx.h"
 
-#include <string.h>
-
-#include <stdbool.h>
-
 #define OMX_COMPONENT_NAME "OMX.st.audio_encoder.ilbc"
 
 static GstOmxBaseFilterClass *parent_class = NULL;

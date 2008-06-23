@@ -22,8 +22,6 @@
 #include "gstomx_wmvdec.h"
 #include "gstomx.h"
 
-#include <string.h>
-
 #define OMX_COMPONENT_NAME "OMX.st.video_decoder.wmv"
 
 static GstOmxBaseVideoDecClass *parent_class = NULL;

@@ -25,8 +25,6 @@
 #include <gst/gst.h>
 #include <gst/base/gstbasesrc.h>
 
-#include <config.h>
-
 G_BEGIN_DECLS
 
 #define GST_OMX_BASE_SRC(obj) (GstOmxBaseSrc *) (obj)

@@ -23,8 +23,7 @@
 #include "gstomx_base_sink.h"
 #include "gstomx.h"
 
-#include <string.h>
-
+#include <string.h> /* For strcmp */
 #include <stdbool.h>
 
 #define OMX_COMPONENT_NAME "OMX.st.videosink"
