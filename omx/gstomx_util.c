@@ -126,8 +126,8 @@ g_omx_deinit (void)
     }
 }
 
-GOmxImp *
-g_omx_request_imp (const gchar *name)
+static inline GOmxImp *
+request_imp (const gchar *name)
 {
     GOmxImp *imp;
     imp = g_hash_table_lookup (implementations, name);
@@ -149,8 +149,8 @@ g_omx_request_imp (const gchar *name)
     return imp;
 }
 
-void
-g_omx_release_imp (GOmxImp *imp)
+static inline void
+release_imp (GOmxImp *imp)
 {
     imp->client_count--;
     if (imp->client_count == 0)
@@ -237,7 +237,7 @@ g_omx_core_init (GOmxCore *core,
                  const gchar *library_name,
                  const gchar *component_name)
 {
-    core->imp = g_omx_request_imp (library_name);
+    core->imp = request_imp (library_name);
 
     if (!core->imp)
     {
@@ -260,7 +260,7 @@ g_omx_core_deinit (GOmxCore *core)
     if (core->omx_error)
         return;
 
-    g_omx_release_imp (core->imp);
+    release_imp (core->imp);
     core->imp = NULL;
 }
 

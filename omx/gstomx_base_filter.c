@@ -244,7 +244,7 @@ type_class_init (gpointer g_class,
     }
 }
 
-inline GstFlowReturn
+static inline GstFlowReturn
 push_buffer (GstOmxBaseFilter *self,
              GstBuffer *buf)
 {

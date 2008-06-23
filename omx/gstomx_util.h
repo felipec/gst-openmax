@@ -116,7 +116,7 @@ struct GOmxSem
 void g_omx_init (void);
 void g_omx_deinit (void);
 
-GOmxCore *g_omx_core_new ();
+GOmxCore *g_omx_core_new (void);
 void g_omx_core_free (GOmxCore *core);
 void g_omx_core_init (GOmxCore *core, const gchar *library_name, const gchar *component_name);
 void g_omx_core_deinit (GOmxCore *core);

@@ -220,8 +220,8 @@ render (GstBaseSink *gst_base,
 }
 
 static gboolean
-event (GstBaseSink *gst_base,
-       GstEvent *event)
+handle_event (GstBaseSink *gst_base,
+              GstEvent *event)
 {
     GstOmxBaseSink *self;
 
@@ -335,7 +335,7 @@ type_class_init (gpointer g_class,
 
     gst_base_sink_class->start = start;
     gst_base_sink_class->stop = stop;
-    gst_base_sink_class->event = event;
+    gst_base_sink_class->event = handle_event;
     gst_base_sink_class->preroll = render;
     gst_base_sink_class->render = render;
 

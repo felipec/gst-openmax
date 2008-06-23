@@ -265,7 +265,7 @@ create (GstBaseSrc *gst_base,
 
                     if (!omx_buffer->pBuffer)
                     {
-                        GstBuffer *buf;
+                        GstBuffer *new_buf;
                         GstFlowReturn result;
 
                         GST_LOG_OBJECT (self, "allocate buffer");
@@ -273,15 +273,15 @@ create (GstBaseSrc *gst_base,
                                                                     GST_BUFFER_OFFSET_NONE,
                                                                     omx_buffer->nAllocLen,
                                                                     GST_PAD_CAPS (gst_base->srcpad),
-                                                                    &buf);
+                                                                    &new_buf);
 
                         if (result == GST_FLOW_OK)
                         {
-                            gst_buffer_ref (buf);
-                            omx_buffer->pAppPrivate = buf;
+                            gst_buffer_ref (new_buf);
+                            omx_buffer->pAppPrivate = new_buf;
 
-                            omx_buffer->pBuffer = GST_BUFFER_DATA (buf);
-                            omx_buffer->nAllocLen = GST_BUFFER_SIZE (buf);
+                            omx_buffer->pBuffer = GST_BUFFER_DATA (new_buf);
+                            omx_buffer->nAllocLen = GST_BUFFER_SIZE (new_buf);
                         }
                         else
                         {
@@ -323,8 +323,8 @@ create (GstBaseSrc *gst_base,
 }
 
 static gboolean
-event (GstBaseSrc *gst_base,
-       GstEvent *event)
+handle_event (GstBaseSrc *gst_base,
+              GstEvent *event)
 {
     GstOmxBaseSrc *self;
 
@@ -427,7 +427,7 @@ type_class_init (gpointer g_class,
 
     gst_base_src_class->start = start;
     gst_base_src_class->stop = stop;
-    gst_base_src_class->event = event;
+    gst_base_src_class->event = handle_event;
     gst_base_src_class->create = create;
 
     /* Properties stuff */

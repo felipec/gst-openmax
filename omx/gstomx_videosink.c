@@ -54,8 +54,10 @@ generate_sink_template (void)
                                NULL);
 
     {
-        GValue list = { 0, 0 };
-        GValue val = { 0, 0 };
+        GValue list;
+        GValue val;
+
+        list.g_type = val.g_type = 0;
 
         g_value_init (&list, GST_TYPE_LIST);
         g_value_init (&val, GST_TYPE_FOURCC);
