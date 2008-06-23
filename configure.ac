@@ -1,8 +1,8 @@
 AC_PREREQ([2.52])
 
-AC_INIT([GstOpenMAX], [0.10.0.4], [http://freedesktop.org/wiki/GstOpenMAX], [gst-openmax])
+AC_INIT([gst-openmax], [0.10.0.4], [http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer&component=gst-openmax], [gst-openmax])
 AC_CONFIG_AUX_DIR([config])
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([-Wall -Wno-portability])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile \
 		 omx/Makefile \
@@ -15,9 +15,6 @@ dnl versions of GStreamer
 GST_MAJORMINOR=0.10
 GST_REQUIRED=0.10.0
 
-dnl initialize GStreamer macros
-AG_GST_INIT
-
 dnl AM_MAINTAINER_MODE provides the option to enable maintainer mode
 AM_MAINTAINER_MODE
 
@@ -28,8 +25,11 @@ AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 AM_PATH_CHECK
 
-dnl add GStreamer macros for aclocal
-AC_SUBST(ACLOCAL_AMFLAGS, ["-I common/m4"])
+dnl Keep correct libtool macros in-tree.
+AC_CONFIG_MACRO_DIR([m4])
+
+dnl initialize GStreamer macros
+AG_GST_INIT
 
 dnl define an ERROR_CFLAGS Makefile variable
 AG_GST_SET_ERROR_CFLAGS($GST_CVS)

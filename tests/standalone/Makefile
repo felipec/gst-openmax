@@ -8,6 +8,7 @@ libomxil_foo_so_LIBADD = $(GTHREAD_LIBS) $(top_srcdir)/util/.libs/libutil.a
 
 CFLAGS = -ggdb
 top_srcdir = ../..
+srcdir = .
 CC = gcc
 LIBRARIES = $(noinst_LIBRARIES)
 GTHREAD_CFLAGS=`pkg-config --cflags gthread-2.0`
@@ -23,9 +24,13 @@ libomxil-foo.so: LIBS := $(libomxil_foo_so_LIBADD)
 %.so::
 	$(CC) $(LDFLAGS) -shared -o $@ $^ $(LIBS)
 
-.PHONY: clean install
+.PHONY: clean distclean install
 
 clean:
 	rm -rf *.o $(LIBRARIES)
 
 install:
+distdir:
+	cp -pR $(srcdir)/core.c $(distdir)
+	cp -pR $(srcdir)/Makefile $(distdir)
+distclean: clean
