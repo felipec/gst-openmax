@@ -22,6 +22,8 @@
 #include "gstomx_base_videoenc.h"
 #include "gstomx.h"
 
+#include <string.h> /* For strcmp */
+
 enum
 {
     ARG_0,

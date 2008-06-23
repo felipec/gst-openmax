@@ -22,6 +22,8 @@
 #include "gstomx_base_sink.h"
 #include "gstomx.h"
 
+#include <string.h> /* For memcpy */
+
 static gboolean share_input_buffer = FALSE;
 
 enum

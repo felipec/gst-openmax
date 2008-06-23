@@ -48,6 +48,8 @@
 #include "gstomx_videosink.h"
 #include "gstomx_filereadersrc.h"
 
+#include "config.h"
+
 #include <stdbool.h>
 
 GST_DEBUG_CATEGORY (gstomx_debug);

@@ -22,6 +22,8 @@
 #include "gstomx_base_filter.h"
 #include "gstomx.h"
 
+#include <string.h> /* For memcpy */
+
 static gboolean share_input_buffer = FALSE;
 static gboolean share_output_buffer = FALSE;
 
