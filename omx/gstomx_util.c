@@ -488,7 +488,7 @@ g_omx_port_setup (GOmxPort *port,
         /** @todo handle this case */
         g_print ("WARNING: unhandled setup\n");
     }
-    port->buffers = g_new (OMX_BUFFERHEADERTYPE *, port->num_buffers);
+    port->buffers = g_new0 (OMX_BUFFERHEADERTYPE *, port->num_buffers);
 }
 
 void
