@@ -71,13 +71,13 @@ typedef struct TableItem
 static TableItem element_table[] =
 {
     { "omx_dummy", "libomxil-bellagio.so.0", "OMX.st.dummy", GST_RANK_NONE, gst_omx_dummy_get_type },
-    { "omx_mpeg4dec", "libomxil-bellagio.so.0", "OMX.st.video_decoder.mpeg4", GST_RANK_PRIMARY, gst_omx_mpeg4dec_get_type },
-    { "omx_h264dec", "libomxil-bellagio.so.0", "OMX.st.video_decoder.avc", GST_RANK_PRIMARY, gst_omx_h264dec_get_type },
-    { "omx_h263dec", "libomxil-bellagio.so.0", "OMX.st.video_decoder.h263", GST_RANK_PRIMARY, gst_omx_h263dec_get_type },
-    { "omx_wmvdec", "libomxil-bellagio.so.0", "OMX.st.video_decoder.wmv", GST_RANK_PRIMARY, gst_omx_wmvdec_get_type },
-    { "omx_mpeg4enc", "libomxil-bellagio.so.0", "OMX.st.video_encoder.mpeg4", GST_RANK_PRIMARY, gst_omx_mpeg4enc_get_type },
-    { "omx_h264enc", "libomxil-bellagio.so.0", "OMX.st.video_encoder.avc", GST_RANK_PRIMARY, gst_omx_h264enc_get_type },
-    { "omx_h263enc", "libomxil-bellagio.so.0", "OMX.st.video_encoder.h263", GST_RANK_PRIMARY, gst_omx_h263enc_get_type },
+    { "omx_mpeg4dec", "libOMX_Core.so", "OMX.TI.Video.Decoder", GST_RANK_PRIMARY, gst_omx_mpeg4dec_get_type },
+    { "omx_h264dec", "libOMX_Core.so", "OMX.TI.Video.Decoder", GST_RANK_PRIMARY, gst_omx_h264dec_get_type },
+    { "omx_h263dec", "libOMX_Core.so", "OMX.TI.Video.Decoder", GST_RANK_PRIMARY, gst_omx_h263dec_get_type },
+    { "omx_wmvdec", "libOMX_Core.so", "OMX.TI.Video.Decoder", GST_RANK_PRIMARY, gst_omx_wmvdec_get_type },
+    { "omx_mpeg4enc", "libOMX_Core.so", "OMX.TI.Video.encoder", GST_RANK_PRIMARY, gst_omx_mpeg4enc_get_type },
+    { "omx_h264enc", "libOMX_Core.so", "OMX.TI.Video.encoder", GST_RANK_PRIMARY, gst_omx_h264enc_get_type },
+    { "omx_h263enc", "libOMX_Core.so", "OMX.TI.Video.encoder", GST_RANK_PRIMARY, gst_omx_h263enc_get_type },
     { "omx_vorbisdec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.ogg.single", GST_RANK_SECONDARY, gst_omx_vorbisdec_get_type },
     { "omx_mp3dec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.mp3.mad", GST_RANK_PRIMARY, gst_omx_mp3dec_get_type },
 #ifdef EXPERIMENTAL
@@ -96,7 +96,7 @@ static TableItem element_table[] =
     { "omx_g729enc", "libomxil-bellagio.so.0", "OMX.st.audio_encoder.g729", GST_RANK_PRIMARY, gst_omx_g729enc_get_type },
     { "omx_ilbcdec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.ilbc", GST_RANK_PRIMARY, gst_omx_ilbcdec_get_type },
     { "omx_ilbcenc", "libomxil-bellagio.so.0", "OMX.st.audio_encoder.ilbc", GST_RANK_PRIMARY, gst_omx_ilbcenc_get_type },
-    { "omx_jpegenc", "libomxil-bellagio.so.0", "OMX.st.image_encoder.jpeg", GST_RANK_PRIMARY, gst_omx_jpegenc_get_type },
+    { "omx_jpegenc", "libOMX_Core.so", "OMX.TI.JPEG.encoder", GST_RANK_PRIMARY, gst_omx_jpegenc_get_type },
 #endif /* EXPERIMENTAL */
     { "omx_audiosink", "libomxil-bellagio.so.0", "OMX.st.alsa.alsasink", GST_RANK_NONE, gst_omx_audiosink_get_type },
 #ifdef EXPERIMENTAL
