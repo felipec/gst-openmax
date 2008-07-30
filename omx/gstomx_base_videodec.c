@@ -218,6 +218,12 @@ sink_setcaps (GstPad *pad,
         OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
 
         g_omx_port_enable (omx_base->in_port);
+
+        g_omx_port_disable (omx_base->out_port);
+
+        gstomx_base_filter_setup_ports (omx_base);
+
+        g_omx_port_enable (omx_base->out_port);
     }
 
     return gst_pad_set_caps (pad, caps);
