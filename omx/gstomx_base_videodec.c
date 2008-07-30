@@ -213,7 +213,11 @@ sink_setcaps (GstPad *pad,
         param.format.video.nFrameWidth = width;
         param.format.video.nFrameHeight = height;
 
+        g_omx_port_disable (omx_base->in_port);
+
         OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
+
+        g_omx_port_enable (omx_base->in_port);
     }
 
     return gst_pad_set_caps (pad, caps);
