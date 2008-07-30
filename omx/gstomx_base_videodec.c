@@ -204,7 +204,13 @@ sink_setcaps (GstPad *pad,
         param->format.video.nFrameWidth = width;
         param->format.video.nFrameHeight = height;
 
+        if (!omx_base->in_port->tunneled)
+            g_omx_port_disable (omx_base->in_port);
+
         OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+
+        if (!omx_base->in_port->tunneled)
+            g_omx_port_enable (omx_base->in_port);
     }
 
     free (param);
