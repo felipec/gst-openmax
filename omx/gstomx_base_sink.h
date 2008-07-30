@@ -50,6 +50,7 @@ struct GstOmxBaseSink
     char *omx_library;
 
     gboolean initialized;
+    gboolean tunneling;
 };
 
 struct GstOmxBaseSinkClass
