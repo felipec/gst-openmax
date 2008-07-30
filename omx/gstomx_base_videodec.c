@@ -211,6 +211,14 @@ sink_setcaps (GstPad *pad,
 
         if (!omx_base->in_port->tunneled)
             g_omx_port_enable (omx_base->in_port);
+
+        if (!omx_base->out_port->tunneled)
+            g_omx_port_disable (omx_base->out_port);
+
+        gstomx_base_filter_setup_ports (omx_base);
+
+        if (!omx_base->out_port->tunneled)
+            g_omx_port_enable (omx_base->out_port);
     }
 
     free (param);

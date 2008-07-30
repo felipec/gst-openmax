@@ -65,6 +65,8 @@ struct GstOmxBaseFilterClass
 
 GType gst_omx_base_filter_get_type (void);
 
+void gstomx_base_filter_setup_ports (GstOmxBaseFilter *self);
+
 G_END_DECLS
 
 #endif /* GSTOMX_BASE_FILTER_H */

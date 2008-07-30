@@ -43,8 +43,8 @@ enum
 
 static GstElementClass *parent_class = NULL;
 
-static void
-setup_ports (GstOmxBaseFilter *self)
+void
+gstomx_base_filter_setup_ports (GstOmxBaseFilter *self)
 {
     GOmxCore *core;
     OMX_PARAM_PORTDEFINITIONTYPE *param;
@@ -476,7 +476,7 @@ omx_init (GstOmxBaseFilter *self)
         self->omx_setup (self);
     }
 
-    setup_ports (self);
+    gstomx_base_filter_setup_ports (self);
 
     return TRUE;
 }
