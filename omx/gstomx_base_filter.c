@@ -129,7 +129,8 @@ change_state (GstElement *element,
             break;
 
         case GST_STATE_CHANGE_PAUSED_TO_READY:
-            gst_pad_pause_task (self->srcpad);
+            if (!self->out_port->tunneled)
+                gst_pad_pause_task (self->srcpad);
             g_omx_core_stop (self->gomx);
             break;
 
@@ -682,6 +683,7 @@ pad_event (GstPad *pad,
     switch (GST_EVENT_TYPE (event))
     {
         case GST_EVENT_EOS:
+            if (!self->in_port->tunneled)
             {
                 /* send buffer with eos flag */
                 /** @todo move to util */
@@ -717,7 +719,8 @@ pad_event (GstPad *pad,
             g_omx_port_pause (in_port);
             g_omx_port_pause (out_port);
 
-            gst_pad_pause_task (self->srcpad);
+            if (!self->out_port->tunneled)
+                gst_pad_pause_task (self->srcpad);
 
             /* flush all buffers */
             OMX_SendCommand (gomx->omx_handle, OMX_CommandFlush, OMX_ALL, NULL);
@@ -731,7 +734,8 @@ pad_event (GstPad *pad,
 
             g_omx_sem_down (gomx->flush_sem);
 
-            gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
+            if (!self->out_port->tunneled)
+                gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
 
             g_omx_port_resume (in_port);
             g_omx_port_resume (out_port);
@@ -773,7 +777,8 @@ activate_push (GstPad *pad,
             g_omx_port_resume (self->in_port);
             g_omx_port_resume (self->out_port);
 
-            result = gst_pad_start_task (pad, output_loop, pad);
+            if (!self->out_port->tunneled)
+                result = gst_pad_start_task (pad, output_loop, pad);
         }
     }
     else
