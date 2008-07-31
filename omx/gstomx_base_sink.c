@@ -487,6 +487,7 @@ type_instance_init (GTypeInstance *instance,
     }
 
     self->omx_library = g_strdup (DEFAULT_LIBRARY_NAME);
+    self->tunneling = TRUE;
 
     {
         GstPad *sinkpad;

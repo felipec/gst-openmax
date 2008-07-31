@@ -827,6 +827,7 @@ type_instance_init (GTypeInstance *instance,
     GST_LOG_OBJECT (self, "begin");
 
     self->use_timestamps = TRUE;
+    self->tunneling = TRUE;
 
     /* GOmx */
     {
