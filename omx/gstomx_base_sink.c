@@ -63,24 +63,6 @@ setup_ports (GstOmxBaseSink *self)
 }
 
 static gboolean
-start (GstBaseSink *gst_base)
-{
-    GstOmxBaseSink *self;
-
-    self = GST_OMX_BASE_SINK (gst_base);
-
-    GST_LOG_OBJECT (self, "begin");
-
-    g_omx_core_init (self->gomx, self->omx_library, self->omx_component);
-    if (self->gomx->omx_error)
-        return GST_STATE_CHANGE_FAILURE;
-
-    GST_LOG_OBJECT (self, "end");
-
-    return TRUE;
-}
-
-static gboolean
 stop (GstBaseSink *gst_base)
 {
     GstOmxBaseSink *self;
@@ -340,7 +322,6 @@ type_class_init (gpointer g_class,
 
     gobject_class->dispose = dispose;
 
-    gst_base_sink_class->start = start;
     gst_base_sink_class->stop = stop;
     gst_base_sink_class->event = handle_event;
     gst_base_sink_class->preroll = render;
@@ -408,6 +389,40 @@ activate_push (GstPad *pad,
     return result;
 }
 
+static inline gboolean
+omx_init (GstOmxBaseSink *self)
+{
+    g_omx_core_init (self->gomx, self->omx_library, self->omx_component);
+
+    if (self->gomx->omx_error)
+        return FALSE;
+
+    return TRUE;
+}
+
+static GstPadLinkReturn
+pad_sink_link (GstPad *pad,
+               GstPad *peer)
+{
+    GOmxCore *gomx;
+    GstOmxBaseSink *self;
+
+    self = GST_OMX_BASE_SINK (GST_OBJECT_PARENT (pad));
+
+    GST_INFO_OBJECT (self, "link");
+
+    gomx = self->gomx;
+
+    if (!self->core_init)
+    {
+        if (!omx_init (self))
+            return GST_PAD_LINK_REFUSED;
+        self->core_init = TRUE;
+    }
+
+    return GST_PAD_LINK_OK;
+}
+
 static void
 type_instance_init (GTypeInstance *instance,
                     gpointer g_class)
@@ -434,6 +449,7 @@ type_instance_init (GTypeInstance *instance,
         GstPad *sinkpad;
         self->sinkpad = sinkpad = GST_BASE_SINK_PAD (self);
         gst_pad_set_activatepush_function (sinkpad, activate_push);
+        gst_pad_set_link_function (sinkpad, pad_sink_link);
     }
 
     GST_LOG_OBJECT (self, "end");
