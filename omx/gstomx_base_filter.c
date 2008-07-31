@@ -154,6 +154,7 @@ dispose (GObject *obj)
 
     self = GST_OMX_BASE_FILTER (obj);
 
+    g_omx_core_deinit (self->gomx);
     g_omx_core_free (self->gomx);
 
     g_free (self->omx_component);
