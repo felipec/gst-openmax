@@ -51,7 +51,6 @@ struct GstOmxBaseFilter
     char *omx_component;
     char *omx_library;
     gboolean use_timestamps; /** @todo remove; timestamps should always be used */
-    gboolean initialized;
     gboolean core_init;
 
     GstOmxBaseFilterCb omx_setup;
