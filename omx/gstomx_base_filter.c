@@ -88,12 +88,6 @@ change_state (GstElement *element,
 
     switch (transition)
     {
-        case GST_STATE_CHANGE_NULL_TO_READY:
-            g_omx_core_init (self->gomx, self->omx_library, self->omx_component);
-            if (self->gomx->omx_error)
-                return GST_STATE_CHANGE_FAILURE;
-            break;
-
         case GST_STATE_CHANGE_PAUSED_TO_READY:
             if (self->initialized)
             {
@@ -459,6 +453,68 @@ leave:
     gst_object_unref (self);
 }
 
+static inline gboolean
+omx_init (GstOmxBaseFilter *self)
+{
+    g_omx_core_init (self->gomx, self->omx_library, self->omx_component);
+
+    if (self->gomx->omx_error)
+        return FALSE;
+
+    return TRUE;
+}
+
+static GstPadLinkReturn
+pad_src_link (GstPad *pad,
+              GstPad *peer)
+{
+    GstOmxBaseFilter *self;
+    GstPadLinkReturn result = GST_PAD_LINK_OK;
+
+    if (GST_PAD_LINKFUNC (peer))
+    {
+        result = GST_PAD_LINKFUNC (peer) (peer, pad);
+    }
+
+    if (result != GST_PAD_LINK_OK)
+        return result;
+
+    self = GST_OMX_BASE_FILTER (GST_OBJECT_PARENT (pad));
+
+    GST_INFO_OBJECT (self, "link");
+
+    if (!self->core_init)
+    {
+        if (!omx_init (self))
+            return GST_PAD_LINK_REFUSED;
+
+        self->core_init = TRUE;
+    }
+
+    return GST_PAD_LINK_OK;
+}
+
+static GstPadLinkReturn
+pad_sink_link (GstPad *pad,
+               GstPad *peer)
+{
+    GstOmxBaseFilter *self;
+
+    self = GST_OMX_BASE_FILTER (GST_OBJECT_PARENT (pad));
+
+    GST_INFO_OBJECT (self, "link");
+
+    if (!self->core_init)
+    {
+        if (!omx_init (self))
+            return GST_PAD_LINK_REFUSED;
+
+        self->core_init = TRUE;
+    }
+
+    return GST_PAD_LINK_OK;
+}
+
 static GstFlowReturn
 pad_chain (GstPad *pad,
            GstBuffer *buf)
@@ -776,11 +832,13 @@ type_instance_init (GTypeInstance *instance,
 
     gst_pad_set_chain_function (self->sinkpad, pad_chain);
     gst_pad_set_event_function (self->sinkpad, pad_event);
+    gst_pad_set_link_function (self->sinkpad, pad_sink_link);
 
     self->srcpad =
         gst_pad_new_from_template (gst_element_class_get_pad_template (element_class, "src"), "src");
 
     gst_pad_set_activatepush_function (self->srcpad, activate_push);
+    gst_pad_set_link_function (self->srcpad, pad_src_link);
 
     gst_pad_use_fixed_caps (self->srcpad);
 
