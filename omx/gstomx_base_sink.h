@@ -51,6 +51,7 @@ struct GstOmxBaseSink
 
     gboolean ready;
     GstPadActivateModeFunction base_activatepush;
+    gboolean initialized;
 };
 
 struct GstOmxBaseSinkClass
