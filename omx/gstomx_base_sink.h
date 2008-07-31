@@ -49,7 +49,7 @@ struct GstOmxBaseSink
     char *omx_component;
     char *omx_library;
 
-    gboolean core_init;
+    gboolean initialized;
 };
 
 struct GstOmxBaseSinkClass

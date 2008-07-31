@@ -427,12 +427,12 @@ pad_sink_link (GstPad *pad,
 
     gomx = self->gomx;
 
-    if (!self->core_init)
+    if (!self->initialized)
     {
         if (!omx_init (self))
             return GST_PAD_LINK_REFUSED;
 
-        self->core_init = TRUE;
+        self->initialized = TRUE;
     }
 
     return GST_PAD_LINK_OK;
