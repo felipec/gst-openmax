@@ -137,6 +137,7 @@ imp_new (const gchar *name)
         imp->sym_table.deinit = dlsym (handle, "OMX_Deinit");
         imp->sym_table.get_handle = dlsym (handle, "OMX_GetHandle");
         imp->sym_table.free_handle = dlsym (handle, "OMX_FreeHandle");
+        imp->sym_table.setup_tunnel = dlsym (handle, "OMX_SetupTunnel");
     }
 
     return imp;
@@ -414,6 +415,35 @@ void
 g_omx_core_wait_for_done (GOmxCore *core)
 {
     g_omx_sem_down (core->done_sem);
+}
+
+gboolean
+g_omx_core_setup_tunnel (GOmxPort *src_port,
+                         GOmxPort *sink_port)
+{
+    OMX_ERRORTYPE omx_error;
+    GOmxCore *src_core;
+    GOmxCore *sink_core;
+
+    /* not the same OpenMAX IL implementation. */
+    if (src_port->core->imp != sink_port->core->imp)
+        return FALSE;
+
+    src_core = src_port->core;
+    sink_core = sink_port->core;
+
+    omx_error = src_port->core->imp->sym_table.setup_tunnel (src_port->core->omx_handle,
+                                                             src_port->port_index,
+                                                             sink_port->core->omx_handle,
+                                                             sink_port->port_index);
+
+    if (omx_error != OMX_ErrorNone)
+        return FALSE;
+
+    src_port->tunneled = TRUE;
+    sink_port->tunneled = TRUE;
+
+    return TRUE;
 }
 
 /*

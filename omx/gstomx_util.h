@@ -63,6 +63,10 @@ struct GOmxSymbolTable
                                  OMX_PTR data,
                                  OMX_CALLBACKTYPE *callbacks);
     OMX_ERRORTYPE (*free_handle) (OMX_HANDLETYPE handle);
+    OMX_ERRORTYPE (*setup_tunnel) (OMX_HANDLETYPE src_handle,
+                                   OMX_U32 src_port,
+                                   OMX_HANDLETYPE sink_handle,
+                                   OMX_U32 sink_port);
 };
 
 struct GOmxImp
@@ -135,6 +139,7 @@ void g_omx_core_unready (GOmxCore *core);
 void g_omx_core_set_done (GOmxCore *core);
 void g_omx_core_wait_for_done (GOmxCore *core);
 GOmxPort *g_omx_core_setup_port (GOmxCore *core, OMX_PARAM_PORTDEFINITIONTYPE *omx_port);
+gboolean g_omx_core_setup_tunnel (GOmxPort *src_port, GOmxPort *sink_port);
 
 GOmxPort *g_omx_port_new (GOmxCore *core);
 void g_omx_port_free (GOmxPort *port);
