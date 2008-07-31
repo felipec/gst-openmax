@@ -487,12 +487,12 @@ pad_src_link (GstPad *pad,
 
     GST_INFO_OBJECT (self, "link");
 
-    if (!self->core_init)
+    if (!self->initialized)
     {
         if (!omx_init (self))
             return GST_PAD_LINK_REFUSED;
 
-        self->core_init = TRUE;
+        self->initialized = TRUE;
     }
 
     return GST_PAD_LINK_OK;
@@ -508,12 +508,12 @@ pad_sink_link (GstPad *pad,
 
     GST_INFO_OBJECT (self, "link");
 
-    if (!self->core_init)
+    if (!self->initialized)
     {
         if (!omx_init (self))
             return GST_PAD_LINK_REFUSED;
 
-        self->core_init = TRUE;
+        self->initialized = TRUE;
     }
 
     return GST_PAD_LINK_OK;
@@ -766,7 +766,8 @@ activate_push (GstPad *pad,
         g_omx_port_pause (self->out_port);
 
         /* make sure streaming finishes */
-        result = gst_pad_stop_task (pad);
+        if (!self->out_port->tunneled)
+            result = gst_pad_stop_task (pad);
     }
 
     gst_object_unref (self);
