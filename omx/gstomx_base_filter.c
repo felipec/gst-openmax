@@ -521,6 +521,14 @@ pad_src_link (GstPad *pad,
         self->initialized = TRUE;
     }
 
+    if (self->tunneling)
+    {
+        if (gst_omx_setup_tunnel (pad, peer))
+        {
+            GST_INFO_OBJECT (self, "tunnel setup");
+        }
+    }
+
     return GST_PAD_LINK_OK;
 }
 
