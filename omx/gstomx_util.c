@@ -432,6 +432,7 @@ g_omx_port_new (GOmxCore *core)
     port->buffers = NULL;
 
     port->enabled = TRUE;
+    port->tunneled = FALSE;
     port->queue = async_queue_new ();
     port->mutex = g_mutex_new ();
 
@@ -486,6 +487,12 @@ port_allocate_buffers (GOmxPort *port)
         gpointer buffer_data;
         guint size;
 
+        if (port->tunneled)
+        {
+            port->buffers[i] = NULL;
+            continue;
+        }
+
         size = port->buffer_size;
         buffer_data = g_malloc (size);
 
@@ -534,6 +541,9 @@ static void
 port_start_buffers (GOmxPort *port)
 {
     guint i;
+
+    if (port->tunneled)
+        return;
 
     for (i = 0; i < port->num_buffers; i++)
     {

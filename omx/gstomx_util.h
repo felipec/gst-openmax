@@ -107,6 +107,7 @@ struct GOmxPort
 
     GMutex *mutex;
     gboolean enabled;
+    gboolean tunneled;
     AsyncQueue *queue;
 };
 
