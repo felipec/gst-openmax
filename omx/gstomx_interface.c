@@ -21,6 +21,48 @@
 
 #include "gstomx_interface.h"
 
+#include "gstomx_util.h"
+
+gboolean
+gst_omx_setup_tunnel (GstPad *src_pad,
+                      GstPad *sink_pad)
+{
+    GOmxPort *src_port;
+    GOmxPort *sink_port;
+
+    {
+        GstElement *element;
+        gboolean enabled;
+
+        enabled = FALSE;
+        element = gst_pad_get_parent_element (src_pad);
+        if (GST_IS_OMX (element))
+        {
+            g_object_get (G_OBJECT (element), "tunneling", &enabled, NULL);
+            gst_object_unref (element);
+        }
+
+        if (!enabled)
+            return FALSE;
+
+        enabled = FALSE;
+        element = gst_pad_get_parent_element (sink_pad);
+        if (GST_IS_OMX (element))
+        {
+            g_object_get (G_OBJECT (element), "tunneling", &enabled, NULL);
+            gst_object_unref (element);
+        }
+
+        if (!enabled)
+            return FALSE;
+    }
+
+    src_port = gst_pad_get_element_private (src_pad);
+    sink_port = gst_pad_get_element_private (sink_pad);
+
+    return g_omx_core_setup_tunnel (src_port, sink_port);
+}
+
 GType
 gst_omx_get_type (void)
 {

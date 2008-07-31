@@ -40,6 +40,9 @@ typedef struct GstOmxClass
 
 GType gst_omx_get_type (void);
 
+gboolean gst_omx_setup_tunnel (GstPad *src_pad,
+                               GstPad *sink_pad);
+
 G_END_DECLS
 
 #endif /* GSTOMX_INTERFACE_H */
