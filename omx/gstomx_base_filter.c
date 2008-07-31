@@ -241,6 +241,8 @@ type_class_init (gpointer g_class,
                                                               "Name of the OpenMAX IL component to use",
                                                               NULL, G_PARAM_READWRITE));
 
+        /** @todo this proertly should be set before the pads are linked,
+         * otherwise it has no effect. */
         g_object_class_install_property (gobject_class, ARG_LIBRARY_NAME,
                                          g_param_spec_string ("library-name", "Library name",
                                                               "Name of the OpenMAX IL implementation library to use",

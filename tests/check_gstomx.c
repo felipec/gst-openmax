@@ -77,13 +77,13 @@ helper (gboolean flush)
 
     /* init */
     filter = gst_check_setup_element ("omx_dummy");
+    g_object_set (G_OBJECT (filter), "library-name", "libomxil-foo.so", NULL);
+
     mysrcpad = gst_check_setup_src_pad (filter, &srctemplate, NULL);
     mysinkpad = gst_check_setup_sink_pad (filter, &sinktemplate, NULL);
 
     gst_pad_set_active (mysrcpad, TRUE);
     gst_pad_set_active (mysinkpad, TRUE);
-
-    g_object_set (G_OBJECT (filter), "library-name", "libomxil-foo.so", NULL);
 
     /* start */
 
