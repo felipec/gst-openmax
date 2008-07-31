@@ -438,6 +438,9 @@ omx_init (GstOmxBaseSink *self)
     if (self->gomx->omx_error)
         return FALSE;
 
+    /* disable clock port. */
+    OMX_SendCommand (self->gomx->omx_handle, OMX_CommandPortDisable, 1, NULL);
+
     setup_ports (self);
 
     return TRUE;
