@@ -60,6 +60,28 @@ setup_ports (GstOmxBaseSink *self)
     gst_pad_set_element_private (self->sinkpad, self->in_port);
 }
 
+static GstStateChangeReturn
+change_state (GstElement *element,
+              GstStateChange transition)
+{
+    GstStateChangeReturn ret = GST_STATE_CHANGE_SUCCESS;
+    GstOmxBaseSink *self;
+
+    self = GST_OMX_BASE_SINK (element);
+
+    GST_LOG_OBJECT (self, "begin");
+
+    GST_INFO_OBJECT (self, "changing state %s - %s",
+                     gst_element_state_get_name (GST_STATE_TRANSITION_CURRENT (transition)),
+                     gst_element_state_get_name (GST_STATE_TRANSITION_NEXT (transition)));
+
+    ret = GST_ELEMENT_CLASS (parent_class)->change_state (element, transition);
+
+    GST_LOG_OBJECT (self, "end");
+
+    return ret;
+}
+
 static gboolean
 stop (GstBaseSink *gst_base)
 {
@@ -311,13 +333,17 @@ type_class_init (gpointer g_class,
 {
     GObjectClass *gobject_class;
     GstBaseSinkClass *gst_base_sink_class;
+    GstElementClass *gstelement_class;
 
     gobject_class = G_OBJECT_CLASS (g_class);
     gst_base_sink_class = GST_BASE_SINK_CLASS (g_class);
+    gstelement_class = GST_ELEMENT_CLASS (g_class);
 
     parent_class = g_type_class_ref (GST_TYPE_ELEMENT);
 
     gobject_class->finalize = finalize;
+
+    gstelement_class->change_state = change_state;
 
     gst_base_sink_class->stop = stop;
     gst_base_sink_class->event = handle_event;
