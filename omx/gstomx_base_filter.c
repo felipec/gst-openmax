@@ -39,6 +39,7 @@ enum
     ARG_COMPONENT_NAME,
     ARG_LIBRARY_NAME,
     ARG_USE_TIMESTAMPS,
+    ARG_TUNNELING,
 };
 
 static GstElementClass *parent_class = NULL;
@@ -183,6 +184,9 @@ set_property (GObject *obj,
         case ARG_USE_TIMESTAMPS:
             self->use_timestamps = g_value_get_boolean (value);
             break;
+        case ARG_TUNNELING:
+            self->tunneling = g_value_get_boolean (value);
+            break;
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
             break;
@@ -209,6 +213,9 @@ get_property (GObject *obj,
             break;
         case ARG_USE_TIMESTAMPS:
             g_value_set_boolean (value, self->use_timestamps);
+            break;
+        case ARG_TUNNELING:
+            g_value_set_boolean (value, self->tunneling);
             break;
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
@@ -251,6 +258,11 @@ type_class_init (gpointer g_class,
         g_object_class_install_property (gobject_class, ARG_USE_TIMESTAMPS,
                                          g_param_spec_boolean ("use-timestamps", "Use timestamps",
                                                                "Whether or not to use timestamps",
+                                                               TRUE, G_PARAM_READWRITE));
+
+        g_object_class_install_property (gobject_class, ARG_TUNNELING,
+                                         g_param_spec_boolean ("tunneling", "Enable tunneling",
+                                                               "Enables setting up an OpenMAX IL tunnel with another element",
                                                                TRUE, G_PARAM_READWRITE));
     }
 }
