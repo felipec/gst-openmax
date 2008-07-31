@@ -77,31 +77,47 @@ change_state (GstElement *element,
                      gst_element_state_get_name (GST_STATE_TRANSITION_CURRENT (transition)),
                      gst_element_state_get_name (GST_STATE_TRANSITION_NEXT (transition)));
 
+    switch (transition)
+    {
+        case GST_STATE_CHANGE_NULL_TO_READY:
+            g_omx_core_prepare (self->gomx);
+            break;
+
+        case GST_STATE_CHANGE_READY_TO_PAUSED:
+            g_omx_core_start (self->gomx);
+            break;
+
+        case GST_STATE_CHANGE_PAUSED_TO_READY:
+            g_omx_port_finish (self->in_port);
+            break;
+
+        default:
+            break;
+    }
+
     ret = GST_ELEMENT_CLASS (parent_class)->change_state (element, transition);
 
+    if (ret == GST_STATE_CHANGE_FAILURE)
+        goto leave;
+
+    switch (transition)
+    {
+        case GST_STATE_CHANGE_PLAYING_TO_PAUSED:
+            g_omx_port_pause (self->in_port);
+            break;
+
+        case GST_STATE_CHANGE_PAUSED_TO_READY:
+            g_omx_core_finish (self->gomx);
+            break;
+
+        default:
+            break;
+    }
+
+leave:
     GST_LOG_OBJECT (self, "end");
 
     return ret;
-}
-
-static gboolean
-stop (GstBaseSink *gst_base)
-{
-    GstOmxBaseSink *self;
-
-    self = GST_OMX_BASE_SINK (gst_base);
-
-    GST_LOG_OBJECT (self, "begin");
-
-    g_omx_core_finish (self->gomx);
-
-    g_omx_core_deinit (self->gomx);
-    if (self->gomx->omx_error)
-        return GST_STATE_CHANGE_FAILURE;
-
-    GST_LOG_OBJECT (self, "end");
-
-    return TRUE;
 }
 
 static void
@@ -137,32 +153,11 @@ render (GstBaseSink *gst_base,
 
     GST_LOG_OBJECT (self, "state: %d", gomx->omx_state);
 
-    if (G_UNLIKELY (gomx->omx_state == OMX_StateLoaded))
-    {
-        GST_INFO_OBJECT (self, "omx: prepare");
-
-        setup_ports (self);
-        g_omx_core_prepare (self->gomx);
-
-        self->initialized = TRUE;
-    }
-
     in_port = self->in_port;
 
     if (G_LIKELY (in_port->enabled))
     {
         guint buffer_offset = 0;
-
-        if (G_UNLIKELY (gomx->omx_state == OMX_StateIdle))
-        {
-            GST_INFO_OBJECT (self, "omx: play");
-            g_omx_core_start (gomx);
-        }
-
-        if (G_UNLIKELY (gomx->omx_state != OMX_StateExecuting))
-        {
-            GST_ERROR_OBJECT (self, "Whoa! very wrong");
-        }
 
         while (G_LIKELY (buffer_offset < GST_BUFFER_SIZE (buf)))
         {
@@ -346,7 +341,6 @@ type_class_init (gpointer g_class,
 
     gstelement_class->change_state = change_state;
 
-    gst_base_sink_class->stop = stop;
     gst_base_sink_class->event = handle_event;
     gst_base_sink_class->preroll = render;
     gst_base_sink_class->render = render;
@@ -381,31 +375,25 @@ activate_push (GstPad *pad,
     {
         GST_DEBUG_OBJECT (self, "activate");
 
-        if (self->initialized)
+        /* we do not start the task yet if the pad is not connected */
+        if (gst_pad_is_linked (pad))
         {
-            /* we do not start the task yet if the pad is not connected */
-            if (gst_pad_is_linked (pad))
-            {
-                /** @todo link callback function also needed */
-                g_omx_port_resume (self->in_port);
-            }
+            /** @todo link callback function also needed */
+            g_omx_port_resume (self->in_port);
         }
     }
     else
     {
         GST_DEBUG_OBJECT (self, "deactivate");
 
-        if (self->initialized)
-        {
-            /** @todo disable this until we properly reinitialize the buffers. */
+        /** @todo disable this until we properly reinitialize the buffers. */
 #if 0
-            /* flush all buffers */
-            OMX_SendCommand (self->gomx->omx_handle, OMX_CommandFlush, OMX_ALL, NULL);
+        /* flush all buffers */
+        OMX_SendCommand (self->gomx->omx_handle, OMX_CommandFlush, OMX_ALL, NULL);
 #endif
 
-            /* unlock loops */
-            g_omx_port_pause (self->in_port);
-        }
+        /* unlock loops */
+        g_omx_port_pause (self->in_port);
     }
 
     gst_object_unref (self);
@@ -420,6 +408,8 @@ omx_init (GstOmxBaseSink *self)
 
     if (self->gomx->omx_error)
         return FALSE;
+
+    setup_ports (self);
 
     return TRUE;
 }
@@ -441,6 +431,7 @@ pad_sink_link (GstPad *pad,
     {
         if (!omx_init (self))
             return GST_PAD_LINK_REFUSED;
+
         self->core_init = TRUE;
     }
 
