@@ -25,6 +25,8 @@
 
 #include <string.h> /* for memset, memcpy */
 
+static inline gboolean omx_init (GstOmxBaseFilter *self);
+
 enum
 {
     ARG_0,
@@ -101,6 +103,14 @@ change_state (GstElement *element,
     switch (transition)
     {
         case GST_STATE_CHANGE_NULL_TO_READY:
+            if (!self->initialized)
+            {
+                if (!omx_init (self))
+                    return GST_STATE_CHANGE_FAILURE;
+
+                self->initialized = TRUE;
+            }
+
             g_omx_core_prepare (core);
             if (core->omx_state != OMX_StateIdle)
             {
