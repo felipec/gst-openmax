@@ -269,6 +269,8 @@ g_omx_core_deinit (GOmxCore *core)
     if (!core->imp)
         return;
 
+    wait_for_state (core, OMX_StateLoaded);
+
     {
         guint index;
         for (index = 0; index < core->ports->len; index++)
@@ -308,13 +310,13 @@ g_omx_core_prepare (GOmxCore *core)
                 port_allocate_buffers (port);
         }
     }
-
-    wait_for_state (core, OMX_StateIdle);
 }
 
 void
 g_omx_core_start (GOmxCore *core)
 {
+    wait_for_state (core, OMX_StateIdle);
+
     change_state (core, OMX_StateExecuting);
 
     wait_for_state (core, OMX_StateExecuting);
@@ -353,6 +355,8 @@ g_omx_core_pause (GOmxCore *core)
 void
 g_omx_core_unready (GOmxCore *core)
 {
+    wait_for_state (core, OMX_StateIdle);
+
     change_state (core, OMX_StateLoaded);
 
     {
@@ -368,8 +372,6 @@ g_omx_core_unready (GOmxCore *core)
                 port_free_buffers (port);
         }
     }
-
-    wait_for_state (core, OMX_StateLoaded);
 }
 
 GOmxPort *
