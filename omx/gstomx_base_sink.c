@@ -117,6 +117,10 @@ change_state (GstElement *element,
             break;
 
         case GST_STATE_CHANGE_PAUSED_TO_READY:
+            g_omx_core_stop (self->gomx);
+            break;
+
+        case GST_STATE_CHANGE_READY_TO_NULL:
             g_omx_core_finish (self->gomx);
             break;
 

@@ -129,10 +129,11 @@ change_state (GstElement *element,
 
         case GST_STATE_CHANGE_PAUSED_TO_READY:
             gst_pad_pause_task (self->srcpad);
-            g_omx_core_finish (self->gomx);
+            g_omx_core_stop (self->gomx);
             break;
 
         case GST_STATE_CHANGE_READY_TO_NULL:
+            g_omx_core_finish (self->gomx);
             break;
 
         default:
