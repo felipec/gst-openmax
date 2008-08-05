@@ -30,6 +30,8 @@
 
 static gboolean share_input_buffer = FALSE;
 
+static inline gboolean omx_init (GstOmxBaseSink *self);
+
 enum
 {
     ARG_0,
@@ -80,6 +82,14 @@ change_state (GstElement *element,
     switch (transition)
     {
         case GST_STATE_CHANGE_NULL_TO_READY:
+            if (!self->initialized)
+            {
+                if (!omx_init (self))
+                    return GST_PAD_LINK_REFUSED;
+
+                self->initialized = TRUE;
+            }
+
             g_omx_core_prepare (self->gomx);
             break;
 
