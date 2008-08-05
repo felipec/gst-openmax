@@ -128,6 +128,7 @@ change_state (GstElement *element,
                 g_omx_port_finish (self->in_port);
                 g_omx_port_finish (self->out_port);
 
+                g_omx_core_stop (core);
                 g_omx_core_finish (core);
                 self->ready = FALSE;
             }
