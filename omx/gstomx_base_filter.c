@@ -129,7 +129,7 @@ change_state (GstElement *element,
                 g_omx_port_finish (self->out_port);
 
                 g_omx_core_stop (core);
-                g_omx_core_finish (core);
+                g_omx_core_unload (core);
                 self->ready = FALSE;
             }
             g_mutex_unlock (self->ready_lock);

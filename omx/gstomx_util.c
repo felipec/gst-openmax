@@ -321,6 +321,9 @@ g_omx_core_deinit (GOmxCore *core)
     if (!core->imp)
         return;
 
+    core_for_each_port (core, g_omx_port_free);
+    g_ptr_array_clear (core->ports);
+
     if (core->omx_state == OMX_StateLoaded ||
         core->omx_state == OMX_StateInvalid)
     {
@@ -372,7 +375,7 @@ g_omx_core_pause (GOmxCore *core)
 }
 
 void
-g_omx_core_finish (GOmxCore *core)
+g_omx_core_unload (GOmxCore *core)
 {
     if (core->omx_state == OMX_StateIdle ||
         core->omx_state == OMX_StateWaitForResources ||
@@ -386,9 +389,6 @@ g_omx_core_finish (GOmxCore *core)
         if (core->omx_state != OMX_StateInvalid)
             wait_for_state (core, OMX_StateLoaded);
     }
-
-    core_for_each_port (core, g_omx_port_free);
-    g_ptr_array_clear (core->ports);
 }
 
 GOmxPort *
