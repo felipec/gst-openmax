@@ -426,6 +426,8 @@ g_omx_core_setup_tunnel (GOmxPort *src_port,
     OMX_ERRORTYPE omx_error;
     GOmxCore *src_core;
     GOmxCore *sink_core;
+    gboolean src_port_disabled;
+    gboolean sink_port_disabled;
 
     /* not the same OpenMAX IL implementation. */
     if (src_port->core->imp != sink_port->core->imp)
@@ -434,16 +436,73 @@ g_omx_core_setup_tunnel (GOmxPort *src_port,
     src_core = src_port->core;
     sink_core = sink_port->core;
 
+    if (src_core->omx_state != OMX_StateLoaded)
+    {
+        GOmxPort *port = src_port;
+
+        port_free_buffers (port);
+
+        OMX_SendCommand (port->core->omx_handle, OMX_CommandPortDisable, port->port_index, NULL);
+        src_port_disabled = TRUE;
+    }
+
+    if (sink_core->omx_state != OMX_StateLoaded)
+    {
+        GOmxPort *port = sink_port;
+
+        port_free_buffers (port);
+
+        OMX_SendCommand (port->core->omx_handle, OMX_CommandPortDisable, port->port_index, NULL);
+        sink_port_disabled = TRUE;
+    }
+
+    if (sink_port_disabled)
+    {
+        g_omx_sem_down (sink_port->core->port_sem);
+        sink_port->enabled = FALSE;
+    }
+
+    if (src_port_disabled)
+    {
+        g_omx_sem_down (src_port->core->port_sem);
+        src_port->enabled = FALSE;
+    }
+
     omx_error = src_port->core->imp->sym_table.setup_tunnel (src_port->core->omx_handle,
                                                              src_port->port_index,
                                                              sink_port->core->omx_handle,
                                                              sink_port->port_index);
 
+    if (omx_error == OMX_ErrorNone)
+    {
+        src_port->tunneled = TRUE;
+        sink_port->tunneled = TRUE;
+    }
+
+    if (src_port_disabled)
+    {
+        GOmxPort *port = src_port;
+
+        OMX_SendCommand (port->core->omx_handle, OMX_CommandPortEnable, port->port_index, NULL);
+        g_omx_sem_down (port->core->port_sem);
+        port->enabled = TRUE;
+
+        port_allocate_buffers (port);
+    }
+
+    if (sink_port_disabled)
+    {
+        GOmxPort *port = sink_port;
+
+        OMX_SendCommand (port->core->omx_handle, OMX_CommandPortEnable, port->port_index, NULL);
+        g_omx_sem_down (port->core->port_sem);
+        port->enabled = TRUE;
+
+        port_allocate_buffers (port);
+    }
+
     if (omx_error != OMX_ErrorNone)
         return FALSE;
-
-    src_port->tunneled = TRUE;
-    sink_port->tunneled = TRUE;
 
     return TRUE;
 }
