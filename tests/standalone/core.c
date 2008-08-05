@@ -398,3 +398,12 @@ OMX_FreeHandle (OMX_HANDLETYPE handle)
     /** @todo Free private structure? */
     return OMX_ErrorNone;
 }
+
+OMX_ERRORTYPE
+OMX_SetupTunnel (OMX_HANDLETYPE src_handle,
+                 OMX_U32 src_port,
+                 OMX_HANDLETYPE sink_handle,
+                 OMX_U32 sink_port)
+{
+    return OMX_ErrorNotImplemented;
+}
