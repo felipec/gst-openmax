@@ -268,6 +268,17 @@ g_omx_core_deinit (GOmxCore *core)
     if (!core->imp)
         return;
 
+    {
+        guint index;
+        for (index = 0; index < core->ports->len; index++)
+        {
+            GOmxPort *port;
+            port = g_omx_core_get_port (core, index);
+            g_omx_port_free (port);
+        }
+        g_ptr_array_clear (core->ports);
+    }
+
     core->omx_error = core->imp->sym_table.free_handle (core->omx_handle);
 
     if (core->omx_error)
@@ -339,7 +350,7 @@ g_omx_core_pause (GOmxCore *core)
 }
 
 void
-g_omx_core_finish (GOmxCore *core)
+g_omx_core_unready (GOmxCore *core)
 {
     change_state (core, OMX_StateLoaded);
 
@@ -358,17 +369,6 @@ g_omx_core_finish (GOmxCore *core)
     }
 
     wait_for_state (core, OMX_StateLoaded);
-
-    {
-        guint index;
-        for (index = 0; index < core->ports->len; index++)
-        {
-            GOmxPort *port;
-            port = g_omx_core_get_port (core, index);
-            g_omx_port_free (port);
-        }
-        g_ptr_array_clear (core->ports);
-    }
 }
 
 GOmxPort *

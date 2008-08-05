@@ -90,9 +90,8 @@ stop (GstBaseSrc *gst_base)
     GST_LOG_OBJECT (self, "begin");
 
     g_omx_core_stop (self->gomx);
-    g_omx_core_finish (self->gomx);
-
     g_omx_core_deinit (self->gomx);
+
     if (self->gomx->omx_error)
         return GST_STATE_CHANGE_FAILURE;
 

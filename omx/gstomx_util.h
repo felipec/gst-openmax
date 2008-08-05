@@ -130,7 +130,7 @@ void g_omx_core_prepare (GOmxCore *core);
 void g_omx_core_start (GOmxCore *core);
 void g_omx_core_pause (GOmxCore *core);
 void g_omx_core_stop (GOmxCore *core);
-void g_omx_core_finish (GOmxCore *core);
+void g_omx_core_unready (GOmxCore *core);
 void g_omx_core_set_done (GOmxCore *core);
 void g_omx_core_wait_for_done (GOmxCore *core);
 GOmxPort *g_omx_core_setup_port (GOmxCore *core, OMX_PARAM_PORTDEFINITIONTYPE *omx_port);
