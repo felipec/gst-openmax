@@ -722,12 +722,10 @@ EventHandler (OMX_HANDLETYPE omx_handle,
             }
         case OMX_EventBufferFlag:
             {
-#if 0
                 if (nData2 & OMX_BUFFERFLAG_EOS)
                 {
-                    g_omx_port_set_done (core->ports[1]);
+                    g_omx_core_set_done (core);
                 }
-#endif
                 break;
             }
         case OMX_EventPortSettingsChanged:
