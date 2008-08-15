@@ -22,6 +22,8 @@
 #include "gstomx_audiosink.h"
 #include "gstomx.h"
 
+#include <stdlib.h> /* For calloc, free */
+
 #define OMX_COMPONENT_NAME "OMX.st.alsa.alsasink"
 
 static GstOmxBaseSinkClass *parent_class = NULL;

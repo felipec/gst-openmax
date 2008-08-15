@@ -23,6 +23,8 @@
 #include "gstomx_base_filter.h"
 #include "gstomx.h"
 
+#include <stdlib.h> /* For calloc, free */
+
 #define OMX_COMPONENT_NAME "OMX.st.audio_decoder.mp3.mad"
 
 static GstOmxBaseFilterClass *parent_class = NULL;

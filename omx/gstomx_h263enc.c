@@ -22,6 +22,8 @@
 #include "gstomx_h263enc.h"
 #include "gstomx.h"
 
+#include <stdlib.h> /* For calloc, free */
+
 #define OMX_COMPONENT_NAME "OMX.st.video_encoder.h263"
 
 static GstOmxBaseFilterClass *parent_class = NULL;

@@ -24,6 +24,8 @@
 
 #include <glib.h>
 
+#include <stdlib.h> /* For calloc, free */
+
 #include "async_queue.h"
 
 static void *foo_thread (void *cb_data);

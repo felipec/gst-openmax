@@ -22,6 +22,7 @@
 #include "gstomx_base_src.h"
 #include "gstomx.h"
 
+#include <stdlib.h> /* For calloc, free */
 #include <string.h> /* For memcpy */
 #include <stdbool.h>
 

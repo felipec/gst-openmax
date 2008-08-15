@@ -23,6 +23,7 @@
 #include "gstomx_base_filter.h"
 #include "gstomx.h"
 
+#include <stdlib.h> /* For calloc, free */
 #include <string.h> /* For strcmp */
 
 #define OMX_COMPONENT_NAME "OMX.st.audio_encoder.g711"

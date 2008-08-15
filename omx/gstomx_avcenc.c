@@ -22,6 +22,8 @@
 #include "gstomx_avcenc.h"
 #include "gstomx.h"
 
+#include <stdlib.h> /* For calloc, free */
+
 #define OMX_COMPONENT_NAME "OMX.st.video_encoder.avc"
 
 static GstOmxBaseFilterClass *parent_class = NULL;

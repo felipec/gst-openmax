@@ -24,8 +24,7 @@
 #include "gstomx_base_filter.h"
 #include "gstomx.h"
 
-#include <string.h>
-
+#include <stdlib.h> /* For calloc, free */
 #include <stdbool.h>
 
 #define OMX_COMPONENT_NAME "OMX.st.volume.component"

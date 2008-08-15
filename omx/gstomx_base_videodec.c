@@ -22,6 +22,8 @@
 #include "gstomx_base_videodec.h"
 #include "gstomx.h"
 
+#include <stdlib.h> /* For calloc, free */
+
 static GstOmxBaseFilterClass *parent_class = NULL;
 
 static GstCaps *
