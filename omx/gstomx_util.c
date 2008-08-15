@@ -461,6 +461,7 @@ g_omx_port_setup (GOmxPort *port,
     /** @todo should it be nBufferCountMin? */
     port->num_buffers = omx_port->nBufferCountActual;
     port->buffer_size = omx_port->nBufferSize;
+    port->port_index = omx_port->nPortIndex;
 
     if (port->buffers)
     {
