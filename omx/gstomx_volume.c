@@ -1,9 +1,8 @@
 /*
- * Copyright (C) 2007-2008 Nokia Corporation. All rights reserved.
- * Copyright (C) 2008 NXP. All rights reserved.
+ * Copyright (C) 2007-2008 Nokia Corporation.
+ * Copyright (C) 2008 NXP.
  *
- * Author: Felipe Contreras <felipe.contreras@nokia.com>
- * Frederik Vernelen <frederik.vernelen@nxp.com>
+ * Author: Frederik Vernelen <frederik.vernelen@nxp.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -34,7 +33,7 @@
 static GstOmxBaseFilterClass *parent_class = NULL;
 
 static GstCaps *
-generate_src_template ()
+generate_src_template (void)
 {
     GstCaps *caps;
 
@@ -51,7 +50,7 @@ generate_src_template ()
 }
 
 static GstCaps *
-generate_sink_template ()
+generate_sink_template (void)
 {
     GstCaps *caps;
 
@@ -82,7 +81,7 @@ type_base_init (gpointer g_class)
         details.longname = "OpenMAX IL Volume component";
         details.klass = "Filter/Effect/Audio";
         details.description = "Changes the volume with OpenMAX IL";
-        details.author = "Frederik";
+        details.author = "Frederik Vernelen";
 
         gst_element_class_set_details (element_class, &details);
     }
@@ -186,7 +185,7 @@ gst_omx_volume_get_type (void)
 {
     static GType type = 0;
 
-    if (type == 0)
+    if (G_UNLIKELY (type == 0))
     {
         GTypeInfo *type_info;
 
