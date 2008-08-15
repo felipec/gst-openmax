@@ -136,6 +136,8 @@ render (GstBaseSink *gst_base,
 
         setup_ports (self);
         g_omx_core_prepare (self->gomx);
+
+        self->initialized = TRUE;
     }
 
     in_port = self->in_port;
@@ -358,6 +360,51 @@ type_class_init (gpointer g_class,
     }
 }
 
+static gboolean
+activate_push (GstPad *pad,
+               gboolean active)
+{
+    gboolean result = TRUE;
+    GstOmxBaseSink *self;
+
+    self = GST_OMX_BASE_SINK (gst_pad_get_parent (pad));
+
+    if (active)
+    {
+        GST_DEBUG_OBJECT (self, "activate");
+
+        if (self->initialized)
+        {
+            /* we do not start the task yet if the pad is not connected */
+            if (gst_pad_is_linked (pad))
+            {
+                /** @todo link callback function also needed */
+                g_omx_port_resume (self->in_port);
+            }
+        }
+    }
+    else
+    {
+        GST_DEBUG_OBJECT (self, "deactivate");
+
+        if (self->initialized)
+        {
+            /** @todo disable this until we properly reinitialize the buffers. */
+#if 0
+            /* flush all buffers */
+            OMX_SendCommand (self->gomx->omx_handle, OMX_CommandFlush, OMX_ALL, NULL);
+#endif
+
+            /* unlock loops */
+            g_omx_port_pause (self->in_port);
+        }
+    }
+
+    gst_object_unref (self);
+
+    return result;
+}
+
 static void
 type_instance_init (GTypeInstance *instance,
                     gpointer g_class)
@@ -379,6 +426,12 @@ type_instance_init (GTypeInstance *instance,
     }
 
     self->omx_library = g_strdup (DEFAULT_LIBRARY_NAME);
+
+    {
+        GstPad *sinkpad;
+        sinkpad = GST_BASE_SINK_PAD (self);
+        gst_pad_set_activatepush_function (sinkpad, activate_push);
+    }
 
     GST_LOG_OBJECT (self, "end");
 }
