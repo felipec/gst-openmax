@@ -73,14 +73,16 @@ struct GOmxImp
 struct GOmxCore
 {
     OMX_HANDLETYPE omx_handle;
-    OMX_STATETYPE omx_state;
     OMX_ERRORTYPE omx_error;
+
+    OMX_STATETYPE omx_state;
+    GCond *omx_state_condition;
+    GMutex *omx_state_mutex;
 
     GPtrArray *ports;
 
     gpointer client_data; /**< Placeholder for the client data. */
 
-    GOmxSem *state_sem;
     GOmxSem *done_sem;
     GOmxSem *flush_sem;
     GOmxSem *port_sem;
