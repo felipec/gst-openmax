@@ -72,6 +72,15 @@ inline GOmxPort *
 g_omx_core_get_port (GOmxCore *core,
                      guint index);
 
+static inline void
+port_free_buffers (GOmxPort *port);
+
+static inline void
+port_allocate_buffers (GOmxPort *port);
+
+static inline void
+port_start_buffers (GOmxPort *port);
+
 static OMX_CALLBACKTYPE callbacks = { EventHandler, EmptyBufferDone, FillBufferDone };
 
 static GHashTable *implementations;
@@ -270,7 +279,6 @@ g_omx_core_prepare (GOmxCore *core)
     /* Allocate buffers. */
     {
         guint index;
-        guint i;
 
         for (index = 0; index < core->ports->len; index++)
         {
@@ -279,31 +287,7 @@ g_omx_core_prepare (GOmxCore *core)
             port = g_omx_core_get_port (core, index);
 
             if (port)
-            {
-                for (i = 0; i < port->num_buffers; i++)
-                {
-                    gpointer buffer_data;
-                    guint size;
-
-                    size = port->buffer_size;
-                    buffer_data = g_malloc (size);
-
-#ifdef USE_ALLOCATE_BUFFER
-                    OMX_AllocateBuffer (core->omx_handle,
-                                        &port->buffers[i],
-                                        index,
-                                        NULL,
-                                        size);
-#else
-                    OMX_UseBuffer (core->omx_handle,
-                                   &port->buffers[i],
-                                   index,
-                                   NULL,
-                                   size,
-                                   buffer_data);
-#endif /* USE_ALLOCATE_BUFFER */
-                }
-            }
+                port_allocate_buffers (port);
         }
     }
 
@@ -319,7 +303,6 @@ g_omx_core_start (GOmxCore *core)
 
     {
         guint index;
-        guint i;
 
         for (index = 0; index < core->ports->len; index++)
         {
@@ -327,14 +310,8 @@ g_omx_core_start (GOmxCore *core)
 
             port = g_omx_core_get_port (core, index);
 
-            for (i = 0; i < port->num_buffers; i++)
-            {
-                OMX_BUFFERHEADERTYPE *omx_buffer;
-
-                omx_buffer = port->buffers[i];
-
-                got_buffer (core, port, omx_buffer);
-            }
+            if (port)
+                port_start_buffers (port);
         }
     }
 }
@@ -358,7 +335,6 @@ g_omx_core_finish (GOmxCore *core)
 
     {
         guint index;
-        guint i;
 
         for (index = 0; index < core->ports->len; index++)
         {
@@ -366,18 +342,8 @@ g_omx_core_finish (GOmxCore *core)
 
             port = g_omx_core_get_port (core, index);
 
-            for (i = 0; i < port->num_buffers; i++)
-            {
-                OMX_BUFFERHEADERTYPE *omx_buffer;
-
-                omx_buffer = port->buffers[i];
-
-#ifdef USE_ALLOCATE_BUFFER
-                g_free (omx_buffer->pBuffer);
-#endif /* USE_ALLOCATE_BUFFER */
-
-                OMX_FreeBuffer (core->omx_handle, index, omx_buffer);
-            }
+            if (port)
+                port_free_buffers (port);
         }
     }
 
@@ -502,6 +468,75 @@ g_omx_port_setup (GOmxPort *port,
         g_print ("WARNING: unhandled setup\n");
     }
     port->buffers = g_new0 (OMX_BUFFERHEADERTYPE *, port->num_buffers);
+}
+
+static void
+port_allocate_buffers (GOmxPort *port)
+{
+    guint i;
+
+    for (i = 0; i < port->num_buffers; i++)
+    {
+        gpointer buffer_data;
+        guint size;
+
+        size = port->buffer_size;
+        buffer_data = g_malloc (size);
+
+#ifdef USE_ALLOCATE_BUFFER
+        OMX_AllocateBuffer (port->core->omx_handle,
+                            &port->buffers[i],
+                            port->port_index,
+                            NULL,
+                            size);
+#else
+        OMX_UseBuffer (port->core->omx_handle,
+                       &port->buffers[i],
+                       port->port_index,
+                       NULL,
+                       size,
+                       buffer_data);
+#endif /* USE_ALLOCATE_BUFFER */
+    }
+}
+
+static void
+port_free_buffers (GOmxPort *port)
+{
+    guint i;
+
+    for (i = 0; i < port->num_buffers; i++)
+    {
+        OMX_BUFFERHEADERTYPE *omx_buffer;
+
+        omx_buffer = port->buffers[i];
+
+        if (omx_buffer)
+        {
+#ifdef USE_ALLOCATE_BUFFER
+            g_free (omx_buffer->pBuffer);
+            omx_buffer->pBuffer = NULL;
+#endif /* USE_ALLOCATE_BUFFER */
+
+            OMX_FreeBuffer (port->core->omx_handle, port->port_index, omx_buffer);
+            port->buffers[i] = NULL;
+        }
+    }
+}
+
+static void
+port_start_buffers (GOmxPort *port)
+{
+    guint i;
+
+    for (i = 0; i < port->num_buffers; i++)
+    {
+        OMX_BUFFERHEADERTYPE *omx_buffer;
+
+        omx_buffer = port->buffers[i];
+
+        got_buffer (port->core, port, omx_buffer);
+    }
 }
 
 void
