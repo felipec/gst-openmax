@@ -634,11 +634,18 @@ pad_event (GstPad *pad,
                     GST_LOG_OBJECT (self, "request buffer");
                     omx_buffer = g_omx_port_request_buffer (self->in_port);
 
-                    omx_buffer->nFlags |= OMX_BUFFERFLAG_EOS;
+                    if (G_LIKELY (omx_buffer))
+                    {
+                        omx_buffer->nFlags |= OMX_BUFFERFLAG_EOS;
 
-                    GST_LOG_OBJECT (self, "release_buffer");
-                    /* foo_buffer_untaint (omx_buffer); */
-                    g_omx_port_release_buffer (self->in_port, omx_buffer);
+                        GST_LOG_OBJECT (self, "release_buffer");
+                        /* foo_buffer_untaint (omx_buffer); */
+                        g_omx_port_release_buffer (self->in_port, omx_buffer);
+                    }
+                    else
+                    {
+                        g_omx_core_set_done (gomx);
+                    }
                 }
 
                 /* Wait for the output port to get the EOS. */
