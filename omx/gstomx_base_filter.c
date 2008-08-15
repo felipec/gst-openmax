@@ -728,8 +728,11 @@ activate_push (GstPad *pad,
 
         if (self->initialized)
         {
+            /** @todo disable this until we properly reinitialize the buffers. */
+#if 0
             /* flush all buffers */
             OMX_SendCommand (self->gomx->omx_handle, OMX_CommandFlush, OMX_ALL, NULL);
+#endif
 
             /* unlock loops */
             g_omx_port_disable (self->in_port);
