@@ -21,6 +21,7 @@
 
 #include "gstomx_base_filter.h"
 #include "gstomx.h"
+#include "gstomx_interface.h"
 
 #include <stdlib.h> /* For calloc, free */
 #include <string.h> /* For memcpy */
@@ -787,6 +788,25 @@ type_instance_init (GTypeInstance *instance,
     GST_LOG_OBJECT (self, "end");
 }
 
+static void
+omx_interface_init (GstImplementsInterfaceClass *klass)
+{
+}
+
+static gboolean
+interface_supported (GstImplementsInterface *iface,
+                     GType type)
+{
+    g_assert (type == GST_TYPE_OMX);
+    return TRUE;
+}
+
+static void
+interface_init (GstImplementsInterfaceClass *klass)
+{
+    klass->supported = interface_supported;
+}
+
 GType
 gst_omx_base_filter_get_type (void)
 {
@@ -795,6 +815,8 @@ gst_omx_base_filter_get_type (void)
     if (G_UNLIKELY (type == 0))
     {
         GTypeInfo *type_info;
+        GInterfaceInfo *iface_info;
+        GInterfaceInfo *omx_info;
 
         type_info = g_new0 (GTypeInfo, 1);
         type_info->class_size = sizeof (GstOmxBaseFilterClass);
@@ -803,8 +825,19 @@ gst_omx_base_filter_get_type (void)
         type_info->instance_init = type_instance_init;
 
         type = g_type_register_static (GST_TYPE_ELEMENT, "GstOmxBaseFilter", type_info, 0);
-
         g_free (type_info);
+
+        iface_info = g_new0 (GInterfaceInfo, 1);
+        iface_info->interface_init = (GInterfaceInitFunc) interface_init;
+
+        g_type_add_interface_static (type, GST_TYPE_IMPLEMENTS_INTERFACE, iface_info);
+        g_free (iface_info);
+
+        omx_info = g_new0 (GInterfaceInfo, 1);
+        omx_info->interface_init = (GInterfaceInitFunc) omx_interface_init;
+
+        g_type_add_interface_static (type, GST_TYPE_OMX, omx_info);
+        g_free (omx_info);
     }
 
     return type;
