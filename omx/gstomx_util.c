@@ -580,6 +580,35 @@ g_omx_port_pause (GOmxPort *port)
 }
 
 void
+g_omx_port_enable (GOmxPort *port)
+{
+    GOmxCore *core;
+
+    core = port->core;
+
+    OMX_SendCommand (core->omx_handle, OMX_CommandPortEnable, port->port_index, NULL);
+    port_allocate_buffers (port);
+    port_start_buffers (port);
+    g_omx_port_resume (port);
+
+    g_omx_sem_down (core->port_sem);
+}
+
+void
+g_omx_port_disable (GOmxPort *port)
+{
+    GOmxCore *core;
+
+    core = port->core;
+
+    OMX_SendCommand (core->omx_handle, OMX_CommandPortDisable, port->port_index, NULL);
+    g_omx_port_pause (port);
+    port_free_buffers (port);
+
+    g_omx_sem_down (core->port_sem);
+}
+
+void
 g_omx_port_finish (GOmxPort *port)
 {
     port->enabled = FALSE;
