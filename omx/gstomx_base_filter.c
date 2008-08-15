@@ -33,7 +33,7 @@ enum
     ARG_0,
     ARG_COMPONENT_NAME,
     ARG_LIBRARY_NAME,
-    ARG_USE_TIMESTAMPS
+    ARG_USE_TIMESTAMPS,
 };
 
 static GstElementClass *parent_class = NULL;
@@ -161,17 +161,11 @@ set_property (GObject *obj,
     switch (prop_id)
     {
         case ARG_COMPONENT_NAME:
-            if (self->omx_component)
-            {
-                g_free (self->omx_component);
-            }
+            g_free (self->omx_component);
             self->omx_component = g_value_dup_string (value);
             break;
         case ARG_LIBRARY_NAME:
-            if (self->omx_library)
-            {
-                g_free (self->omx_library);
-            }
+            g_free (self->omx_library);
             self->omx_library = g_value_dup_string (value);
             break;
         case ARG_USE_TIMESTAMPS:

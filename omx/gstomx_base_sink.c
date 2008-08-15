@@ -31,7 +31,7 @@ enum
 {
     ARG_0,
     ARG_COMPONENT_NAME,
-    ARG_LIBRARY_NAME
+    ARG_LIBRARY_NAME,
 };
 
 static GstElementClass *parent_class = NULL;
@@ -277,17 +277,11 @@ set_property (GObject *obj,
     switch (prop_id)
     {
         case ARG_COMPONENT_NAME:
-            if (self->omx_component)
-            {
-                g_free (self->omx_component);
-            }
+            g_free (self->omx_component);
             self->omx_component = g_value_dup_string (value);
             break;
         case ARG_LIBRARY_NAME:
-            if (self->omx_library)
-            {
-                g_free (self->omx_library);
-            }
+            g_free (self->omx_library);
             self->omx_library = g_value_dup_string (value);
             break;
         default:
@@ -389,7 +383,7 @@ gst_omx_base_sink_get_type (void)
 {
     static GType type = 0;
 
-    if (type == 0)
+    if (G_UNLIKELY (type == 0))
     {
         GTypeInfo *type_info;
 
