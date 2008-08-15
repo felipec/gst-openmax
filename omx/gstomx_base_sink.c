@@ -227,8 +227,12 @@ handle_event (GstBaseSink *gst_base,
               GstEvent *event)
 {
     GstOmxBaseSink *self;
+    GOmxCore *gomx;
+    GOmxPort *in_port;
 
     self = GST_OMX_BASE_SINK (gst_base);
+    gomx = self->gomx;
+    in_port = self->in_port;
 
     GST_LOG_OBJECT (self, "begin");
 
@@ -238,21 +242,21 @@ handle_event (GstBaseSink *gst_base,
     {
         case GST_EVENT_EOS:
             /* Close the inpurt port. */
-            g_omx_core_set_done (self->gomx);
+            g_omx_core_set_done (gomx);
             break;
 
         case GST_EVENT_FLUSH_START:
             /* unlock loops */
-            g_omx_port_disable (self->in_port);
+            g_omx_port_disable (in_port);
 
             /* flush all buffers */
-            OMX_SendCommand (self->gomx->omx_handle, OMX_CommandFlush, OMX_ALL, NULL);
+            OMX_SendCommand (gomx->omx_handle, OMX_CommandFlush, OMX_ALL, NULL);
             break;
 
         case GST_EVENT_FLUSH_STOP:
-            g_omx_sem_down (self->gomx->flush_sem);
+            g_omx_sem_down (gomx->flush_sem);
 
-            g_omx_port_enable (self->in_port);
+            g_omx_port_enable (in_port);
             break;
 
         default:
