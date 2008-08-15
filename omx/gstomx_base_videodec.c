@@ -316,7 +316,7 @@ gst_omx_base_videodec_get_type (void)
 {
     static GType type = 0;
 
-    if (type == 0)
+    if (G_UNLIKELY (type == 0))
     {
         GTypeInfo *type_info;
 
