@@ -588,7 +588,8 @@ g_omx_port_enable (GOmxPort *port)
 
     OMX_SendCommand (core->omx_handle, OMX_CommandPortEnable, port->port_index, NULL);
     port_allocate_buffers (port);
-    port_start_buffers (port);
+    if (core->omx_state != OMX_StateLoaded)
+        port_start_buffers (port);
     g_omx_port_resume (port);
 
     g_omx_sem_down (core->port_sem);
