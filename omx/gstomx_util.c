@@ -374,11 +374,10 @@ g_omx_core_setup_port (GOmxCore *core,
     if (!port)
     {
         port = g_omx_port_new (core);
+        g_ptr_array_insert (core->ports, index, port);
     }
 
     g_omx_port_setup (port, omx_port);
-
-    g_ptr_array_insert (core->ports, index, port);
 
     return port;
 }
@@ -463,11 +462,7 @@ g_omx_port_setup (GOmxPort *port,
     port->buffer_size = omx_port->nBufferSize;
     port->port_index = omx_port->nPortIndex;
 
-    if (port->buffers)
-    {
-        /** @todo handle this case */
-        g_print ("WARNING: unhandled setup\n");
-    }
+    g_free (port->buffers);
     port->buffers = g_new0 (OMX_BUFFERHEADERTYPE *, port->num_buffers);
 }
 
