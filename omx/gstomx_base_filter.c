@@ -604,9 +604,15 @@ pad_event (GstPad *pad,
            GstEvent *event)
 {
     GstOmxBaseFilter *self;
+    GOmxCore *gomx;
+    GOmxPort *in_port;
+    GOmxPort *out_port;
     gboolean ret;
 
     self = GST_OMX_BASE_FILTER (GST_OBJECT_PARENT (pad));
+    gomx = self->gomx;
+    in_port = self->in_port;
+    out_port = self->out_port;
 
     GST_LOG_OBJECT (self, "begin");
 
@@ -616,17 +622,13 @@ pad_event (GstPad *pad,
     {
         case GST_EVENT_EOS:
             {
-                GOmxCore *gomx;
-
-                gomx = self->gomx;
-
                 /* send buffer with eos flag */
                 /** @todo move to util */
                 {
                     OMX_BUFFERHEADERTYPE *omx_buffer;
 
                     GST_LOG_OBJECT (self, "request buffer");
-                    omx_buffer = g_omx_port_request_buffer (self->in_port);
+                    omx_buffer = g_omx_port_request_buffer (in_port);
 
                     if (G_LIKELY (omx_buffer))
                     {
@@ -634,7 +636,7 @@ pad_event (GstPad *pad,
 
                         GST_LOG_OBJECT (self, "release_buffer");
                         /* foo_buffer_untaint (omx_buffer); */
-                        g_omx_port_release_buffer (self->in_port, omx_buffer);
+                        g_omx_port_release_buffer (in_port, omx_buffer);
                     }
                     else
                     {
@@ -651,13 +653,13 @@ pad_event (GstPad *pad,
 
         case GST_EVENT_FLUSH_START:
             /* unlock loops */
-            g_omx_port_disable (self->in_port);
-            g_omx_port_disable (self->out_port);
+            g_omx_port_disable (in_port);
+            g_omx_port_disable (out_port);
 
             gst_pad_pause_task (self->srcpad);
 
             /* flush all buffers */
-            OMX_SendCommand (self->gomx->omx_handle, OMX_CommandFlush, OMX_ALL, NULL);
+            OMX_SendCommand (gomx->omx_handle, OMX_CommandFlush, OMX_ALL, NULL);
 
             ret = gst_pad_push_event (self->srcpad, event);
             break;
@@ -666,12 +668,12 @@ pad_event (GstPad *pad,
             ret = gst_pad_push_event (self->srcpad, event);
             self->last_pad_push_return = GST_FLOW_OK;
 
-            g_omx_sem_down (self->gomx->flush_sem);
+            g_omx_sem_down (gomx->flush_sem);
 
             gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
 
-            g_omx_port_enable (self->in_port);
-            g_omx_port_enable (self->out_port);
+            g_omx_port_enable (in_port);
+            g_omx_port_enable (out_port);
 
             break;
 
