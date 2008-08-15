@@ -143,3 +143,13 @@ async_queue_enable (AsyncQueue *queue)
     queue->enabled = TRUE;
     g_mutex_unlock (queue->mutex);
 }
+
+void
+async_queue_flush (AsyncQueue *queue)
+{
+    g_mutex_lock (queue->mutex);
+    g_list_free (queue->head);
+    queue->head = queue->tail = NULL;
+    queue->length = 0;
+    g_mutex_unlock (queue->mutex);
+}
