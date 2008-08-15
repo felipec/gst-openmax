@@ -1,6 +1,6 @@
 AC_PREREQ([2.52])
 
-AC_INIT([gst-openmax], [0.10.0.4], [http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer&component=gst-openmax], [gst-openmax])
+AC_INIT([gst-openmax], [0.10.0.5], [http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer&component=gst-openmax], [gst-openmax])
 AC_CONFIG_AUX_DIR([config])
 AM_INIT_AUTOMAKE([-Wall -Wno-portability])
 AC_CONFIG_HEADERS([config.h])
