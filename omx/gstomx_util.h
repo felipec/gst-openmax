@@ -83,6 +83,7 @@ struct GOmxCore
     GOmxSem *state_sem;
     GOmxSem *done_sem;
     GOmxSem *flush_sem;
+    GOmxSem *port_sem;
 
     GOmxCb settings_changed_cb;
     GOmxImp *imp;

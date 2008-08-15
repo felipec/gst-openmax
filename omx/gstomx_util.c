@@ -221,6 +221,7 @@ g_omx_core_new (void)
     core->state_sem = g_omx_sem_new ();
     core->done_sem = g_omx_sem_new ();
     core->flush_sem = g_omx_sem_new ();
+    core->port_sem = g_omx_sem_new ();
 
     core->omx_state = OMX_StateInvalid;
 
@@ -230,6 +231,7 @@ g_omx_core_new (void)
 void
 g_omx_core_free (GOmxCore *core)
 {
+    g_omx_sem_free (core->port_sem);
     g_omx_sem_free (core->flush_sem);
     g_omx_sem_free (core->done_sem);
     g_omx_sem_free (core->state_sem);
@@ -746,6 +748,9 @@ EventHandler (OMX_HANDLETYPE omx_handle,
                     case OMX_CommandFlush:
                         g_omx_sem_up (core->flush_sem);
                         break;
+                    case OMX_CommandPortDisable:
+                    case OMX_CommandPortEnable:
+                        g_omx_sem_up (core->port_sem);
                     default:
                         break;
                 }
