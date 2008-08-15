@@ -653,8 +653,8 @@ pad_event (GstPad *pad,
 
         case GST_EVENT_FLUSH_START:
             /* unlock loops */
-            g_omx_port_disable (in_port);
-            g_omx_port_disable (out_port);
+            g_omx_port_pause (in_port);
+            g_omx_port_pause (out_port);
 
             gst_pad_pause_task (self->srcpad);
 
@@ -672,8 +672,8 @@ pad_event (GstPad *pad,
 
             gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
 
-            g_omx_port_enable (in_port);
-            g_omx_port_enable (out_port);
+            g_omx_port_resume (in_port);
+            g_omx_port_resume (out_port);
 
             break;
 
@@ -711,8 +711,8 @@ activate_push (GstPad *pad,
             if (self->initialized)
             {
                 /** @todo link callback function also needed */
-                g_omx_port_enable (self->in_port);
-                g_omx_port_enable (self->out_port);
+                g_omx_port_resume (self->in_port);
+                g_omx_port_resume (self->out_port);
 
                 result = gst_pad_start_task (pad, output_loop, pad);
             }
@@ -731,8 +731,8 @@ activate_push (GstPad *pad,
 #endif
 
             /* unlock loops */
-            g_omx_port_disable (self->in_port);
-            g_omx_port_disable (self->out_port);
+            g_omx_port_pause (self->in_port);
+            g_omx_port_pause (self->out_port);
         }
 
         /* make sure streaming finishes */

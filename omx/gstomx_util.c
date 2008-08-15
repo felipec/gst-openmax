@@ -535,13 +535,13 @@ g_omx_port_release_buffer (GOmxPort *port,
 }
 
 void
-g_omx_port_enable (GOmxPort *port)
+g_omx_port_resume (GOmxPort *port)
 {
     async_queue_enable (port->queue);
 }
 
 void
-g_omx_port_disable (GOmxPort *port)
+g_omx_port_pause (GOmxPort *port)
 {
     async_queue_disable (port->queue);
 }

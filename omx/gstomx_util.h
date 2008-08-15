@@ -134,8 +134,8 @@ void g_omx_port_setup (GOmxPort *port, OMX_PARAM_PORTDEFINITIONTYPE *omx_port);
 void g_omx_port_push_buffer (GOmxPort *port, OMX_BUFFERHEADERTYPE *omx_buffer);
 OMX_BUFFERHEADERTYPE *g_omx_port_request_buffer (GOmxPort *port);
 void g_omx_port_release_buffer (GOmxPort *port, OMX_BUFFERHEADERTYPE *omx_buffer);
-void g_omx_port_enable (GOmxPort *port);
-void g_omx_port_disable (GOmxPort *port);
+void g_omx_port_resume (GOmxPort *port);
+void g_omx_port_pause (GOmxPort *port);
 void g_omx_port_finish (GOmxPort *port);
 
 GOmxSem *g_omx_sem_new (void);

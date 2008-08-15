@@ -247,7 +247,7 @@ handle_event (GstBaseSink *gst_base,
 
         case GST_EVENT_FLUSH_START:
             /* unlock loops */
-            g_omx_port_disable (in_port);
+            g_omx_port_pause (in_port);
 
             /* flush all buffers */
             OMX_SendCommand (gomx->omx_handle, OMX_CommandFlush, OMX_ALL, NULL);
@@ -256,7 +256,7 @@ handle_event (GstBaseSink *gst_base,
         case GST_EVENT_FLUSH_STOP:
             g_omx_sem_down (gomx->flush_sem);
 
-            g_omx_port_enable (in_port);
+            g_omx_port_resume (in_port);
             break;
 
         default:
