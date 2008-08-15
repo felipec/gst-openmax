@@ -603,6 +603,7 @@ g_omx_port_disable (GOmxPort *port)
 
     OMX_SendCommand (core->omx_handle, OMX_CommandPortDisable, port->port_index, NULL);
     g_omx_port_pause (port);
+    async_queue_flush (port->queue); /** @todo should this be in a port_flush function? */
     port_free_buffers (port);
 
     g_omx_sem_down (core->port_sem);
