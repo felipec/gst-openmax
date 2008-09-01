@@ -503,6 +503,27 @@ pad_chain (GstPad *pad,
         {
             GST_INFO_OBJECT (self, "omx: play");
             g_omx_core_start (gomx);
+
+            /* send buffer with codec data flag */
+            /** @todo move to util */
+            if (self->codec_data)
+            {
+                OMX_BUFFERHEADERTYPE *omx_buffer;
+
+                GST_LOG_OBJECT (self, "request buffer");
+                omx_buffer = g_omx_port_request_buffer (in_port);
+
+                if (G_LIKELY (omx_buffer))
+                {
+                    omx_buffer->nFlags |= 0x00000080; /* codec data flag */
+
+                    omx_buffer->nFilledLen = GST_BUFFER_SIZE (self->codec_data);
+                    memcpy (omx_buffer->pBuffer + omx_buffer->nOffset, GST_BUFFER_DATA (self->codec_data), omx_buffer->nFilledLen);
+
+                    GST_LOG_OBJECT (self, "release_buffer");
+                    g_omx_port_release_buffer (in_port, omx_buffer);
+                }
+            }
         }
 
         if (G_UNLIKELY (gomx->omx_state != OMX_StateExecuting))
