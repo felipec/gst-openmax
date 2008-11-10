@@ -661,23 +661,27 @@ pad_event (GstPad *pad,
             break;
 
         case GST_EVENT_FLUSH_START:
+            gst_pad_push_event (self->srcpad, event);
+            self->last_pad_push_return = GST_FLOW_WRONG_STATE;
+
             g_omx_core_flush_start (gomx);
 
             gst_pad_pause_task (self->srcpad);
 
             g_omx_core_flush (gomx);
 
-            ret = gst_pad_push_event (self->srcpad, event);
+            ret = TRUE;
             break;
 
         case GST_EVENT_FLUSH_STOP:
-            ret = gst_pad_push_event (self->srcpad, event);
+            gst_pad_push_event (self->srcpad, event);
             self->last_pad_push_return = GST_FLOW_OK;
 
             g_omx_core_flush_stop (gomx);
 
             gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
 
+            ret = TRUE;
             break;
 
         case GST_EVENT_NEWSEGMENT:
