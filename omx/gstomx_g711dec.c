@@ -23,6 +23,9 @@
 #include "gstomx_base_filter.h"
 #include "gstomx.h"
 
+#include <stdlib.h> /* For calloc, free */
+#include <string.h> /* For strcmp */
+
 #define OMX_COMPONENT_NAME "OMX.st.audio_decoder.g711"
 
 static GstOmxBaseFilterClass *parent_class = NULL;
@@ -119,30 +122,69 @@ type_class_init (gpointer g_class,
     parent_class = g_type_class_ref (GST_OMX_BASE_FILTER_TYPE);
 }
 
-static void
-settings_changed_cb (GOmxCore *core)
+static gboolean
+sink_setcaps (GstPad *pad,
+              GstCaps *caps)
 {
+    GstStructure *structure;
     GstOmxBaseFilter *omx_base;
+    GOmxCore *gomx;
+    const gchar *mode;
+    gboolean ret = TRUE;
 
-    omx_base = core->client_data;
+    omx_base = GST_OMX_BASE_FILTER (GST_PAD_PARENT (pad));
+    gomx = (GOmxCore *) omx_base->gomx;
 
-    GST_DEBUG_OBJECT (omx_base, "settings changed");
+    GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
 
+    structure = gst_caps_get_structure (caps, 0);
+
+    mode = gst_structure_get_name (structure);
+
+    /* Output port configuration. */
     {
-        GstCaps *new_caps;
+        OMX_AUDIO_PARAM_PCMMODETYPE *param;
 
-        new_caps = gst_caps_new_simple ("audio/x-raw-int",
-                                        "endianness", G_TYPE_INT, G_BYTE_ORDER,
-                                        "width", G_TYPE_INT, 16,
-                                        "depth", G_TYPE_INT, 16,
-                                        "rate", G_TYPE_INT, 8000,
-                                        "signed", G_TYPE_BOOLEAN, TRUE,
-                                        "channels", G_TYPE_INT, 1,
-                                        NULL);
+        param = calloc (1, sizeof (OMX_AUDIO_PARAM_PCMMODETYPE));
+        param->nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
+        param->nVersion.s.nVersionMajor = 1;
+        param->nVersion.s.nVersionMinor = 1;
 
-        GST_INFO_OBJECT (omx_base, "caps are: %" GST_PTR_FORMAT, new_caps);
-        gst_pad_set_caps (omx_base->srcpad, new_caps);
+        param->nPortIndex = 0;
+        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, param);
+
+        if (strcmp (mode, "audio/x-alaw") == 0)
+            param->ePCMMode = OMX_AUDIO_PCMModeALaw;
+        else if (strcmp (mode, "audio/x-mulaw") == 0)
+            param->ePCMMode = OMX_AUDIO_PCMModeMULaw;
+
+        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, param);
+
+        free (param);
     }
+
+    /* set caps on the srcpad */
+    {
+        GstCaps *tmp_caps;
+
+        tmp_caps = gst_pad_get_allowed_caps (omx_base->srcpad);
+        tmp_caps = gst_caps_make_writable (tmp_caps);
+        gst_caps_truncate (tmp_caps);
+
+        gst_pad_fixate_caps (omx_base->srcpad, tmp_caps);
+
+        if (gst_caps_is_fixed (tmp_caps))
+        {
+            GST_INFO_OBJECT (omx_base, "fixated to: %" GST_PTR_FORMAT, tmp_caps);
+            gst_pad_set_caps (omx_base->srcpad, tmp_caps);
+        }
+
+        gst_caps_unref (tmp_caps);
+    }
+
+    ret = gst_pad_set_caps (pad, caps);
+
+    return ret;
 }
 
 static void
@@ -157,7 +199,7 @@ type_instance_init (GTypeInstance *instance,
 
     omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
 
-    omx_base->gomx->settings_changed_cb = settings_changed_cb;
+    gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);
 }
 
 GType
