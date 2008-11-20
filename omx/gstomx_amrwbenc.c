@@ -199,7 +199,7 @@ settings_changed_cb (GOmxCore *core)
     {
         GstCaps *new_caps;
 
-        new_caps = gst_caps_new_simple ("audio/AMR",
+        new_caps = gst_caps_new_simple ("audio/AMR-WB",
                                         "channels", G_TYPE_INT, channels,
                                         NULL);
 
