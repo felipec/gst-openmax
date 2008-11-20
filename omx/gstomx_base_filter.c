@@ -117,6 +117,7 @@ change_state (GstElement *element,
             if (self->initialized)
             {
                 g_omx_core_finish (self->gomx);
+                self->initialized = FALSE;
             }
             break;
 
