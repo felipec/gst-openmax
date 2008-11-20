@@ -19,7 +19,7 @@
  *
  */
 
-#include "gstomx_mp3dec.h"
+#include "gstomx_mp2dec.h"
 #include "gstomx_base_filter.h"
 #include "gstomx.h"
 
@@ -53,7 +53,7 @@ generate_sink_template (void)
 
     caps = gst_caps_new_simple ("audio/mpeg",
                                 "mpegversion", G_TYPE_INT, 1,
-                                "layer", G_TYPE_INT, 3,
+                                "layer", G_TYPE_INT, 2,
                                 "rate", GST_TYPE_INT_RANGE, 8000, 48000,
                                 "channels", GST_TYPE_INT_RANGE, 1, 8,
                                 "parsed", G_TYPE_BOOLEAN, TRUE,
@@ -72,9 +72,9 @@ type_base_init (gpointer g_class)
     {
         GstElementDetails details;
 
-        details.longname = "OpenMAX IL MP3 audio decoder";
+        details.longname = "OpenMAX IL MP2 audio decoder";
         details.klass = "Codec/Decoder/Audio";
-        details.description = "Decodes audio in MP3 format with OpenMAX IL";
+        details.description = "Decodes audio in MP2 format with OpenMAX IL";
         details.author = "Felipe Contreras";
 
         gst_element_class_set_details (element_class, &details);
@@ -175,7 +175,7 @@ type_instance_init (GTypeInstance *instance,
 }
 
 GType
-gst_omx_mp3dec_get_type (void)
+gst_omx_mp2dec_get_type (void)
 {
     static GType type = 0;
 
@@ -184,13 +184,13 @@ gst_omx_mp3dec_get_type (void)
         GTypeInfo *type_info;
 
         type_info = g_new0 (GTypeInfo, 1);
-        type_info->class_size = sizeof (GstOmxMp3DecClass);
+        type_info->class_size = sizeof (GstOmxMp2DecClass);
         type_info->base_init = type_base_init;
         type_info->class_init = type_class_init;
-        type_info->instance_size = sizeof (GstOmxMp3Dec);
+        type_info->instance_size = sizeof (GstOmxMp2Dec);
         type_info->instance_init = type_instance_init;
 
-        type = g_type_register_static (GST_OMX_BASE_FILTER_TYPE, "GstOmxMp3Dec", type_info, 0);
+        type = g_type_register_static (GST_OMX_BASE_FILTER_TYPE, "GstOmxMp2Dec", type_info, 0);
 
         g_free (type_info);
     }
