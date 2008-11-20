@@ -446,9 +446,9 @@ output_loop (gpointer data)
         g_omx_port_release_buffer (out_port, omx_buffer);
     }
 
-    self->last_pad_push_return = ret;
-
 leave:
+
+    self->last_pad_push_return = ret;
 
     if (ret != GST_FLOW_OK)
     {
