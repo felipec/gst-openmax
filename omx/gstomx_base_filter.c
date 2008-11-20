@@ -369,9 +369,10 @@ output_loop (gpointer data)
                     memcpy (GST_BUFFER_DATA (buf), omx_buffer->pBuffer + omx_buffer->nOffset, omx_buffer->nFilledLen);
                     if (self->use_timestamps)
                     {
-                        GST_BUFFER_TIMESTAMP (buf) = gst_util_uint64_scale (omx_buffer->nTimeStamp,
-                                                                            GST_SECOND,
-                                                                            OMX_TICKS_PER_SECOND);
+
+                        GST_BUFFER_TIMESTAMP (buf) = gst_util_uint64_scale_int (omx_buffer->nTimeStamp,
+                                                                                GST_SECOND,
+                                                                                OMX_TICKS_PER_SECOND);
                     }
 
                     omx_buffer->nFilledLen = 0;
