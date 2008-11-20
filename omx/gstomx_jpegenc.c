@@ -255,7 +255,6 @@ omx_setup (GstOmxBaseFilter *omx_base)
 
     {
         OMX_PARAM_PORTDEFINITIONTYPE *param;
-        OMX_COLOR_FORMATTYPE color_format;
         gint width, height;
 
         param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
@@ -278,6 +277,8 @@ omx_setup (GstOmxBaseFilter *omx_base)
 #if 1
         /* the component should do this instead */
         {
+            OMX_COLOR_FORMATTYPE color_format;
+
             param->nPortIndex = 0;
             OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
 
@@ -291,9 +292,17 @@ omx_setup (GstOmxBaseFilter *omx_base)
                 case OMX_COLOR_FormatYCbYCr:
                 case OMX_COLOR_FormatCbYCrY:
                     param->nBufferSize = (GST_ROUND_UP_16 (width) * GST_ROUND_UP_16 (height)) * 2;
+#if 0
+                    if (param->nBufferSize >= 400)
+                        param->nBufferSize = 400;
+#endif
                     break;
                 case OMX_COLOR_FormatYUV420Planar:
                     param->nBufferSize = (GST_ROUND_UP_16 (width) * GST_ROUND_UP_16 (height)) * 3 / 2;
+#if 0
+                    if (param->nBufferSize >= 1600)
+                        param->nBufferSize = 1600;
+#endif
                     break;
                 default:
                     break;
@@ -307,19 +316,14 @@ omx_setup (GstOmxBaseFilter *omx_base)
             param->nPortIndex = 1;
             OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
 
-            /* this is against the standard; nBufferSize is read-only. */
-            switch (color_format)
-            {
-                case OMX_COLOR_FormatYCbYCr:
-                case OMX_COLOR_FormatCbYCrY:
-                    param->nBufferSize = (GST_ROUND_UP_16 (width) * GST_ROUND_UP_16 (height)) * 2;
-                    break;
-                case OMX_COLOR_FormatYUV420Planar:
-                    param->nBufferSize = (GST_ROUND_UP_16 (width) * GST_ROUND_UP_16 (height)) * 3 / 2;
-                    break;
-                default:
-                    break;
-            }
+            param->nBufferSize = width * height;
+
+#if 0
+            if (qualityfactor < 10)
+                param->nBufferSize /= 10;
+            else if (qualityfactor < 100)
+                param->nBufferSize /= (100 / qualityfactor);
+#endif
 
             param->format.image.nFrameWidth = width;
             param->format.image.nFrameHeight = height;
