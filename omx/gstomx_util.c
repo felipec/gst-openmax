@@ -29,23 +29,23 @@
  * Forward declarations
  */
 
-inline void
+static inline void
 change_state (GOmxCore *core,
               OMX_STATETYPE state);
 
-inline void
+static inline void
 wait_for_state (GOmxCore *core,
                 OMX_STATETYPE state);
 
-inline void
+static inline void
 in_port_cb (GOmxPort *port,
             OMX_BUFFERHEADERTYPE *omx_buffer);
 
-inline void
+static inline void
 out_port_cb (GOmxPort *port,
              OMX_BUFFERHEADERTYPE *omx_buffer);
 
-inline void
+static inline void
 got_buffer (GOmxCore *core,
             GOmxPort *port,
             OMX_BUFFERHEADERTYPE *omx_buffer);
@@ -68,7 +68,7 @@ FillBufferDone (OMX_HANDLETYPE omx_handle,
                 OMX_PTR app_data,
                 OMX_BUFFERHEADERTYPE *omx_buffer);
 
-inline GOmxPort *
+static inline GOmxPort *
 g_omx_core_get_port (GOmxCore *core,
                      guint index);
 
@@ -358,7 +358,7 @@ g_omx_core_setup_port (GOmxCore *core,
     return port;
 }
 
-inline GOmxPort *
+static inline GOmxPort *
 g_omx_core_get_port (GOmxCore *core,
                      guint index)
 {
@@ -673,14 +673,14 @@ g_omx_sem_up (GOmxSem *sem)
  * Helper functions.
  */
 
-inline void
+static inline void
 change_state (GOmxCore *core,
               OMX_STATETYPE state)
 {
     OMX_SendCommand (core->omx_handle, OMX_CommandStateSet, state, NULL);
 }
 
-inline void
+static inline void
 complete_change_state (GOmxCore *core,
                        OMX_STATETYPE state)
 {
@@ -692,7 +692,7 @@ complete_change_state (GOmxCore *core,
     g_mutex_unlock (core->omx_state_mutex);
 }
 
-inline void
+static inline void
 wait_for_state (GOmxCore *core,
                 OMX_STATETYPE state)
 {
@@ -710,7 +710,7 @@ wait_for_state (GOmxCore *core,
  * Callbacks
  */
 
-inline void
+static inline void
 in_port_cb (GOmxPort *port,
             OMX_BUFFERHEADERTYPE *omx_buffer)
 {
@@ -720,7 +720,7 @@ in_port_cb (GOmxPort *port,
         return;
 }
 
-inline void
+static inline void
 out_port_cb (GOmxPort *port,
              OMX_BUFFERHEADERTYPE *omx_buffer)
 {
@@ -738,7 +738,7 @@ out_port_cb (GOmxPort *port,
 #endif
 }
 
-inline void
+static inline void
 got_buffer (GOmxCore *core,
             GOmxPort *port,
             OMX_BUFFERHEADERTYPE *omx_buffer)

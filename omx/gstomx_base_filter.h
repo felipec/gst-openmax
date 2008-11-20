@@ -34,7 +34,7 @@ typedef struct GstOmxBaseFilter GstOmxBaseFilter;
 typedef struct GstOmxBaseFilterClass GstOmxBaseFilterClass;
 typedef void (*GstOmxBaseFilterCb) (GstOmxBaseFilter *self);
 
-#include <gstomx_util.h>
+#include "gstomx_util.h"
 #include <async_queue.h>
 
 struct GstOmxBaseFilter
