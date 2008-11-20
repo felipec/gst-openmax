@@ -62,7 +62,8 @@ GST_DEBUG_CATEGORY (gstomx_debug);
 static gboolean
 plugin_init (GstPlugin *plugin)
 {
-    GST_DEBUG_CATEGORY_INIT (gstomx_debug, "omx", 0, "OpenMAX");
+    GST_DEBUG_CATEGORY_INIT (gstomx_debug, "omx", 0, "gst-openmax");
+    GST_DEBUG_CATEGORY_INIT (gstomx_util_debug, "omx_util", 0, "gst-openmax utility");
 
     g_omx_init ();
 

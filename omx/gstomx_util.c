@@ -23,6 +23,13 @@
 #include "gstomx_util.h"
 #include <dlfcn.h>
 
+#include "gstomx.h"
+
+GST_DEBUG_CATEGORY (gstomx_util_debug);
+
+#undef GST_CAT_DEFAULT
+#define GST_CAT_DEFAULT gstomx_util_debug
+
 /* #define USE_ALLOCATE_BUFFER */
 
 /*
@@ -850,6 +857,7 @@ EmptyBufferDone (OMX_HANDLETYPE omx_handle,
     core = (GOmxCore*) app_data;
     port = g_omx_core_get_port (core, omx_buffer->nInputPortIndex);
 
+    GST_LOG ("omx_buffer=%p", omx_buffer);
     got_buffer (core, port, omx_buffer);
 
     return OMX_ErrorNone;
@@ -866,6 +874,7 @@ FillBufferDone (OMX_HANDLETYPE omx_handle,
     core = (GOmxCore *) app_data;
     port = g_omx_core_get_port (core, omx_buffer->nOutputPortIndex);
 
+    GST_LOG ("omx_buffer=%p", omx_buffer);
     got_buffer (core, port, omx_buffer);
 
     return OMX_ErrorNone;
