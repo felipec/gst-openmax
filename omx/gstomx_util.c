@@ -382,6 +382,24 @@ g_omx_core_wait_for_done (GOmxCore *core)
     g_omx_sem_down (core->done_sem);
 }
 
+void
+g_omx_core_flush_start (GOmxCore *core)
+{
+    core_for_each_port (core, g_omx_port_pause);
+    OMX_SendCommand (core->omx_handle, OMX_CommandFlush, OMX_ALL, NULL);
+    core_for_each_port (core, g_omx_port_flush);
+}
+
+void
+g_omx_core_flush_stop (GOmxCore *core)
+{
+    g_omx_sem_down (core->flush_sem);
+    core_for_each_port (core, g_omx_port_resume);
+#if 0
+    core_for_each_port (core, port_start_buffers);
+#endif
+}
+
 /*
  * Port
  */
@@ -554,6 +572,12 @@ g_omx_port_pause (GOmxPort *port)
 }
 
 void
+g_omx_port_flush (GOmxPort *port)
+{
+    async_queue_flush (port->queue);
+}
+
+void
 g_omx_port_enable (GOmxPort *port)
 {
     GOmxCore *core;
@@ -578,7 +602,7 @@ g_omx_port_disable (GOmxPort *port)
 
     OMX_SendCommand (core->omx_handle, OMX_CommandPortDisable, port->port_index, NULL);
     g_omx_port_pause (port);
-    async_queue_flush (port->queue); /** @todo should this be in a port_flush function? */
+    g_omx_port_flush (port);
     port_free_buffers (port);
 
     g_omx_sem_down (core->port_sem);

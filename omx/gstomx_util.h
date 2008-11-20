@@ -130,6 +130,8 @@ void g_omx_core_pause (GOmxCore *core);
 void g_omx_core_finish (GOmxCore *core);
 void g_omx_core_set_done (GOmxCore *core);
 void g_omx_core_wait_for_done (GOmxCore *core);
+void g_omx_core_flush_start (GOmxCore *core);
+void g_omx_core_flush_stop (GOmxCore *core);
 GOmxPort *g_omx_core_setup_port (GOmxCore *core, OMX_PARAM_PORTDEFINITIONTYPE *omx_port);
 
 GOmxPort *g_omx_port_new (GOmxCore *core);
@@ -140,6 +142,7 @@ OMX_BUFFERHEADERTYPE *g_omx_port_request_buffer (GOmxPort *port);
 void g_omx_port_release_buffer (GOmxPort *port, OMX_BUFFERHEADERTYPE *omx_buffer);
 void g_omx_port_resume (GOmxPort *port);
 void g_omx_port_pause (GOmxPort *port);
+void g_omx_port_flush (GOmxPort *port);
 void g_omx_port_enable (GOmxPort *port);
 void g_omx_port_disable (GOmxPort *port);
 void g_omx_port_finish (GOmxPort *port);
