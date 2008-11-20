@@ -53,10 +53,10 @@ got_buffer (GOmxCore *core,
 static OMX_ERRORTYPE
 EventHandler (OMX_HANDLETYPE omx_handle,
               OMX_PTR app_data,
-              OMX_EVENTTYPE eEvent,
-              OMX_U32 nData1,
-              OMX_U32 nData2,
-              OMX_PTR pEventData);
+              OMX_EVENTTYPE event,
+              OMX_U32 data_1,
+              OMX_U32 data_2,
+              OMX_PTR event_data);
 
 static OMX_ERRORTYPE
 EmptyBufferDone (OMX_HANDLETYPE omx_handle,
@@ -783,27 +783,27 @@ got_buffer (GOmxCore *core,
 static OMX_ERRORTYPE
 EventHandler (OMX_HANDLETYPE omx_handle,
               OMX_PTR app_data,
-              OMX_EVENTTYPE eEvent,
-              OMX_U32 nData1,
-              OMX_U32 nData2,
-              OMX_PTR pEventData)
+              OMX_EVENTTYPE event,
+              OMX_U32 data_1,
+              OMX_U32 data_2,
+              OMX_PTR event_data)
 {
     GOmxCore *core;
 
     core = (GOmxCore *) app_data;
 
-    switch (eEvent)
+    switch (event)
     {
         case OMX_EventCmdComplete:
             {
                 OMX_COMMANDTYPE cmd;
 
-                cmd = (OMX_COMMANDTYPE) nData1;
+                cmd = (OMX_COMMANDTYPE) data_1;
 
                 switch (cmd)
                 {
                     case OMX_CommandStateSet:
-                        complete_change_state (core, nData2);
+                        complete_change_state (core, data_2);
                         break;
                     case OMX_CommandFlush:
                         g_omx_sem_up (core->flush_sem);
@@ -818,7 +818,7 @@ EventHandler (OMX_HANDLETYPE omx_handle,
             }
         case OMX_EventBufferFlag:
             {
-                if (nData2 & OMX_BUFFERFLAG_EOS)
+                if (data_2 & OMX_BUFFERFLAG_EOS)
                 {
                     g_omx_core_set_done (core);
                 }

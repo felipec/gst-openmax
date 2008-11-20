@@ -385,9 +385,7 @@ util_suite (void)
     Suite *s = suite_create ("util");
 
     if (!g_thread_supported ())
-    {
         g_thread_init (NULL);
-    }
 
     /* Core test case */
     TCase *tc_core = tcase_create ("Core");
