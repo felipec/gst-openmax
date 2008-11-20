@@ -272,7 +272,6 @@ output_loop (gpointer data)
     GOmxPort *out_port;
     GstOmxBaseFilter *self;
     GstFlowReturn ret = GST_FLOW_OK;
-    OMX_BUFFERHEADERTYPE *omx_buffer = NULL;
 
     pad = data;
     self = GST_OMX_BASE_FILTER (gst_pad_get_parent (pad));
@@ -290,6 +289,8 @@ output_loop (gpointer data)
 
     if (G_LIKELY (out_port->enabled))
     {
+        OMX_BUFFERHEADERTYPE *omx_buffer = NULL;
+
         GST_LOG_OBJECT (self, "request buffer");
         omx_buffer = g_omx_port_request_buffer (out_port);
 
@@ -395,9 +396,6 @@ output_loop (gpointer data)
             GST_WARNING_OBJECT (self, "empty buffer");
         }
 
-        if (G_UNLIKELY (ret != GST_FLOW_OK))
-            goto leave;
-
         if (G_UNLIKELY (omx_buffer->nFlags & OMX_BUFFERFLAG_EOS))
         {
             GST_DEBUG_OBJECT (self, "got eos");
@@ -439,16 +437,13 @@ output_loop (gpointer data)
         {
             GST_ERROR_OBJECT (self, "no input buffer to share");
         }
-    }
 
-leave:
-
-    if (omx_buffer)
-    {
         omx_buffer->nFilledLen = 0;
         GST_LOG_OBJECT (self, "release_buffer");
         g_omx_port_release_buffer (out_port, omx_buffer);
     }
+
+leave:
 
     self->last_pad_push_return = ret;
 
