@@ -52,6 +52,7 @@ generate_sink_template (void)
     GstCaps *caps;
 
     caps = gst_caps_new_simple ("audio/x-adpcm",
+                                "string", G_TYPE_STRING, "dvi",
                                 "rate", GST_TYPE_INT_RANGE, 8000, 96000,
                                 "channels", GST_TYPE_INT_RANGE, 1, 8,
                                 NULL);

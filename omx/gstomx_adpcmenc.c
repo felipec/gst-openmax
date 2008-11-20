@@ -35,6 +35,7 @@ generate_src_template (void)
     GstCaps *caps;
 
     caps = gst_caps_new_simple ("audio/x-adpcm",
+                                "string", G_TYPE_STRING, "dvi",
                                 "rate", GST_TYPE_INT_RANGE, 8000, 96000,
                                 "channels", G_TYPE_INT, 1,
                                 NULL);
@@ -139,6 +140,7 @@ settings_changed_cb (GOmxCore *core)
         GstCaps *new_caps;
 
         new_caps = gst_caps_new_simple ("audio/x-adpcm",
+                                        "string", G_TYPE_STRING, "dvi",
                                         "rate", G_TYPE_INT, rate,
                                         "channels", G_TYPE_INT, 1,
                                         NULL);
