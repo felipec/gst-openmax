@@ -386,18 +386,21 @@ void
 g_omx_core_flush_start (GOmxCore *core)
 {
     core_for_each_port (core, g_omx_port_pause);
+}
+
+void
+g_omx_core_flush (GOmxCore *core)
+{
     OMX_SendCommand (core->omx_handle, OMX_CommandFlush, OMX_ALL, NULL);
-    core_for_each_port (core, g_omx_port_flush);
 }
 
 void
 g_omx_core_flush_stop (GOmxCore *core)
 {
     g_omx_sem_down (core->flush_sem);
+    core_for_each_port (core, g_omx_port_flush);
     core_for_each_port (core, g_omx_port_resume);
-#if 0
     core_for_each_port (core, port_start_buffers);
-#endif
 }
 
 /*
