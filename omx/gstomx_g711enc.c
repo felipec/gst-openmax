@@ -64,7 +64,7 @@ generate_sink_template (void)
                                 "endianness", G_TYPE_INT, G_BYTE_ORDER,
                                 "width", GST_TYPE_INT_RANGE, 8, 32,
                                 "depth", GST_TYPE_INT_RANGE, 8, 32,
-                                "rate", GST_TYPE_INT_RANGE, 8000, 16000,
+                                "rate", G_TYPE_INT, 8000,
                                 "signed", G_TYPE_BOOLEAN, TRUE,
                                 "channels", G_TYPE_INT, 1,
                                 NULL);
