@@ -36,8 +36,28 @@ generate_src_template (void)
     caps = gst_caps_new_empty ();
 
     struc = gst_structure_new ("audio/x-iLBC",
-                               "mode", GST_TYPE_INT_RANGE, 20, 30,
                                NULL);
+
+    {
+        GValue list;
+        GValue val;
+
+        list.g_type = val.g_type = 0;
+
+        g_value_init (&list, GST_TYPE_LIST);
+        g_value_init (&val, G_TYPE_INT);
+
+        g_value_set_int (&val, 20);
+        gst_value_list_append_value (&list, &val);
+
+        g_value_set_int (&val, 30);
+        gst_value_list_append_value (&list, &val);
+
+        gst_structure_set_value (struc, "mode", &list);
+
+        g_value_unset (&val);
+        g_value_unset (&list);
+    }
 
     gst_caps_append_structure (caps, struc);
 
@@ -125,11 +145,28 @@ sink_setcaps (GstPad *pad,
 
     GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
 
-    g_return_val_if_fail (gst_caps_get_size (caps) == 1, FALSE);
-
     structure = gst_caps_get_structure (caps, 0);
 
     mode = gst_structure_get_name (structure);
+
+    /* set caps on the srcpad */
+    {
+        GstCaps *tmp_caps;
+
+        tmp_caps = gst_pad_get_allowed_caps (omx_base->srcpad);
+        tmp_caps = gst_caps_make_writable (tmp_caps);
+        gst_caps_truncate (tmp_caps);
+
+        gst_pad_fixate_caps (omx_base->srcpad, tmp_caps);
+
+        if (gst_caps_is_fixed (tmp_caps))
+        {
+            GST_INFO_OBJECT (omx_base, "fixated to: %" GST_PTR_FORMAT, tmp_caps);
+            gst_pad_set_caps (omx_base->srcpad, tmp_caps);
+        }
+
+        gst_caps_unref (tmp_caps);
+    }
 
     return gst_pad_set_caps (pad, caps);
 }
