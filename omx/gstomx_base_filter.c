@@ -439,7 +439,7 @@ output_loop (gpointer data)
         if (self->share_output_buffer &&
             !omx_buffer->pBuffer)
         {
-            GST_WARNING_OBJECT (self, "no input buffer to share");
+            GST_ERROR_OBJECT (self, "no input buffer to share");
         }
 
         GST_LOG_OBJECT (self, "release_buffer");
