@@ -27,7 +27,6 @@
 #include <string.h> /* For memcpy */
 
 static gboolean share_input_buffer = FALSE;
-static gboolean share_output_buffer = FALSE;
 
 enum
 {
@@ -377,7 +376,7 @@ output_loop (gpointer data)
 
                     omx_buffer->nFilledLen = 0;
 
-                    if (share_output_buffer)
+                    if (self->share_output_buffer)
                     {
                         GST_WARNING_OBJECT (self, "couldn't zero-copy");
                         g_free (omx_buffer->pBuffer);
@@ -408,7 +407,7 @@ output_loop (gpointer data)
             goto leave;
         }
 
-        if (share_output_buffer &&
+        if (self->share_output_buffer &&
             !omx_buffer->pBuffer &&
             omx_buffer->nOffset == 0)
         {
@@ -437,7 +436,7 @@ output_loop (gpointer data)
             }
         }
 
-        if (share_output_buffer &&
+        if (self->share_output_buffer &&
             !omx_buffer->pBuffer)
         {
             GST_WARNING_OBJECT (self, "no input buffer to share");
