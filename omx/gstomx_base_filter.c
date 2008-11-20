@@ -453,7 +453,7 @@ leave:
     if (ret != GST_FLOW_OK)
     {
         GST_INFO_OBJECT (self, "pause task, reason:  %s",
-                         gst_flow_get_name (self->last_pad_push_return));
+                         gst_flow_get_name (ret));
         gst_pad_pause_task (self->srcpad);
     }
 
