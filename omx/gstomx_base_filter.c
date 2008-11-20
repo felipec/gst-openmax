@@ -631,6 +631,7 @@ pad_event (GstPad *pad,
     switch (GST_EVENT_TYPE (event))
     {
         case GST_EVENT_EOS:
+            if (self->initialized)
             {
                 /* send buffer with eos flag */
                 /** @todo move to util */
