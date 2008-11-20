@@ -528,7 +528,12 @@ port_start_buffers (GOmxPort *port)
 
         omx_buffer = port->buffers[i];
 
-        got_buffer (port->core, port, omx_buffer);
+        /* If it's an input port we will need to fill the buffer, so put it in
+         * the queue, otherwise send to omx for processing (fill it up). */
+        if (port->type == GOMX_PORT_INPUT)
+            got_buffer (port->core, port, omx_buffer);
+        else
+            g_omx_port_release_buffer (port, omx_buffer);
     }
 }
 
