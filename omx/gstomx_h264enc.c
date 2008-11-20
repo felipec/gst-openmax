@@ -19,7 +19,7 @@
  *
  */
 
-#include "gstomx_avcenc.h"
+#include "gstomx_h264enc.h"
 #include "gstomx.h"
 
 #include <stdlib.h> /* For calloc, free */
@@ -142,7 +142,7 @@ type_instance_init (GTypeInstance *instance,
 }
 
 GType
-gst_omx_avcenc_get_type (void)
+gst_omx_h264enc_get_type (void)
 {
     static GType type = 0;
 
@@ -151,13 +151,13 @@ gst_omx_avcenc_get_type (void)
         GTypeInfo *type_info;
 
         type_info = g_new0 (GTypeInfo, 1);
-        type_info->class_size = sizeof (GstOmxAvcEncClass);
+        type_info->class_size = sizeof (GstOmxH264EncClass);
         type_info->base_init = type_base_init;
         type_info->class_init = type_class_init;
-        type_info->instance_size = sizeof (GstOmxAvcEnc);
+        type_info->instance_size = sizeof (GstOmxH264Enc);
         type_info->instance_init = type_instance_init;
 
-        type = g_type_register_static (GST_OMX_BASE_VIDEOENC_TYPE, "GstOmxAvcEnc", type_info, 0);
+        type = g_type_register_static (GST_OMX_BASE_VIDEOENC_TYPE, "GstOmxH264Enc", type_info, 0);
 
         g_free (type_info);
     }

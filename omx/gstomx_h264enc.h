@@ -19,33 +19,33 @@
  *
  */
 
-#ifndef GSTOMX_AVCENC_H
-#define GSTOMX_AVCENC_H
+#ifndef GSTOMX_H264ENC_H
+#define GSTOMX_H264ENC_H
 
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
 
-#define GST_OMX_AVCENC(obj) (GstOmxAvcEnc *) (obj)
-#define GST_OMX_AVCENC_TYPE (gst_omx_avcenc_get_type ())
+#define GST_OMX_H264ENC(obj) (GstOmxH264Enc *) (obj)
+#define GST_OMX_H264ENC_TYPE (gst_omx_h264enc_get_type ())
 
-typedef struct GstOmxAvcEnc GstOmxAvcEnc;
-typedef struct GstOmxAvcEncClass GstOmxAvcEncClass;
+typedef struct GstOmxH264Enc GstOmxH264Enc;
+typedef struct GstOmxH264EncClass GstOmxH264EncClass;
 
 #include "gstomx_base_videoenc.h"
 
-struct GstOmxAvcEnc
+struct GstOmxH264Enc
 {
     GstOmxBaseVideoEnc omx_base;
 };
 
-struct GstOmxAvcEncClass
+struct GstOmxH264EncClass
 {
     GstOmxBaseVideoEncClass parent_class;
 };
 
-GType gst_omx_avcenc_get_type (void);
+GType gst_omx_h264enc_get_type (void);
 
 G_END_DECLS
 
-#endif /* GSTOMX_AVCENC_H */
+#endif /* GSTOMX_H264ENC_H */

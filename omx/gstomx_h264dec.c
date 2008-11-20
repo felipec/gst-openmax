@@ -55,9 +55,9 @@ type_base_init (gpointer g_class)
     {
         GstElementDetails details;
 
-        details.longname = "OpenMAX IL H.264 video decoder";
+        details.longname = "OpenMAX IL H.264/AVC video decoder";
         details.klass = "Codec/Decoder/Video";
-        details.description = "Decodes video in H.264 format with OpenMAX IL";
+        details.description = "Decodes video in H.264/AVC format with OpenMAX IL";
         details.author = "Felipe Contreras";
 
         gst_element_class_set_details (element_class, &details);
