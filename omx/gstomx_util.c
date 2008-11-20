@@ -389,18 +389,10 @@ g_omx_core_flush_start (GOmxCore *core)
 }
 
 void
-g_omx_core_flush (GOmxCore *core)
-{
-    OMX_SendCommand (core->omx_handle, OMX_CommandFlush, OMX_ALL, NULL);
-}
-
-void
 g_omx_core_flush_stop (GOmxCore *core)
 {
-    g_omx_sem_down (core->flush_sem);
     core_for_each_port (core, g_omx_port_flush);
     core_for_each_port (core, g_omx_port_resume);
-    core_for_each_port (core, port_start_buffers);
 }
 
 /*
@@ -582,7 +574,20 @@ g_omx_port_pause (GOmxPort *port)
 void
 g_omx_port_flush (GOmxPort *port)
 {
-    async_queue_flush (port->queue);
+    if (port->type == GOMX_PORT_OUTPUT)
+    {
+        OMX_BUFFERHEADERTYPE *omx_buffer;
+        while ((omx_buffer = async_queue_pop_forced (port->queue)))
+        {
+            omx_buffer->nFilledLen = 0;
+            g_omx_port_release_buffer (port, omx_buffer);
+        }
+    }
+    else
+    {
+        OMX_SendCommand (port->core->omx_handle, OMX_CommandFlush, port->port_index, NULL);
+        g_omx_sem_down (port->core->flush_sem);
+    }
 }
 
 void
