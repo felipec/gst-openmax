@@ -43,7 +43,7 @@ generate_src_template (void)
 
     caps = gst_caps_new_empty ();
 
-    struc = gst_structure_new ("audio/g729",
+    struc = gst_structure_new ("audio/G729",
                                "rate", G_TYPE_INT, 8000,
                                "channels", G_TYPE_INT, 1,
                                NULL);
