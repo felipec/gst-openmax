@@ -277,25 +277,32 @@ g_omx_core_deinit (GOmxCore *core)
     core->imp = NULL;
 }
 
+typedef void (*GOmxPortFunc) (GOmxPort *port);
+
+static void inline
+core_for_each_port (GOmxCore *core,
+                    GOmxPortFunc func)
+{
+    guint index;
+
+    for (index = 0; index < core->ports->len; index++)
+    {
+        GOmxPort *port;
+
+        port = g_omx_core_get_port (core, index);
+
+        if (port)
+            func (port);
+    }
+}
+
 void
 g_omx_core_prepare (GOmxCore *core)
 {
     change_state (core, OMX_StateIdle);
 
     /* Allocate buffers. */
-    {
-        guint index;
-
-        for (index = 0; index < core->ports->len; index++)
-        {
-            GOmxPort *port;
-
-            port = g_omx_core_get_port (core, index);
-
-            if (port)
-                port_allocate_buffers (port);
-        }
-    }
+    core_for_each_port (core, port_allocate_buffers);
 
     wait_for_state (core, OMX_StateIdle);
 }
@@ -304,29 +311,15 @@ void
 g_omx_core_start (GOmxCore *core)
 {
     change_state (core, OMX_StateExecuting);
-
     wait_for_state (core, OMX_StateExecuting);
 
-    {
-        guint index;
-
-        for (index = 0; index < core->ports->len; index++)
-        {
-            GOmxPort *port;
-
-            port = g_omx_core_get_port (core, index);
-
-            if (port)
-                port_start_buffers (port);
-        }
-    }
+    core_for_each_port (core, port_start_buffers);
 }
 
 void
 g_omx_core_pause (GOmxCore *core)
 {
     change_state (core, OMX_StatePause);
-
     wait_for_state (core, OMX_StatePause);
 }
 
@@ -334,37 +327,14 @@ void
 g_omx_core_finish (GOmxCore *core)
 {
     change_state (core, OMX_StateIdle);
-
     wait_for_state (core, OMX_StateIdle);
 
     change_state (core, OMX_StateLoaded);
-
-    {
-        guint index;
-
-        for (index = 0; index < core->ports->len; index++)
-        {
-            GOmxPort *port;
-
-            port = g_omx_core_get_port (core, index);
-
-            if (port)
-                port_free_buffers (port);
-        }
-    }
-
+    core_for_each_port (core, port_free_buffers);
     wait_for_state (core, OMX_StateLoaded);
 
-    {
-        guint index;
-        for (index = 0; index < core->ports->len; index++)
-        {
-            GOmxPort *port;
-            port = g_omx_core_get_port (core, index);
-            g_omx_port_free (port);
-        }
-        g_ptr_array_clear (core->ports);
-    }
+    core_for_each_port (core, g_omx_port_free);
+    g_ptr_array_clear (core->ports);
 }
 
 GOmxPort *
