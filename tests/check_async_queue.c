@@ -21,9 +21,40 @@
 
 #include <check.h>
 #include "async_queue.h"
+#include "sem.h"
 
 #define PROCESS_COUNT 0x1000
 #define DISABLE_AT PROCESS_COUNT / 2
+
+typedef struct CustomData CustomData;
+
+struct CustomData
+{
+    AsyncQueue *queue;
+    GSem *push_sem;
+    GSem *pop_sem;
+    gboolean done;
+};
+
+static CustomData *
+custom_data_new (void)
+{
+    CustomData *custom_data;
+    custom_data = g_new0 (CustomData, 1);
+    custom_data->queue = async_queue_new ();
+    custom_data->push_sem = g_sem_new ();
+    custom_data->pop_sem = g_sem_new ();
+    return custom_data;
+}
+
+static void
+custom_data_free (CustomData *custom_data)
+{
+    g_sem_free (custom_data->pop_sem);
+    g_sem_free (custom_data->push_sem);
+    async_queue_free (custom_data->queue);
+    g_free (custom_data);
+}
 
 START_TEST (test_async_queue_create)
 {
@@ -180,6 +211,73 @@ pop_with_disable_func (gpointer data)
     return GINT_TO_POINTER (count);
 }
 
+static gpointer
+pop_stress (gpointer data)
+{
+    CustomData *custom_data;
+    AsyncQueue *queue;
+    guint i, j;
+
+    custom_data = data;
+    queue = custom_data->queue;
+    while (!custom_data->done)
+    {
+        for (i = 0; i < 10; i++)
+        {
+            gpointer tmp;
+            tmp = async_queue_pop (queue);
+            if (!tmp)
+                break;
+        }
+
+        g_sem_up (custom_data->pop_sem);
+        g_sem_down (custom_data->push_sem);
+    }
+
+    return NULL;
+}
+
+static gpointer
+push_stress (gpointer data)
+{
+    CustomData *custom_data;
+    AsyncQueue *queue;
+    gpointer foo;
+    guint i, j;
+
+    custom_data = data;
+    queue = custom_data->queue;
+    foo = GINT_TO_POINTER (1);
+    for (j = 0; j < 10; j++)
+    {
+        for (i = 0; i < 10; i++, foo++)
+        {
+            async_queue_push (queue, foo);
+        }
+
+        async_queue_disable (queue);
+
+        g_sem_down (custom_data->pop_sem);
+
+#if 0
+        if (queue->length)
+            g_debug ("flusihng %i elements", queue->length);
+#endif
+
+        async_queue_flush (queue);
+
+        async_queue_enable (queue);
+
+        g_sem_up (custom_data->push_sem);
+    }
+
+    custom_data->done = TRUE;
+    async_queue_disable (queue);
+    g_sem_up (custom_data->push_sem);
+
+    return NULL;
+}
+
 START_TEST (test_async_queue_disable_simple)
 {
     AsyncQueue *queue;
@@ -262,6 +360,25 @@ START_TEST (test_async_queue_enable)
 }
 END_TEST
 
+START_TEST (test_async_queue_stress)
+{
+    GThread *push_thread;
+    GThread *pop_thread;
+    guint count;
+    CustomData *custom_data;
+
+    custom_data = custom_data_new ();
+
+    pop_thread = g_thread_create (pop_stress, custom_data, TRUE, NULL);
+    push_thread = g_thread_create (push_stress, custom_data, TRUE, NULL);
+
+    g_thread_join (pop_thread);
+    g_thread_join (push_thread);
+
+    custom_data_free (custom_data);
+}
+END_TEST
+
 Suite *
 util_suite (void)
 {
@@ -281,6 +398,7 @@ util_suite (void)
     tcase_add_test (tc_core, test_async_queue_disable_simple);
     tcase_add_test (tc_core, test_async_queue_disable);
     tcase_add_test (tc_core, test_async_queue_enable);
+    tcase_add_test (tc_core, test_async_queue_stress);
     suite_add_tcase (s, tc_core);
 
     return s;
