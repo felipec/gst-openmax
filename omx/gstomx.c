@@ -45,6 +45,7 @@
 #include "gstomx_g729enc.h"
 #include "gstomx_ilbcdec.h"
 #include "gstomx_ilbcenc.h"
+#include "gstomx_jpegenc.h"
 #include "gstomx_audiosink.h"
 #include "gstomx_videosink.h"
 #include "gstomx_filereadersrc.h"
@@ -186,6 +187,11 @@ plugin_init (GstPlugin *plugin)
     }
 
     if (!gst_element_register (plugin, "omx_ilbcenc", DEFAULT_RANK, GST_OMX_ILBCENC_TYPE))
+    {
+        return false;
+    }
+
+    if (!gst_element_register (plugin, "omx_jpegenc", DEFAULT_RANK, GST_OMX_JPEGENC_TYPE))
     {
         return false;
     }
