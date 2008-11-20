@@ -143,6 +143,12 @@ dispose (GObject *obj)
 
     self = GST_OMX_BASE_FILTER (obj);
 
+    if (self->codec_data)
+    {
+        gst_buffer_unref (self->codec_data);
+        self->codec_data = NULL;
+    }
+
     g_omx_core_free (self->gomx);
 
     g_free (self->omx_component);
