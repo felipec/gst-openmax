@@ -19,8 +19,8 @@ check_async_queue_LDADD = $(CHECK_LIBS) $(GTHREAD_LIBS) $(top_builddir)/util/lib
 
 check_PROGRAMS += check_libomxil
 check_libomxil_SOURCES = check_libomxil.c
-check_libomxil_CFLAGS = $(CHECK_CFLAGS) -I$(top_srcdir)/omx/headers
-check_libomxil_LDADD = $(CHECK_LIBS) -ldl
+check_libomxil_CFLAGS = $(CHECK_CFLAGS) $(GTHREAD_CFLAGS) -I$(top_srcdir)/omx/headers
+check_libomxil_LDADD = $(CHECK_LIBS) $(GTHREAD_LIBS) -ldl
 
 check_PROGRAMS += check_gstomx
 check_gstomx_SOURCES = check_gstomx.c
