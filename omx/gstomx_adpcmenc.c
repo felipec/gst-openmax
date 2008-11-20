@@ -35,7 +35,7 @@ generate_src_template (void)
     GstCaps *caps;
 
     caps = gst_caps_new_simple ("audio/x-adpcm",
-                                "rate", GST_TYPE_INT_RANGE, 8000, 16000,
+                                "rate", GST_TYPE_INT_RANGE, 8000, 96000,
                                 "channels", G_TYPE_INT, 1,
                                 NULL);
 
@@ -51,7 +51,7 @@ generate_sink_template (void)
                                 "endianness", G_TYPE_INT, G_BYTE_ORDER,
                                 "width", GST_TYPE_INT_RANGE, 8, 32,
                                 "depth", GST_TYPE_INT_RANGE, 8, 32,
-                                "rate", GST_TYPE_INT_RANGE, 8000, 16000,
+                                "rate", GST_TYPE_INT_RANGE, 8000, 96000,
                                 "signed", G_TYPE_BOOLEAN, TRUE,
                                 "channels", G_TYPE_INT, 1,
                                 NULL);
