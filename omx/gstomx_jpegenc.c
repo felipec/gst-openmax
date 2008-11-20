@@ -24,7 +24,7 @@
 #include "gstomx.h"
 
 #include <string.h>
-
+#include <stdlib.h>
 #include <stdbool.h>
 
 #define OMX_COMPONENT_NAME "OMX.st.image_encoder.jpeg"
@@ -183,7 +183,7 @@ sink_setcaps (GstPad *pad,
     GstStructure *structure;
     GstOmxBaseFilter *omx_base;
     GOmxCore *gomx;
-    OMX_COLOR_FORMATTYPE color_format;
+    OMX_COLOR_FORMATTYPE color_format = OMX_COLOR_FormatYUV420Planar;
     gint width = 0;
     gint height = 0;
 
@@ -247,7 +247,6 @@ omx_setup (GstOmxBaseFilter *omx_base)
 {
     GstOmxJpegEnc *self;
     GOmxCore *gomx;
-    gint rate, channels;
 
     self = GST_OMX_JPEGENC (omx_base);
     gomx = (GOmxCore *) omx_base->gomx;
@@ -258,7 +257,6 @@ omx_setup (GstOmxBaseFilter *omx_base)
         OMX_PARAM_PORTDEFINITIONTYPE *param;
         OMX_COLOR_FORMATTYPE color_format;
         gint width, height;
-        guint framerate;
 
         param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
         param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
