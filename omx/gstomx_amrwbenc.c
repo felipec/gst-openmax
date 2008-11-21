@@ -44,6 +44,7 @@ generate_src_template (void)
 
     caps = gst_caps_new_simple ("audio/AMR-WB",
                                 "channels", GST_TYPE_INT_RANGE, 1, 8,
+                                "rate", G_TYPE_INT, 16000,
                                 NULL);
 
     return caps;
@@ -201,6 +202,7 @@ settings_changed_cb (GOmxCore *core)
 
         new_caps = gst_caps_new_simple ("audio/AMR-WB",
                                         "channels", G_TYPE_INT, channels,
+                                        "rate", G_TYPE_INT, 16000,
                                         NULL);
 
         GST_INFO_OBJECT (omx_base, "caps are: %" GST_PTR_FORMAT, new_caps);
