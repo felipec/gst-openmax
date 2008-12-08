@@ -35,7 +35,7 @@ generate_src_template (void)
     GstCaps *caps;
 
     caps = gst_caps_new_simple ("audio/x-adpcm",
-                                "string", G_TYPE_STRING, "dvi",
+                                "layout", G_TYPE_STRING, "dvi",
                                 "rate", GST_TYPE_INT_RANGE, 8000, 96000,
                                 "channels", G_TYPE_INT, 1,
                                 NULL);
@@ -140,7 +140,7 @@ settings_changed_cb (GOmxCore *core)
         GstCaps *new_caps;
 
         new_caps = gst_caps_new_simple ("audio/x-adpcm",
-                                        "string", G_TYPE_STRING, "dvi",
+                                        "layout", G_TYPE_STRING, "dvi",
                                         "rate", G_TYPE_INT, rate,
                                         "channels", G_TYPE_INT, 1,
                                         NULL);
@@ -154,21 +154,36 @@ static gboolean
 sink_setcaps (GstPad *pad,
               GstCaps *caps)
 {
+    GstCaps *peer_caps;
     GstStructure *structure;
     GstOmxBaseFilter *omx_base;
     GOmxCore *gomx;
     gint rate = 0;
+    gboolean ret = TRUE;
 
     omx_base = GST_OMX_BASE_FILTER (GST_PAD_PARENT (pad));
     gomx = (GOmxCore *) omx_base->gomx;
 
     GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
 
-    g_return_val_if_fail (gst_caps_get_size (caps) == 1, FALSE);
+    peer_caps = gst_pad_peer_get_caps (omx_base->srcpad);
 
-    structure = gst_caps_get_structure (caps, 0);
+    g_return_val_if_fail (peer_caps, FALSE);
 
-    gst_structure_get_int (structure, "rate", &rate);
+    GST_INFO_OBJECT (omx_base, "setcaps (sink): peercaps: %" GST_PTR_FORMAT, peer_caps);
+
+    if (gst_caps_get_size (peer_caps) >= 1)
+    {
+        structure = gst_caps_get_structure (peer_caps, 0);
+
+        gst_structure_get_int (structure, "rate", &rate);
+    }
+    else
+    {
+        structure = gst_caps_get_structure (caps, 0);
+
+        gst_structure_get_int (structure, "rate", &rate);
+    }
 
     /* Input port configuration. */
     {
@@ -189,7 +204,33 @@ sink_setcaps (GstPad *pad,
         free (param);
     }
 
-    return gst_pad_set_caps (pad, caps);
+    /* set caps on the srcpad */
+    {
+        GstCaps *tmp_caps;
+        GstStructure *tmp_structure;
+
+        tmp_caps = gst_pad_get_allowed_caps (omx_base->srcpad);
+        tmp_caps = gst_caps_make_writable (tmp_caps);
+        gst_caps_truncate (tmp_caps);
+
+        tmp_structure = gst_caps_get_structure (tmp_caps, 0);
+        gst_structure_fixate_field_nearest_int (tmp_structure, "rate", rate);
+        gst_pad_fixate_caps (omx_base->srcpad, tmp_caps);
+
+        if (gst_caps_is_fixed (tmp_caps))
+        {
+            GST_INFO_OBJECT (omx_base, "fixated to: %" GST_PTR_FORMAT, tmp_caps);
+            gst_pad_set_caps (omx_base->srcpad, tmp_caps);
+        }
+
+        gst_caps_unref (tmp_caps);
+    }
+
+    ret = gst_pad_set_caps (pad, caps);
+
+    gst_caps_unref (peer_caps);
+
+    return ret;
 }
 
 static void
