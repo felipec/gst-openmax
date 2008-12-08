@@ -50,8 +50,8 @@ generate_sink_template (void)
 
     caps = gst_caps_new_simple ("audio/x-raw-int",
                                 "endianness", G_TYPE_INT, G_BYTE_ORDER,
-                                "width", GST_TYPE_INT_RANGE, 8, 32,
-                                "depth", GST_TYPE_INT_RANGE, 8, 32,
+                                "width", G_TYPE_INT, 16,
+                                "depth", G_TYPE_INT, 16,
                                 "rate", GST_TYPE_INT_RANGE, 8000, 96000,
                                 "signed", G_TYPE_BOOLEAN, TRUE,
                                 "channels", G_TYPE_INT, 1,

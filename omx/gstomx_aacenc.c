@@ -48,8 +48,8 @@ generate_src_template (void)
 
     struc = gst_structure_new ("audio/mpeg",
                                "mpegversion", G_TYPE_INT, 4,
-                               "rate", GST_TYPE_INT_RANGE, 8000, 48000,
-                               "channels", GST_TYPE_INT_RANGE, 1, 8,
+                               "rate", GST_TYPE_INT_RANGE, 8000, 96000,
+                               "channels", GST_TYPE_INT_RANGE, 1, 6,
                                NULL);
 
     {
@@ -85,11 +85,11 @@ generate_sink_template (void)
 
     caps = gst_caps_new_simple ("audio/x-raw-int",
                                 "endianness", G_TYPE_INT, G_BYTE_ORDER,
-                                "width", GST_TYPE_INT_RANGE, 8, 32,
-                                "depth", GST_TYPE_INT_RANGE, 8, 32,
-                                "rate", GST_TYPE_INT_RANGE, 8000, 48000,
+                                "width", G_TYPE_INT, 16,
+                                "depth", G_TYPE_INT, 16,
+                                "rate", GST_TYPE_INT_RANGE, 8000, 96000,
                                 "signed", G_TYPE_BOOLEAN, TRUE,
-                                "channels", GST_TYPE_INT_RANGE, 1, 8,
+                                "channels", GST_TYPE_INT_RANGE, 1, 6,
                                 NULL);
 
     return caps;

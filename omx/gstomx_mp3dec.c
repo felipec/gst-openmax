@@ -36,11 +36,11 @@ generate_src_template (void)
 
     caps = gst_caps_new_simple ("audio/x-raw-int",
                                 "endianness", G_TYPE_INT, G_BYTE_ORDER,
-                                "width", GST_TYPE_INT_RANGE, 8, 32,
-                                "depth", GST_TYPE_INT_RANGE, 8, 32,
-                                "rate", GST_TYPE_INT_RANGE, 8000, 48000,
+                                "width", G_TYPE_INT, 16,
+                                "depth", G_TYPE_INT, 16,
+                                "rate", GST_TYPE_INT_RANGE, 8000, 96000,
                                 "signed", G_TYPE_BOOLEAN, TRUE,
-                                "channels", GST_TYPE_INT_RANGE, 1, 8,
+                                "channels", GST_TYPE_INT_RANGE, 1, 2,
                                 NULL);
 
     return caps;
@@ -150,7 +150,7 @@ settings_changed_cb (GOmxCore *core)
                                         "depth", G_TYPE_INT, 16,
                                         "rate", G_TYPE_INT, rate,
                                         "signed", G_TYPE_BOOLEAN, TRUE,
-                                        "endianness", G_TYPE_INT, G_BYTE_ORDER ? 1234 : 4321,
+                                        "endianness", G_TYPE_INT, G_BYTE_ORDER,
                                         "channels", G_TYPE_INT, channels,
                                         NULL);
 

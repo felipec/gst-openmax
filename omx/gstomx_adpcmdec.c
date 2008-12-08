@@ -36,11 +36,11 @@ generate_src_template (void)
 
     caps = gst_caps_new_simple ("audio/x-raw-int",
                                 "endianness", G_TYPE_INT, G_BYTE_ORDER,
-                                "width", GST_TYPE_INT_RANGE, 8, 32,
-                                "depth", GST_TYPE_INT_RANGE, 8, 32,
+                                "width", G_TYPE_INT, 16,
+                                "depth", G_TYPE_INT, 16,
                                 "rate", GST_TYPE_INT_RANGE, 8000, 96000,
                                 "signed", G_TYPE_BOOLEAN, TRUE,
-                                "channels", GST_TYPE_INT_RANGE, 1, 8,
+                                "channels", G_TYPE_INT, 1,
                                 NULL);
 
     return caps;
@@ -54,7 +54,7 @@ generate_sink_template (void)
     caps = gst_caps_new_simple ("audio/x-adpcm",
                                 "layout", G_TYPE_STRING, "dvi",
                                 "rate", GST_TYPE_INT_RANGE, 8000, 96000,
-                                "channels", GST_TYPE_INT_RANGE, 1, 8,
+                                "channels", G_TYPE_INT, 1,
                                 NULL);
 
     return caps;
