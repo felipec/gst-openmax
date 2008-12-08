@@ -146,6 +146,9 @@ sink_setcaps (GstPad *pad,
 
     structure = gst_caps_get_structure (peer_caps, 0);
 
+    if (!structure)
+        goto leave;
+
     mode = gst_structure_get_name (structure);
 
     /* Output port configuration. */
@@ -169,6 +172,8 @@ sink_setcaps (GstPad *pad,
 
         free (param);
     }
+
+leave:
 
     /* set caps on the srcpad */
     {
