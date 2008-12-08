@@ -57,6 +57,7 @@ struct GstOmxBaseFilter
     GstFlowReturn last_pad_push_return;
     GstBuffer *codec_data;
 
+    gboolean share_input_buffer;
     gboolean share_output_buffer; /** @todo this is hack, OpenMAX IL spec should be revised. */
 };
 

@@ -26,8 +26,6 @@
 #include <stdlib.h> /* For calloc, free */
 #include <string.h> /* For memcpy */
 
-static gboolean share_input_buffer = FALSE;
-
 enum
 {
     ARG_0,
@@ -533,7 +531,7 @@ pad_chain (GstPad *pad,
                                   omx_buffer->nOffset, omx_buffer->nTimeStamp);
 
                 if (omx_buffer->nOffset == 0 &&
-                    share_input_buffer)
+                    self->share_input_buffer)
                 {
                     {
                         GstBuffer *old_buf;
@@ -587,7 +585,7 @@ pad_chain (GstPad *pad,
         ret = GST_FLOW_UNEXPECTED;
     }
 
-    if (!share_input_buffer)
+    if (!self->share_input_buffer)
     {
         gst_buffer_unref (buf);
     }
