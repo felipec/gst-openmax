@@ -39,6 +39,8 @@ typedef struct GstOmxJpegEncClass GstOmxJpegEncClass;
 struct GstOmxJpegEnc
 {
     GstOmxBaseFilter omx_base;
+
+    guint quality;
 };
 
 struct GstOmxJpegEncClass

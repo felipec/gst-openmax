@@ -27,6 +27,14 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+enum
+{
+    ARG_0,
+    ARG_QUALITY
+};
+
+#define DEFAULT_QUALITY 90
+
 #define OMX_COMPONENT_NAME "OMX.st.image_encoder.jpeg"
 
 static GstOmxBaseFilterClass *parent_class = NULL;
@@ -123,6 +131,48 @@ type_base_init (gpointer g_class)
 }
 
 static void
+set_property (GObject *obj,
+              guint prop_id,
+              const GValue *value,
+              GParamSpec *pspec)
+{
+    GstOmxJpegEnc *self;
+
+    self = GST_OMX_JPEGENC (obj);
+
+    switch (prop_id)
+    {
+        case ARG_QUALITY:
+            self->quality = g_value_get_uint (value);
+            break;
+        default:
+            G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
+            break;
+    }
+}
+
+static void
+get_property (GObject *obj,
+              guint prop_id,
+              GValue *value,
+              GParamSpec *pspec)
+{
+    GstOmxJpegEnc *self;
+
+    self = GST_OMX_JPEGENC (obj);
+
+    switch (prop_id)
+    {
+        case ARG_QUALITY:
+            g_value_set_uint (value, self->quality);
+            break;
+        default:
+            G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
+            break;
+    }
+}
+
+static void
 type_class_init (gpointer g_class,
                  gpointer class_data)
 {
@@ -131,6 +181,17 @@ type_class_init (gpointer g_class,
     gobject_class = G_OBJECT_CLASS (g_class);
 
     parent_class = g_type_class_ref (GST_OMX_BASE_FILTER_TYPE);
+
+    /* Properties stuff */
+    {
+        gobject_class->set_property = set_property;
+        gobject_class->get_property = get_property;
+
+        g_object_class_install_property (gobject_class, ARG_QUALITY,
+                                         g_param_spec_uint ("quality", "Quality of image",
+                                                            "Set the quality from 0 to 100",
+                                                            0, 100, DEFAULT_QUALITY, G_PARAM_READWRITE));
+    }
 }
 
 static void
@@ -335,6 +396,22 @@ omx_setup (GstOmxBaseFilter *omx_base)
         free (param);
     }
 
+    {
+        OMX_IMAGE_PARAM_QFACTORTYPE *param;
+
+        param = calloc (1, sizeof (OMX_IMAGE_PARAM_QFACTORTYPE));
+        param->nSize = sizeof (OMX_IMAGE_PARAM_QFACTORTYPE);
+        param->nVersion.s.nVersionMajor = 1;
+        param->nVersion.s.nVersionMinor = 1;
+
+        param->nQFactor = self->quality;
+        param->nPortIndex = 1;
+
+        OMX_SetConfig (gomx->omx_handle, OMX_IndexParamQFactor, param);
+
+        free (param);
+    }
+
     GST_INFO_OBJECT (omx_base, "end");
 }
 
@@ -354,6 +431,8 @@ type_instance_init (GTypeInstance *instance,
     omx_base->gomx->settings_changed_cb = settings_changed_cb;
 
     gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);
+
+    self->quality = DEFAULT_QUALITY;
 }
 
 GType
