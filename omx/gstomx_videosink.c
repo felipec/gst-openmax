@@ -95,8 +95,8 @@ type_base_init (gpointer g_class)
         GstElementDetails details;
 
         details.longname = "OpenMAX IL videosink element";
-        details.klass = "None";
-        details.description = "Does nothing";
+        details.klass = "Video/Sink";
+        details.description = "Renders video";
         details.author = "Felipe Contreras";
 
         gst_element_class_set_details (element_class, &details);
