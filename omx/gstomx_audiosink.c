@@ -58,7 +58,7 @@ type_base_init (gpointer g_class)
         GstElementDetails details;
 
         details.longname = "OpenMAX IL audiosink element";
-        details.klass = "None";
+        details.klass = "Sink/Audio";
         details.description = "Autputs audio";
         details.author = "Felipe Contreras";
 
