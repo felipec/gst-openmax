@@ -144,10 +144,10 @@ sink_setcaps (GstPad *pad,
 
     GST_INFO_OBJECT (omx_base, "setcaps (sink): peercaps: %" GST_PTR_FORMAT, peer_caps);
 
-    structure = gst_caps_get_structure (peer_caps, 0);
-
-    if (!structure)
+    if (gst_caps_get_size (peer_caps) == 0)
         goto leave;
+
+    structure = gst_caps_get_structure (peer_caps, 0);
 
     mode = gst_structure_get_name (structure);
 
