@@ -209,33 +209,6 @@ sink_setcaps (GstPad *pad,
 }
 
 static void
-omx_setup (GstOmxBaseFilter *omx_base)
-{
-    GOmxCore *gomx;
-
-    gomx = (GOmxCore *) omx_base->gomx;
-
-    /* Format configuration. */
-    {
-        OMX_AUDIO_PARAM_AACPROFILETYPE *param;
-
-        param = calloc (1, sizeof (OMX_AUDIO_PARAM_AACPROFILETYPE));
-        param->nSize = sizeof (OMX_AUDIO_PARAM_AACPROFILETYPE);
-        param->nVersion.s.nVersionMajor = 1;
-        param->nVersion.s.nVersionMinor = 1;
-
-        param->nPortIndex = 0;
-        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioAac, param);
-
-        param->eAACStreamFormat = OMX_AUDIO_AACStreamFormatMP4ADTS;
-
-        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioAac, param);
-
-        free (param);
-    }
-}
-
-static void
 type_instance_init (GTypeInstance *instance,
                     gpointer g_class)
 {
@@ -244,7 +217,6 @@ type_instance_init (GTypeInstance *instance,
     omx_base = GST_OMX_BASE_FILTER (instance);
 
     omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
-    omx_base->omx_setup = omx_setup;
 
     omx_base->gomx->settings_changed_cb = settings_changed_cb;
 
