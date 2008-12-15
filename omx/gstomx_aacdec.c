@@ -181,6 +181,7 @@ static gboolean
 sink_setcaps (GstPad *pad,
               GstCaps *caps)
 {
+    GstStructure *structure;    
     GstOmxBaseFilter *omx_base;
     GOmxCore *gomx;
 
@@ -188,6 +189,21 @@ sink_setcaps (GstPad *pad,
     gomx = (GOmxCore *) omx_base->gomx;
 
     GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
+
+    structure = gst_caps_get_structure (caps, 0);
+
+    {
+        const GValue *codec_data;
+        GstBuffer *buffer;
+
+        codec_data = gst_structure_get_value (structure, "codec_data");
+        if (codec_data)
+        {
+            buffer = gst_value_get_buffer (codec_data);
+            omx_base->codec_data = buffer;
+            gst_buffer_ref (buffer);
+        }
+    }
 
     return gst_pad_set_caps (pad, caps);
 }
