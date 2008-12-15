@@ -26,6 +26,14 @@
 
 static GstOmxBaseFilterClass *parent_class;
 
+enum
+{
+    ARG_0,
+    ARG_BYTESTREAM,
+};
+
+#define DEFAULT_BYTESTREAM FALSE
+
 static GstCaps *
 generate_src_template (void)
 {
@@ -70,10 +78,70 @@ type_base_init (gpointer g_class)
 }
 
 static void
+set_property (GObject *obj,
+              guint prop_id,
+              const GValue *value,
+              GParamSpec *pspec)
+{
+    GstOmxBaseFilter *omx_base;
+    GstOmxH264Enc *self;
+    GOmxCore *gomx;
+
+    omx_base = GST_OMX_BASE_FILTER (obj);
+    self = GST_OMX_H264ENC (obj);
+    gomx = (GOmxCore*) omx_base->gomx;
+
+    switch (prop_id)
+    {
+        case ARG_BYTESTREAM:
+            self->bytestream = g_value_get_boolean (value);
+            break;
+        default:
+            G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
+            break;
+    }
+}
+
+static void
+get_property (GObject *obj,
+              guint prop_id,
+              GValue *value,
+              GParamSpec *pspec)
+{
+    GstOmxH264Enc *self;
+
+    self = GST_OMX_H264ENC (obj);
+
+    switch (prop_id)
+    {
+        case ARG_BYTESTREAM:
+            g_value_set_boolean (value, self->bytestream);
+            break;
+        default:
+            G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
+            break;
+    }
+}
+
+static void
 type_class_init (gpointer g_class,
                  gpointer class_data)
 {
+    GObjectClass *gobject_class;
+
+    gobject_class = G_OBJECT_CLASS (g_class);
+
     parent_class = g_type_class_ref (GST_OMX_BASE_FILTER_TYPE);
+
+    /* Properties stuff */
+    {
+        gobject_class->set_property = set_property;
+        gobject_class->get_property = get_property;
+
+        g_object_class_install_property (gobject_class, ARG_BYTESTREAM,
+                                         g_param_spec_boolean ("bytestream", "BYTESTREAM", "bytestream",
+                                                               DEFAULT_BYTESTREAM, G_PARAM_READWRITE));
+    }
 }
 
 static void
@@ -106,6 +174,24 @@ omx_setup (GstOmxBaseFilter *omx_base)
 
             OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
         }
+    }
+
+    {
+        OMX_INDEXTYPE index;
+
+        if (OMX_GetExtensionIndex (gomx->omx_handle, "OMX.TI.VideoEncode.Config.NALFormat", &index) == OMX_ErrorNone)
+        {
+            OMX_U32 nal_format;
+            GstOmxH264Enc *h264enc;
+
+            h264enc = GST_OMX_H264ENC (omx_base);
+            nal_format = h264enc->bytestream ? 0 : 1;
+            GST_DEBUG_OBJECT (omx_base, "setting 'OMX.TI.VideoEncode.Config.NALFormat' to %u", nal_format);
+
+            OMX_SetParameter (gomx->omx_handle, index, &nal_format);
+        }
+        else
+            GST_WARNING_OBJECT (omx_base, "'OMX.TI.VideoEncode.Config.NALFormat' unsupported");
     }
 
     GST_INFO_OBJECT (omx_base, "end");

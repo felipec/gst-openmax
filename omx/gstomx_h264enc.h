@@ -37,6 +37,7 @@ typedef struct GstOmxH264EncClass GstOmxH264EncClass;
 struct GstOmxH264Enc
 {
     GstOmxBaseVideoEnc omx_base;
+    gboolean bytestream;
 };
 
 struct GstOmxH264EncClass
