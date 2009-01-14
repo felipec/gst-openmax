@@ -98,12 +98,13 @@ static void
 settings_changed_cb (GOmxCore *core)
 {
     GstOmxBaseFilter *omx_base;
+    GstOmxBaseVideoDec *self;
     guint width;
     guint height;
-    guint framerate;
     guint32 format = 0;
 
     omx_base = core->client_data;
+    self = GST_OMX_BASE_VIDEODEC (omx_base);
 
     GST_DEBUG_OBJECT (omx_base, "settings changed");
 
@@ -121,7 +122,6 @@ settings_changed_cb (GOmxCore *core)
 
         width = param->format.video.nFrameWidth;
         height = param->format.video.nFrameHeight;
-        framerate = param->format.video.xFramerate;
         switch (param->format.video.eColorFormat)
         {
             case OMX_COLOR_FormatYUV420Planar:
@@ -143,7 +143,8 @@ settings_changed_cb (GOmxCore *core)
         new_caps = gst_caps_new_simple ("video/x-raw-yuv",
                                         "width", G_TYPE_INT, width,
                                         "height", G_TYPE_INT, height,
-                                        "framerate", GST_TYPE_FRACTION, framerate, 1,
+                                        "framerate", GST_TYPE_FRACTION,
+                                        self->framerate_num, self->framerate_denom,
                                         "format", GST_TYPE_FOURCC, format,
                                         NULL);
 
@@ -177,6 +178,11 @@ sink_setcaps (GstPad *pad,
 
     gst_structure_get_int (structure, "width", &width);
     gst_structure_get_int (structure, "height", &height);
+    if (!gst_structure_get_fraction (structure, "framerate", &self->framerate_num, &self->framerate_denom))
+    {
+        self->framerate_num = 0;
+        self->framerate_denom = 1;
+    }
 
     param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
     param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
