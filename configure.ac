@@ -26,7 +26,7 @@ AC_PROG_LIBTOOL
 AM_PATH_CHECK
 
 dnl Keep correct libtool macros in-tree.
-AC_CONFIG_MACRO_DIR([m4])
+dnl AC_CONFIG_MACRO_DIR([m4])
 
 dnl initialize GStreamer macros
 AG_GST_INIT
