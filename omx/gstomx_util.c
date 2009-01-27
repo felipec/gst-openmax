@@ -40,7 +40,7 @@ static inline void
 change_state (GOmxCore *core,
               OMX_STATETYPE state);
 
-static inline void
+static inline gboolean
 wait_for_state (GOmxCore *core,
                 OMX_STATETYPE state);
 
@@ -303,7 +303,7 @@ core_for_each_port (GOmxCore *core,
     }
 }
 
-void
+gboolean
 g_omx_core_prepare (GOmxCore *core)
 {
     change_state (core, OMX_StateIdle);
@@ -311,37 +311,54 @@ g_omx_core_prepare (GOmxCore *core)
     /* Allocate buffers. */
     core_for_each_port (core, port_allocate_buffers);
 
-    wait_for_state (core, OMX_StateIdle);
+    return wait_for_state (core, OMX_StateIdle);
 }
 
-void
+gboolean
 g_omx_core_start (GOmxCore *core)
 {
     change_state (core, OMX_StateExecuting);
-    wait_for_state (core, OMX_StateExecuting);
+    if (!wait_for_state (core, OMX_StateExecuting))
+      goto fail;
 
     core_for_each_port (core, port_start_buffers);
+
+    return TRUE;
+
+fail:
+  {
+    return FALSE;
+  }
 }
 
-void
+gboolean
 g_omx_core_pause (GOmxCore *core)
 {
     change_state (core, OMX_StatePause);
-    wait_for_state (core, OMX_StatePause);
+    return wait_for_state (core, OMX_StatePause);
 }
 
-void
+gboolean
 g_omx_core_finish (GOmxCore *core)
 {
     change_state (core, OMX_StateIdle);
-    wait_for_state (core, OMX_StateIdle);
+    if (!wait_for_state (core, OMX_StateIdle))
+      goto fail;
 
     change_state (core, OMX_StateLoaded);
     core_for_each_port (core, port_free_buffers);
-    wait_for_state (core, OMX_StateLoaded);
+    if (!wait_for_state (core, OMX_StateLoaded))
+      goto fail;
 
     core_for_each_port (core, g_omx_port_free);
     g_ptr_array_clear (core->ports);
+
+    return TRUE;
+
+fail:
+  {
+    return FALSE;
+  }
 }
 
 GOmxPort *
@@ -393,13 +410,21 @@ void
 g_omx_core_flush_start (GOmxCore *core)
 {
     core_for_each_port (core, g_omx_port_pause);
+    g_mutex_lock (core->omx_state_mutex);
+    core->flushing = TRUE;
+    g_cond_signal (core->omx_state_condition);
+    g_mutex_unlock (core->omx_state_mutex);
 }
 
 void
-g_omx_core_flush_stop (GOmxCore *core)
+g_omx_core_flush_stop (GOmxCore *core, gboolean flush_port)
 {
-    core_for_each_port (core, g_omx_port_flush);
+    if (flush_port)
+      core_for_each_port (core, g_omx_port_flush);
     core_for_each_port (core, g_omx_port_resume);
+    g_mutex_lock (core->omx_state_mutex);
+    core->flushing = FALSE;
+    g_mutex_unlock (core->omx_state_mutex);
 }
 
 /*
@@ -710,18 +735,22 @@ complete_change_state (GOmxCore *core,
     g_mutex_unlock (core->omx_state_mutex);
 }
 
-static inline void
+static inline gboolean
 wait_for_state (GOmxCore *core,
                 OMX_STATETYPE state)
 {
+    gboolean intr;
+
     g_mutex_lock (core->omx_state_mutex);
 
-    while (core->omx_state != state)
+    while (!(intr = core->flushing) && core->omx_state != state)
     {
         g_cond_wait (core->omx_state_condition, core->omx_state_mutex);
     }
 
     g_mutex_unlock (core->omx_state_mutex);
+
+    return !intr;
 }
 
 /*
