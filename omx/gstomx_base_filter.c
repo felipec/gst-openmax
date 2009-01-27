@@ -402,7 +402,8 @@ output_loop (gpointer data)
         if (G_UNLIKELY (omx_buffer->nFlags & OMX_BUFFERFLAG_EOS))
         {
             GST_DEBUG_OBJECT (self, "got eos");
-            g_omx_core_set_done (gomx);
+            gst_pad_push_event (self->srcpad, gst_event_new_eos ());
+            ret = GST_FLOW_UNEXPECTED;
             goto leave;
         }
 
@@ -643,7 +644,7 @@ pad_event (GstPad *pad,
     GOmxCore *gomx;
     GOmxPort *in_port;
     GOmxPort *out_port;
-    gboolean ret;
+    gboolean ret = TRUE;
 
     self = GST_OMX_BASE_FILTER (GST_OBJECT_PARENT (pad));
     gomx = self->gomx;
@@ -657,7 +658,10 @@ pad_event (GstPad *pad,
     switch (GST_EVENT_TYPE (event))
     {
         case GST_EVENT_EOS:
-            if (self->initialized)
+            /* if we are init'ed, and there is a running loop; then
+             * if we get a buffer to inform it of EOS, let it handle the rest
+             * in any other case, we send EOS */
+            if (self->initialized && self->last_pad_push_return == GST_FLOW_OK)
             {
                 /* send buffer with eos flag */
                 /** @todo move to util */
@@ -674,17 +678,14 @@ pad_event (GstPad *pad,
                         GST_LOG_OBJECT (self, "release_buffer");
                         /* foo_buffer_untaint (omx_buffer); */
                         g_omx_port_release_buffer (in_port, omx_buffer);
-                    }
-                    else
-                    {
-                        g_omx_core_set_done (gomx);
+                        /* loop handles EOS, eat it here */
+                        gst_event_unref (event);
+                        break;
                     }
                 }
-
-                /* Wait for the output port to get the EOS. */
-                g_omx_core_wait_for_done (gomx);
             }
 
+            /* we tried, but it's up to us here */
             ret = gst_pad_push_event (self->srcpad, event);
             break;
 
