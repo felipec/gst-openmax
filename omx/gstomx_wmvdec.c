@@ -44,6 +44,50 @@ generate_sink_template (void)
     return caps;
 }
 
+static gboolean
+sink_setcaps (GstPad *pad,
+              GstCaps *caps)
+{
+    GstStructure *structure;
+    GstOmxBaseVideoDec *omx_base;
+    GstOmxBaseFilter *omx_base_filter;
+    GOmxCore *gomx;
+    gboolean is_vc1 = FALSE;
+
+    omx_base = GST_OMX_BASE_VIDEODEC (GST_PAD_PARENT (pad));
+    omx_base_filter = GST_OMX_BASE_FILTER (omx_base);
+
+    gomx = (GOmxCore *) omx_base_filter->gomx;
+
+    structure = gst_caps_get_structure (caps, 0);
+
+    {
+        guint32 fourcc;
+
+        /** @todo which one should it be? Is this a demuxer bug? */
+        if (gst_structure_get_fourcc (structure, "fourcc", &fourcc) ||
+            gst_structure_get_fourcc (structure, "format", &fourcc))
+        {
+            if (fourcc == GST_MAKE_FOURCC ('W', 'V', 'C', '1'))
+                is_vc1 = TRUE;
+        }
+    }
+
+    /* This is specific for TI. */
+    {
+        OMX_INDEXTYPE index;
+        OMX_U32 file_type = is_vc1 ? 0 : 1; /* 0 = wvc1, 1 = wmv3 */
+        OMX_GetExtensionIndex (gomx->omx_handle, "OMX.TI.VideoDecode.Param.WMVFileType", &index);
+        OMX_SetParameter (gomx->omx_handle, index, &file_type);
+
+        GST_DEBUG_OBJECT (omx_base,
+                          "OMX_SetParameter OMX.TI.VideoDecode.Param.WMVFileType %" G_GUINT32_FORMAT,
+                          file_type);
+    }
+
+    return TRUE;
+}
+
 static void
 type_base_init (gpointer g_class)
 {
@@ -89,6 +133,8 @@ type_instance_init (GTypeInstance *instance,
     omx_base = GST_OMX_BASE_VIDEODEC (instance);
 
     omx_base->compression_format = OMX_VIDEO_CodingWMV;
+
+    omx_base->sink_setcaps = sink_setcaps;
 }
 
 GType

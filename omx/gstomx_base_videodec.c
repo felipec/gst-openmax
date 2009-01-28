@@ -216,6 +216,9 @@ sink_setcaps (GstPad *pad,
         OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
     }
 
+    if (self->sink_setcaps)
+        self->sink_setcaps (pad, caps);
+
     return gst_pad_set_caps (pad, caps);
 }
 
