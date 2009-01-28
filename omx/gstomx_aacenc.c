@@ -199,48 +199,6 @@ type_class_init (gpointer g_class,
     }
 }
 
-static void
-settings_changed_cb (GOmxCore *core)
-{
-    GstOmxBaseFilter *omx_base;
-    guint rate;
-    guint channels;
-
-    omx_base = core->client_data;
-
-    GST_DEBUG_OBJECT (omx_base, "settings changed");
-
-    {
-        OMX_AUDIO_PARAM_AACPROFILETYPE *param;
-
-        param = calloc (1, sizeof (OMX_AUDIO_PARAM_AACPROFILETYPE));
-        param->nSize = sizeof (OMX_AUDIO_PARAM_AACPROFILETYPE);
-        param->nVersion.s.nVersionMajor = 1;
-        param->nVersion.s.nVersionMinor = 1;
-
-        param->nPortIndex = 1;
-        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioAac, param);
-
-        rate = param->nSampleRate;
-        channels = param->nChannels;
-
-        free (param);
-    }
-
-    {
-        GstCaps *new_caps;
-
-        new_caps = gst_caps_new_simple ("audio/mpeg",
-                                        "mpegversion", G_TYPE_INT, 4,
-                                        "rate", G_TYPE_INT, rate,
-                                        "channels", G_TYPE_INT, channels,
-                                        NULL);
-
-        GST_INFO_OBJECT (omx_base, "caps are: %" GST_PTR_FORMAT, new_caps);
-        gst_pad_set_caps (omx_base->srcpad, new_caps);
-    }
-}
-
 static gboolean
 sink_setcaps (GstPad *pad,
               GstCaps *caps)
@@ -281,6 +239,21 @@ sink_setcaps (GstPad *pad,
         OMX_SetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, param);
 
         free (param);
+    }
+
+    {
+      GstCaps *src_caps;
+
+      src_caps = gst_caps_new_simple ("audio/mpeg",
+          "mpegversion", G_TYPE_INT, 4,
+          "rate", G_TYPE_INT, rate,
+          "channels", G_TYPE_INT, channels,
+          NULL);
+      GST_INFO_OBJECT (omx_base, "src caps are: %" GST_PTR_FORMAT, src_caps);
+
+      gst_pad_set_caps (omx_base->srcpad, src_caps);
+
+      gst_caps_unref (src_caps);
     }
 
     return gst_pad_set_caps (pad, caps);
@@ -375,8 +348,6 @@ type_instance_init (GTypeInstance *instance,
 
     omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
     omx_base->omx_setup = omx_setup;
-
-    omx_base->gomx->settings_changed_cb = settings_changed_cb;
 
     gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);
 
