@@ -177,8 +177,6 @@ settings_changed_cb (GOmxCore *core)
     }
 }
 
-static void omx_setup (GstOmxBaseFilter *omx_base);
-
 static gboolean
 sink_setcaps (GstPad *pad,
               GstCaps *caps)

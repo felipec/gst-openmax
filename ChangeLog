@@ -1,18 +1,3 @@
-2008-05-12  Stefan Kost  <ensonic@users.sf.net>
-
-	* configure.ac:
-	* omx/gstomx.h:
-	* omx/gstomx_aacdec.c:
-	* omx/gstomx_aacenc.c:
-	* omx/gstomx_amrnbenc.c:
-	* omx/gstomx_amrwbenc.c:
-	* omx/gstomx_base_videodec.c:
-	* omx/gstomx_base_videoenc.c:
-	* omx/gstomx_filereadersrc.c:
-	* omx/gstomx_util.c:
-	* omx/gstomx_util.h:
-	* omx/gstomx_videosink.c:
-	  Build cvs versions with -Werror. Fix the warnings gcc complains about.
 == Release 0.10.0.4 ==
 
 2008-06-19	Felipe Contreras <felipe.contreras@gmail.com>
