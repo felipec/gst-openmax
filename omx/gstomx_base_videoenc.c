@@ -278,52 +278,6 @@ omx_setup (GstOmxBaseFilter *omx_base)
             OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
         }
 
-        /* some workarounds. */
-        /* required for TI components. */
-#if 1
-        /* the component should do this instead */
-        {
-            param->nPortIndex = 0;
-            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
-
-            width = param->format.video.nFrameWidth;
-            height = param->format.video.nFrameHeight;
-            framerate = param->format.video.xFramerate;
-            color_format = param->format.video.eColorFormat;
-
-            /* this is against the standard; nBufferSize is read-only. */
-            switch (color_format)
-            {
-                case OMX_COLOR_FormatYCbYCr:
-                case OMX_COLOR_FormatCbYCrY:
-                    param->nBufferSize = (width * height) * 2;
-                    break;
-                case OMX_COLOR_FormatYUV420Planar:
-                    param->nBufferSize = (width * height) * 3 / 2;
-                    break;
-                default:
-                    break;
-            }
-
-            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
-        }
-
-        /* the component should do this instead */
-        {
-            param->nPortIndex = 1;
-            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
-
-            /* this is against the standard; nBufferSize is read-only. */
-            param->nBufferSize = (width * height) / 2;
-
-            param->format.video.nFrameWidth = width;
-            param->format.video.nFrameHeight = height;
-            param->format.video.xFramerate = framerate;
-
-            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
-        }
-#endif
-
         free (param);
     }
 
