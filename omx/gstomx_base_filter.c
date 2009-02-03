@@ -378,7 +378,10 @@ output_loop (gpointer data)
                     if (self->share_output_buffer)
                     {
                         GST_WARNING_OBJECT (self, "couldn't zero-copy");
-                        g_free (omx_buffer->pBuffer);
+                        /** @todo only the first buffer must be freed (the one
+                         * allocated by us), the rest are allocated by the next
+                         * element. */
+                        /* g_free (omx_buffer->pBuffer); */
                         omx_buffer->pBuffer = NULL;
                     }
 
