@@ -337,6 +337,66 @@ omx_setup (GstOmxBaseFilter *omx_base)
 
             OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
         }
+
+        /* some workarounds required for TI components. */
+        {
+            OMX_COLOR_FORMATTYPE color_format;
+            gint width, height;
+
+            /* the component should do this instead */
+            {
+                param.nPortIndex = 0;
+                OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
+
+                width = param.format.image.nFrameWidth;
+                height = param.format.image.nFrameHeight;
+                color_format = param.format.image.eColorFormat;
+
+                /* this is against the standard; nBufferSize is read-only. */
+                switch (color_format)
+                {
+                    case OMX_COLOR_FormatYCbYCr:
+                    case OMX_COLOR_FormatCbYCrY:
+                        param.nBufferSize = (GST_ROUND_UP_16 (width) * GST_ROUND_UP_16 (height)) * 2;
+#if 0
+                        if (param.nBufferSize >= 400)
+                            param.nBufferSize = 400;
+#endif
+                        break;
+                    case OMX_COLOR_FormatYUV420Planar:
+                        param.nBufferSize = (GST_ROUND_UP_16 (width) * GST_ROUND_UP_16 (height)) * 3 / 2;
+#if 0
+                        if (param.nBufferSize >= 1600)
+                            param.nBufferSize = 1600;
+#endif
+                        break;
+                    default:
+                        break;
+                }
+
+                OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
+            }
+
+            /* the component should do this instead */
+            {
+                param.nPortIndex = 1;
+                OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
+
+                param.nBufferSize = width * height;
+
+#if 0
+                if (qualityfactor < 10)
+                    param.nBufferSize /= 10;
+                else if (qualityfactor < 100)
+                    param.nBufferSize /= (100 / qualityfactor);
+#endif
+
+                param.format.image.nFrameWidth = width;
+                param.format.image.nFrameHeight = height;
+
+                OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
+            }
+        }
     }
 
     {

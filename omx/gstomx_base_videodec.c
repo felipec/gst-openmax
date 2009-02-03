@@ -247,6 +247,55 @@ omx_setup (GstOmxBaseFilter *omx_base)
 
             OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
         }
+
+        /* some workarounds required for TI components. */
+        {
+            OMX_COLOR_FORMATTYPE color_format;
+            gint width, height;
+
+            {
+                param.nPortIndex = 0;
+                OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
+
+                width = param.format.video.nFrameWidth;
+                height = param.format.video.nFrameHeight;
+
+                /* this is against the standard; nBufferSize is read-only. */
+                param.nBufferSize = (width * height) / 2;
+
+                OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
+            }
+
+            /* the component should do this instead */
+            {
+                param.nPortIndex = 1;
+                OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
+
+                param.format.video.nFrameWidth = width;
+                param.format.video.nFrameHeight = height;
+
+                /** @todo get this from the srcpad. */
+                param.format.video.eColorFormat = OMX_COLOR_FormatCbYCrY;
+
+                color_format = param.format.video.eColorFormat;
+
+                /* this is against the standard; nBufferSize is read-only. */
+                switch (color_format)
+                {
+                    case OMX_COLOR_FormatYCbYCr:
+                    case OMX_COLOR_FormatCbYCrY:
+                        param.nBufferSize = (width * height) * 2;
+                        break;
+                    case OMX_COLOR_FormatYUV420Planar:
+                        param.nBufferSize = (width * height) * 3 / 2;
+                        break;
+                    default:
+                        break;
+                }
+
+                OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
+            }
+        }
     }
 
     GST_INFO_OBJECT (omx_base, "end");
