@@ -36,6 +36,7 @@ generate_sink_template (void)
                                "width", GST_TYPE_INT_RANGE, 16, 4096,
                                "height", GST_TYPE_INT_RANGE, 16, 4096,
                                "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, G_MAXINT, 1,
+                               "wmvversion", G_TYPE_INT, 3,
                                NULL);
 
     gst_caps_append_structure (caps, struc);
