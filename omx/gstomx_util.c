@@ -90,6 +90,8 @@ port_start_buffers (GOmxPort *port);
 
 static OMX_CALLBACKTYPE callbacks = { EventHandler, EmptyBufferDone, FillBufferDone };
 
+/* protect implementations hash_table */
+static GMutex *imp_mutex;
 static GHashTable *implementations;
 static gboolean initialized;
 
@@ -140,6 +142,7 @@ imp_new (const gchar *name)
             return NULL;
         }
 
+        imp->mutex = g_mutex_new ();
         imp->sym_table.init = dlsym (handle, "OMX_Init");
         imp->sym_table.deinit = dlsym (handle, "OMX_Deinit");
         imp->sym_table.get_handle = dlsym (handle, "OMX_GetHandle");
@@ -156,40 +159,54 @@ imp_free (GOmxImp *imp)
     {
         dlclose (imp->dl_handle);
     }
+    g_mutex_free (imp->mutex);
     g_free (imp);
 }
 
 static inline GOmxImp *
 request_imp (const gchar *name)
 {
-    GOmxImp *imp;
+    GOmxImp *imp = NULL;
+    g_mutex_lock (imp_mutex);
     imp = g_hash_table_lookup (implementations, name);
     if (!imp)
     {
         imp = imp_new (name);
-        if (!imp)
-            return NULL;
-        g_hash_table_insert (implementations, g_strdup (name), imp);
+        if (imp)
+            g_hash_table_insert (implementations, g_strdup (name), imp);
     }
+    g_mutex_unlock (imp_mutex);
+    if (!imp)
+        goto exit;
+    g_mutex_lock (imp->mutex);
     if (imp->client_count == 0)
     {
         OMX_ERRORTYPE omx_error;
         omx_error = imp->sym_table.init ();
         if (omx_error)
-            return NULL;
+        {
+            imp = NULL;
+            g_mutex_unlock (imp->mutex);
+            goto exit;
+        }
     }
     imp->client_count++;
+    g_mutex_unlock (imp->mutex);
+
+exit:
     return imp;
 }
 
 static inline void
 release_imp (GOmxImp *imp)
 {
+    g_mutex_lock (imp->mutex);
     imp->client_count--;
     if (imp->client_count == 0)
     {
         imp->sym_table.deinit ();
     }
+    g_mutex_unlock (imp->mutex);
 }
 
 void
@@ -197,6 +214,8 @@ g_omx_init (void)
 {
     if (!initialized)
     {
+        /* safe as plugin_init is safe */
+        imp_mutex = g_mutex_new ();
         implementations = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) imp_free);
         initialized = true;
     }
@@ -208,6 +227,7 @@ g_omx_deinit (void)
     if (initialized)
     {
         g_hash_table_destroy (implementations);
+        g_mutex_free (imp_mutex);
         initialized = false;
     }
 }

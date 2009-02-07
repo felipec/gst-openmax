@@ -68,6 +68,7 @@ struct GOmxImp
     guint client_count;
     void *dl_handle;
     GOmxSymbolTable sym_table;
+    GMutex *mutex;
 };
 
 struct GOmxCore
