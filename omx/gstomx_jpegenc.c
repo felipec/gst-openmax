@@ -316,7 +316,6 @@ omx_setup (GstOmxBaseFilter *omx_base)
 
     {
         OMX_PARAM_PORTDEFINITIONTYPE *param;
-        gint width, height;
 
         param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
         param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);

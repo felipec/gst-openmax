@@ -231,8 +231,6 @@ omx_setup (GstOmxBaseFilter *omx_base)
 
     {
         OMX_PARAM_PORTDEFINITIONTYPE *param;
-        OMX_COLOR_FORMATTYPE color_format;
-        gint width, height;
 
         param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
         param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
