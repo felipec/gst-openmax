@@ -270,12 +270,8 @@ omx_setup (GstOmxBaseFilter *omx_base)
 
     GST_INFO_OBJECT (omx_base, "begin");
 
-#if 0
     {
         OMX_AUDIO_PARAM_AACPROFILETYPE *param;
-        OMX_COLOR_FORMATTYPE color_format;
-        gint width, height;
-        guint framerate;
 
         param = calloc (1, sizeof (OMX_AUDIO_PARAM_AACPROFILETYPE));
         param->nSize = sizeof (OMX_AUDIO_PARAM_AACPROFILETYPE);
@@ -287,12 +283,12 @@ omx_setup (GstOmxBaseFilter *omx_base)
             param->nPortIndex = 1;
             OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioAac, param);
 
+            GST_DEBUG_OBJECT (omx_base, "setting bitrate: %i", self->bitrate);
             param->nBitRate = self->bitrate;
 
             OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioAac, param);
         }
     }
-#endif
 
     /* some workarounds. */
 #if 0
