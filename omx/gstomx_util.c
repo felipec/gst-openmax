@@ -740,6 +740,7 @@ static inline void
 change_state (GOmxCore *core,
               OMX_STATETYPE state)
 {
+    GST_LOG ("state=%d", state);
     OMX_SendCommand (core->omx_handle, OMX_CommandStateSet, state, NULL);
 }
 
@@ -751,6 +752,7 @@ complete_change_state (GOmxCore *core,
 
     core->omx_state = state;
     g_cond_signal (core->omx_state_condition);
+    GST_LOG ("state=%d", state);
 
     g_mutex_unlock (core->omx_state_mutex);
 }
