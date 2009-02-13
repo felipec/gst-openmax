@@ -87,6 +87,27 @@ omx_setup (GstOmxBaseFilter *omx_base)
 
     GST_INFO_OBJECT (omx_base, "begin");
 
+    {
+        OMX_PARAM_PORTDEFINITIONTYPE param;
+
+        memset (&param, 0, sizeof (param));
+        param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
+        param.nVersion.s.nVersionMajor = 1;
+        param.nVersion.s.nVersionMinor = 1;
+
+        /* some workarounds required for TI components. */
+        /* the component should do this instead */
+        {
+            param.nPortIndex = 1;
+            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
+
+            /* this is against the standard; nBufferSize is read-only. */
+            param.nBufferSize = 300000;
+
+            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
+        }
+    }
+
     GST_INFO_OBJECT (omx_base, "end");
 }
 
