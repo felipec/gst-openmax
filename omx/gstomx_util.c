@@ -361,14 +361,20 @@ g_omx_core_pause (GOmxCore *core)
 gboolean
 g_omx_core_finish (GOmxCore *core)
 {
-    change_state (core, OMX_StateIdle);
-    if (!wait_for_state (core, OMX_StateIdle))
-      goto fail;
+    /* if component in error, do not expect it to handle state change */
+    if (!core->omx_error) {
+      change_state (core, OMX_StateIdle);
+      if (!wait_for_state (core, OMX_StateIdle))
+        goto fail;
+    }
 
-    change_state (core, OMX_StateLoaded);
+    if (!core->omx_error)
+      change_state (core, OMX_StateLoaded);
     core_for_each_port (core, port_free_buffers);
-    if (!wait_for_state (core, OMX_StateLoaded))
-      goto fail;
+    if (!core->omx_error) {
+      if (!wait_for_state (core, OMX_StateLoaded))
+        goto fail;
+    }
 
     core_for_each_port (core, g_omx_port_free);
     g_ptr_array_clear (core->ports);
@@ -889,6 +895,21 @@ EventHandler (OMX_HANDLETYPE omx_handle,
                 if (core->settings_changed_cb)
                 {
                     core->settings_changed_cb (core);
+                }
+            }
+        case OMX_EventError:
+            {
+                if (data_1 == OMX_ErrorInvalidState)
+                {
+                    /* component might leave us waiting for buffers, unblock */
+                    g_omx_core_flush_start (core);
+                    core->omx_error = data_1;
+                    GST_DEBUG ("unrecoverable error: invalid state");
+                }
+                else
+                {
+                    /* might be common, let's not cause panic by _ERROR */
+                    GST_DEBUG ("unhandled error: %lx", data_1);
                 }
             }
         default:

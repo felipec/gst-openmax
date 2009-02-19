@@ -543,7 +543,7 @@ pad_chain (GstPad *pad,
         {
             OMX_BUFFERHEADERTYPE *omx_buffer;
 
-            if (self->last_pad_push_return != GST_FLOW_OK)
+            if (self->last_pad_push_return != GST_FLOW_OK || self->gomx->omx_error)
             {
                 goto out_flushing;
             }
@@ -626,6 +626,12 @@ pad_chain (GstPad *pad,
     /* special conditions */
 out_flushing:
     {
+        if (gomx->omx_error)
+        {
+            GST_ELEMENT_ERROR (self, STREAM, FAILED, (NULL),
+                ("Component in invalid state"));
+            self->last_pad_push_return = GST_FLOW_ERROR;
+        }
         gst_buffer_unref (buf);
         return self->last_pad_push_return;
     }
