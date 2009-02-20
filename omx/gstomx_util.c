@@ -909,7 +909,7 @@ EventHandler (OMX_HANDLETYPE omx_handle,
                 else
                 {
                     /* might be common, let's not cause panic by _ERROR */
-                    GST_DEBUG ("unhandled error: %lx", data_1);
+                    GST_WARNING ("unhandled error: %lx", data_1);
                 }
             }
         default:
