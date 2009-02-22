@@ -138,7 +138,7 @@ imp_new (const gchar *name)
         if (!handle)
         {
             g_warning ("%s\n", dlerror ());
-            imp_free (imp);
+            g_free (imp);
             return NULL;
         }
 
