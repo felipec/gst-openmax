@@ -30,12 +30,39 @@
 enum
 {
     ARG_0,
-    ARG_BITRATE
+    ARG_BITRATE,
+    ARG_OUTPUT_FORMAT
 };
 
 #define DEFAULT_BITRATE 64000
+#define DEFAULT_OUTPUT_FORMAT OMX_AUDIO_AACStreamFormatRAW
 
 static GstOmxBaseFilterClass *parent_class = NULL;
+
+#define GST_TYPE_OMX_AACENC_OUTPUT_FORMAT (gst_omx_aacenc_output_format_get_type ())
+static GType
+gst_omx_aacenc_output_format_get_type (void)
+{
+  static GType gst_omx_aacenc_output_format_type = 0;
+
+  if (!gst_omx_aacenc_output_format_type) {
+    static GEnumValue gst_omx_aacenc_output_format[] = {
+      {OMX_AUDIO_AACStreamFormatMP2ADTS, "Audio Data Transport Stream 2 format", "MP2ADTS"},
+      {OMX_AUDIO_AACStreamFormatMP4ADTS, "Audio Data Transport Stream 4 format", "MP4ADTS"},
+      {OMX_AUDIO_AACStreamFormatMP4LOAS, "Low Overhead Audio Stream format", "MP4LOAS"},
+      {OMX_AUDIO_AACStreamFormatMP4LATM, "Low overhead Audio Transport Multiplex", "MP4LATM"},
+      {OMX_AUDIO_AACStreamFormatADIF, "Audio Data Interchange Format", "ADIF"},
+      {OMX_AUDIO_AACStreamFormatMP4FF, "AAC inside MPEG-4/ISO File Format", "MP4FF"},
+      {OMX_AUDIO_AACStreamFormatRAW, "AAC Raw Format", "RAW"},
+      {0, NULL, NULL},
+    };
+
+    gst_omx_aacenc_output_format_type = g_enum_register_static ("GstOmxAacencOutputFormat",
+        gst_omx_aacenc_output_format);
+  }
+
+  return gst_omx_aacenc_output_format_type;
+}
 
 static GstCaps *
 generate_src_template (void)
@@ -149,6 +176,9 @@ set_property (GObject *obj,
         case ARG_BITRATE:
             self->bitrate = g_value_get_uint (value);
             break;
+        case ARG_OUTPUT_FORMAT:
+            self->output_format = g_value_get_enum (value);
+            break;
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
             break;
@@ -170,6 +200,9 @@ get_property (GObject *obj,
         case ARG_BITRATE:
             /** @todo propagate this to OpenMAX when processing. */
             g_value_set_uint (value, self->bitrate);
+            break;
+        case ARG_OUTPUT_FORMAT:
+            g_value_set_enum (value, self->output_format);
             break;
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
@@ -196,6 +229,13 @@ type_class_init (gpointer g_class,
                                          g_param_spec_uint ("bitrate", "Bit-rate",
                                                             "Encoding bit-rate",
                                                             0, G_MAXUINT, DEFAULT_BITRATE, G_PARAM_READWRITE));
+
+        g_object_class_install_property (gobject_class, ARG_OUTPUT_FORMAT,
+                                         g_param_spec_enum ("output-format", "Output format",
+                                                            "OMX_AUDIO_AACSTREAMFORMATTYPE of output",
+                                                            GST_TYPE_OMX_AACENC_OUTPUT_FORMAT,
+                                                            DEFAULT_OUTPUT_FORMAT,
+                                                            G_PARAM_READWRITE));
     }
 }
 
@@ -286,6 +326,10 @@ omx_setup (GstOmxBaseFilter *omx_base)
             GST_DEBUG_OBJECT (omx_base, "setting bitrate: %i", self->bitrate);
             param->nBitRate = self->bitrate;
 
+            GST_DEBUG_OBJECT (omx_base, "setting output format: %i",
+                              self->output_format);
+            param->eAACStreamFormat = self->output_format;
+
             OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioAac, param);
         }
     }
@@ -348,6 +392,7 @@ type_instance_init (GTypeInstance *instance,
     gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);
 
     self->bitrate = DEFAULT_BITRATE;
+    self->output_format = DEFAULT_OUTPUT_FORMAT;
 }
 
 GType

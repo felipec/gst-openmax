@@ -38,6 +38,7 @@ struct GstOmxAacEnc
 {
     GstOmxBaseFilter omx_base;
     guint bitrate;
+    gint output_format;
 };
 
 struct GstOmxAacEncClass
