@@ -31,13 +31,42 @@ enum
 {
     ARG_0,
     ARG_BITRATE,
+    ARG_PROFILE,
     ARG_OUTPUT_FORMAT
 };
 
 #define DEFAULT_BITRATE 64000
+#define DEFAULT_PROFILE OMX_AUDIO_AACObjectLC
 #define DEFAULT_OUTPUT_FORMAT OMX_AUDIO_AACStreamFormatRAW
 
 static GstOmxBaseFilterClass *parent_class = NULL;
+
+#define GST_TYPE_OMX_AACENC_PROFILE (gst_omx_aacenc_profile_get_type ())
+static GType
+gst_omx_aacenc_profile_get_type (void)
+{
+  static GType gst_omx_aacenc_profile_type = 0;
+
+  if (!gst_omx_aacenc_profile_type) {
+    static GEnumValue gst_omx_aacenc_profile[] = {
+      {OMX_AUDIO_AACObjectLC, "Low Complexity", "LC"},
+      {OMX_AUDIO_AACObjectMain, "Main", "Main"},
+      {OMX_AUDIO_AACObjectSSR, "Scalable Sample Rate", "SSR"},
+      {OMX_AUDIO_AACObjectLTP, "Long Term Prediction", "LTP"},
+      {OMX_AUDIO_AACObjectHE, "High Efficiency with SBR (HE-AAC v1)", "HE"},
+      {OMX_AUDIO_AACObjectScalable, "Scalable", "Scalable"},
+      {OMX_AUDIO_AACObjectERLC, "ER AAC Low Complexity object (Error Resilient AAC-LC)", "ERLC"},
+      {OMX_AUDIO_AACObjectLD, "AAC Low Delay object (Error Resilient)", "LD"},
+      {OMX_AUDIO_AACObjectHE_PS, "High Efficiency with Parametric Stereo coding (HE-AAC v2, object type PS)", "HE_PS"},
+      {0, NULL, NULL},
+    };
+
+    gst_omx_aacenc_profile_type = g_enum_register_static ("GstOmxAacencProfile",
+        gst_omx_aacenc_profile);
+  }
+
+  return gst_omx_aacenc_profile_type;
+}
 
 #define GST_TYPE_OMX_AACENC_OUTPUT_FORMAT (gst_omx_aacenc_output_format_get_type ())
 static GType
@@ -176,6 +205,9 @@ set_property (GObject *obj,
         case ARG_BITRATE:
             self->bitrate = g_value_get_uint (value);
             break;
+        case ARG_PROFILE:
+            self->profile = g_value_get_enum (value);
+            break;
         case ARG_OUTPUT_FORMAT:
             self->output_format = g_value_get_enum (value);
             break;
@@ -200,6 +232,9 @@ get_property (GObject *obj,
         case ARG_BITRATE:
             /** @todo propagate this to OpenMAX when processing. */
             g_value_set_uint (value, self->bitrate);
+            break;
+        case ARG_PROFILE:
+            g_value_set_enum (value, self->profile);
             break;
         case ARG_OUTPUT_FORMAT:
             g_value_set_enum (value, self->output_format);
@@ -229,6 +264,12 @@ type_class_init (gpointer g_class,
                                          g_param_spec_uint ("bitrate", "Bit-rate",
                                                             "Encoding bit-rate",
                                                             0, G_MAXUINT, DEFAULT_BITRATE, G_PARAM_READWRITE));
+        g_object_class_install_property (gobject_class, ARG_PROFILE,
+                                         g_param_spec_enum ("profile", "Enocding profile",
+                                                            "OMX_AUDIO_AACPROFILETYPE of output",
+                                                            GST_TYPE_OMX_AACENC_PROFILE,
+                                                            DEFAULT_PROFILE,
+                                                            G_PARAM_READWRITE));
 
         g_object_class_install_property (gobject_class, ARG_OUTPUT_FORMAT,
                                          g_param_spec_enum ("output-format", "Output format",
@@ -326,6 +367,9 @@ omx_setup (GstOmxBaseFilter *omx_base)
             GST_DEBUG_OBJECT (omx_base, "setting bitrate: %i", self->bitrate);
             param->nBitRate = self->bitrate;
 
+            GST_DEBUG_OBJECT (omx_base, "setting profile: %i", self->profile);
+            param->eAACProfile = self->profile;
+
             GST_DEBUG_OBJECT (omx_base, "setting output format: %i",
                               self->output_format);
             param->eAACStreamFormat = self->output_format;
@@ -392,6 +436,7 @@ type_instance_init (GTypeInstance *instance,
     gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);
 
     self->bitrate = DEFAULT_BITRATE;
+    self->profile = DEFAULT_PROFILE;
     self->output_format = DEFAULT_OUTPUT_FORMAT;
 }
 
