@@ -336,7 +336,29 @@ output_loop (gpointer data)
             /* buf is always null when the output buffer pointer isn't shared. */
             buf = omx_buffer->pAppPrivate;
 
-            if (buf && !(omx_buffer->nFlags & OMX_BUFFERFLAG_EOS))
+            /** @todo we need to move all the caps handling to one single
+             * place, in the output loop probably. */
+            if (G_UNLIKELY (omx_buffer->nFlags & 0x80))
+            {
+                GstCaps *caps = NULL;
+                GstStructure *structure;
+                GValue value = { 0 };
+
+                caps = gst_pad_get_negotiated_caps (self->srcpad);
+                caps = gst_caps_make_writable (caps);
+                structure = gst_caps_get_structure (caps, 0);
+
+                g_value_init (&value, GST_TYPE_BUFFER);
+                buf = gst_buffer_new_and_alloc (omx_buffer->nFilledLen);
+                memcpy (GST_BUFFER_DATA (buf), omx_buffer->pBuffer + omx_buffer->nOffset, omx_buffer->nFilledLen);
+                gst_value_set_buffer (&value, buf);
+                gst_buffer_unref (buf);
+                gst_structure_set_value (structure, "codec_data", &value);
+                g_value_unset (&value);
+
+                gst_pad_set_caps (self->srcpad, caps);
+            }
+            else if (buf && !(omx_buffer->nFlags & OMX_BUFFERFLAG_EOS))
             {
                 GST_BUFFER_SIZE (buf) = omx_buffer->nFilledLen;
                 if (self->use_timestamps)
