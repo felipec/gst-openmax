@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2008 Nokia Corporation.
+ * Copyright (C) 2007-2009 Nokia Corporation.
  * Copyright (C) 2008 NXP.
  *
  * Author: Frederik Vernelen <frederik.vernelen@nxp.com>
