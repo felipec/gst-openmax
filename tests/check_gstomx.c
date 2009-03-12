@@ -67,6 +67,29 @@ GST_STATIC_PAD_TEMPLATE ("src",
                          GST_PAD_ALWAYS,
                          GST_STATIC_CAPS_ANY);
 
+/* some global vars, makes it easy as for the ones above */
+static GMutex *eos_mutex;
+static GCond *eos_cond;
+static gboolean eos_arrived;
+
+gboolean
+test_sink_event (GstPad * pad, GstEvent * event)
+{
+
+  switch (GST_EVENT_TYPE (event)) {
+    case GST_EVENT_EOS:
+      g_mutex_lock (eos_mutex);
+      eos_arrived = TRUE;
+      g_cond_signal (eos_cond);
+      g_mutex_unlock (eos_mutex);
+      break;
+    default:
+      break;
+  }
+
+  return gst_pad_event_default (pad, event);
+}
+
 static void
 helper (gboolean flush)
 {
@@ -82,6 +105,14 @@ helper (gboolean flush)
 
     gst_pad_set_active (mysrcpad, TRUE);
     gst_pad_set_active (mysinkpad, TRUE);
+
+    /* need to know when we are eos */
+    gst_pad_set_event_function (mysinkpad, test_sink_event);
+
+    /* and notify the test run */
+    eos_mutex = g_mutex_new ();
+    eos_cond = g_cond_new ();
+    eos_arrived = FALSE;
 
     g_object_set (G_OBJECT (filter), "library-name", "libomxil-foo.so", NULL);
 
@@ -125,6 +156,11 @@ helper (gboolean flush)
     }
 
     gst_pad_push_event (mysrcpad, gst_event_new_eos ());
+    /* need to wait a bit to make sure src pad task digested all and sent eos */
+    g_mutex_lock (eos_mutex);
+    while (!eos_arrived)
+      g_cond_wait (eos_cond, eos_mutex);
+    g_mutex_unlock (eos_mutex);
 
     /* check the order of the buffers*/
     if (!flush)
@@ -154,6 +190,9 @@ helper (gboolean flush)
     gst_check_teardown_src_pad (filter);
     gst_check_teardown_sink_pad (filter);
     gst_check_teardown_element (filter);
+
+    g_mutex_free (eos_mutex);
+    g_cond_free (eos_cond);
 }
 
 GST_START_TEST (test_flush)
