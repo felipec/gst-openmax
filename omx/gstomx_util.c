@@ -167,6 +167,7 @@ static inline GOmxImp *
 request_imp (const gchar *name)
 {
     GOmxImp *imp = NULL;
+
     g_mutex_lock (imp_mutex);
     imp = g_hash_table_lookup (implementations, name);
     if (!imp)
@@ -176,8 +177,10 @@ request_imp (const gchar *name)
             g_hash_table_insert (implementations, g_strdup (name), imp);
     }
     g_mutex_unlock (imp_mutex);
+
     if (!imp)
-        goto exit;
+        return NULL;
+
     g_mutex_lock (imp->mutex);
     if (imp->client_count == 0)
     {
@@ -186,14 +189,12 @@ request_imp (const gchar *name)
         if (omx_error)
         {
             g_mutex_unlock (imp->mutex);
-            imp = NULL;
-            goto exit;
+            return NULL;
         }
     }
     imp->client_count++;
     g_mutex_unlock (imp->mutex);
 
-exit:
     return imp;
 }
 
