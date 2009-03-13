@@ -76,18 +76,18 @@ gboolean
 test_sink_event (GstPad * pad, GstEvent * event)
 {
 
-  switch (GST_EVENT_TYPE (event)) {
-    case GST_EVENT_EOS:
-      g_mutex_lock (eos_mutex);
-      eos_arrived = TRUE;
-      g_cond_signal (eos_cond);
-      g_mutex_unlock (eos_mutex);
-      break;
-    default:
-      break;
-  }
+    switch (GST_EVENT_TYPE (event)) {
+        case GST_EVENT_EOS:
+            g_mutex_lock (eos_mutex);
+            eos_arrived = TRUE;
+            g_cond_signal (eos_cond);
+            g_mutex_unlock (eos_mutex);
+            break;
+        default:
+            break;
+    }
 
-  return gst_pad_event_default (pad, event);
+    return gst_pad_event_default (pad, event);
 }
 
 static void
@@ -159,7 +159,7 @@ helper (gboolean flush)
     /* need to wait a bit to make sure src pad task digested all and sent eos */
     g_mutex_lock (eos_mutex);
     while (!eos_arrived)
-      g_cond_wait (eos_cond, eos_mutex);
+        g_cond_wait (eos_cond, eos_mutex);
     g_mutex_unlock (eos_mutex);
 
     /* check the order of the buffers*/
@@ -210,15 +210,15 @@ GST_END_TEST
 static Suite *
 gstomx_suite (void)
 {
-  Suite *s = suite_create ("gstomx");
-  TCase *tc_chain = tcase_create ("general");
+    Suite *s = suite_create ("gstomx");
+    TCase *tc_chain = tcase_create ("general");
 
-  tcase_set_timeout (tc_chain, 10);
-  tcase_add_test (tc_chain, test_basic);
-  tcase_add_test (tc_chain, test_flush);
-  suite_add_tcase (s, tc_chain);
+    tcase_set_timeout (tc_chain, 10);
+    tcase_add_test (tc_chain, test_basic);
+    tcase_add_test (tc_chain, test_flush);
+    suite_add_tcase (s, tc_chain);
 
-  return s;
+    return s;
 }
 
 GST_CHECK_MAIN (gstomx);
