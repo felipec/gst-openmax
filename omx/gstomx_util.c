@@ -185,8 +185,8 @@ request_imp (const gchar *name)
         omx_error = imp->sym_table.init ();
         if (omx_error)
         {
-            imp = NULL;
             g_mutex_unlock (imp->mutex);
+            imp = NULL;
             goto exit;
         }
     }
