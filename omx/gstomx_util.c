@@ -899,17 +899,20 @@ EventHandler (OMX_HANDLETYPE omx_handle,
             }
         case OMX_EventError:
             {
-                if (data_1 == OMX_ErrorInvalidState)
+                switch (data_1)
                 {
-                    /* component might leave us waiting for buffers, unblock */
-                    g_omx_core_flush_start (core);
-                    core->omx_error = data_1;
-                    GST_DEBUG ("unrecoverable error: invalid state");
-                }
-                else
-                {
-                    /* might be common, let's not cause panic by _ERROR */
-                    GST_WARNING ("unhandled error: %lx", data_1);
+                    case OMX_ErrorInvalidState:
+                    case OMX_ErrorInsufficientResources:
+                    case OMX_ErrorFormatNotDetected:
+                        /* component might leave us waiting for buffers, unblock */
+                        g_omx_core_flush_start (core);
+                        core->omx_error = data_1;
+                        GST_ERROR ("unrecoverable error");
+                        break;
+                    default:
+                        /* might be common, let's not cause panic by _ERROR */
+                        GST_WARNING ("unhandled error: %lx", data_1);
+                        break;
                 }
             }
         default:
