@@ -52,6 +52,7 @@ struct GstOmxBaseFilter
     char *omx_library;
     gboolean use_timestamps; /** @todo remove; timestamps should always be used */
     gboolean initialized;
+    GMutex *initialized_lock;
 
     GstOmxBaseFilterCb omx_setup;
     GstFlowReturn last_pad_push_return;
