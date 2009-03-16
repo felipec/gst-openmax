@@ -46,7 +46,7 @@ generate_sink_template (void)
     struc = gst_structure_new ("video/x-raw-yuv",
                                "width", GST_TYPE_INT_RANGE, 16, 4096,
                                "height", GST_TYPE_INT_RANGE, 16, 4096,
-                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 30, 1,
+                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
                                NULL);
 
     {

@@ -36,7 +36,7 @@ generate_src_template (void)
     caps = gst_caps_new_simple ("video/x-h264",
                                 "width", GST_TYPE_INT_RANGE, 16, 4096,
                                 "height", GST_TYPE_INT_RANGE, 16, 4096,
-                                "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 30, 1,
+                                "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
                                 NULL);
 
     return caps;
