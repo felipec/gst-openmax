@@ -40,6 +40,8 @@ struct GstOmxBaseVideoEnc
 
     OMX_VIDEO_CODINGTYPE compression_format;
     guint bitrate;
+    gint framerate_num;
+    gint framerate_denom;
 };
 
 struct GstOmxBaseVideoEncClass

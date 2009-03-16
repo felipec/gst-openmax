@@ -166,17 +166,19 @@ sink_setcaps (GstPad *pad,
               GstCaps *caps)
 {
     GstStructure *structure;
+    GstOmxBaseVideoEnc *self;
     GstOmxBaseFilter *omx_base;
     GOmxCore *gomx;
     OMX_COLOR_FORMATTYPE color_format = OMX_COLOR_FormatUnused;
     gint width = 0;
     gint height = 0;
-    gint framerate = 0;
+    const GValue *framerate = NULL;
 
-    omx_base = GST_OMX_BASE_FILTER (GST_PAD_PARENT (pad));
+    self = GST_OMX_BASE_VIDEOENC (GST_PAD_PARENT (pad));
+    omx_base = GST_OMX_BASE_FILTER (self);
     gomx = (GOmxCore *) omx_base->gomx;
 
-    GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
+    GST_INFO_OBJECT (self, "setcaps (sink): %" GST_PTR_FORMAT, caps);
 
     g_return_val_if_fail (gst_caps_get_size (caps) == 1, FALSE);
 
@@ -185,20 +187,16 @@ sink_setcaps (GstPad *pad,
     gst_structure_get_int (structure, "width", &width);
     gst_structure_get_int (structure, "height", &height);
 
-    {
-        const GValue *tmp;
-        tmp = gst_structure_get_value (structure, "framerate");
-
-        if (tmp != NULL)
-        {
-            framerate = gst_value_get_fraction_numerator (tmp) / gst_value_get_fraction_denominator (tmp);
-        }
-
-    }
-
     if (strcmp (gst_structure_get_name (structure), "video/x-raw-yuv") == 0)
     {
         guint32 fourcc;
+
+        framerate = gst_structure_get_value (structure, "framerate");
+        if (framerate)
+        {
+            self->framerate_num = gst_value_get_fraction_numerator (framerate);
+            self->framerate_denom = gst_value_get_fraction_denominator (framerate);
+        }
 
         if (gst_structure_get_fourcc (structure, "format", &fourcc))
         {
@@ -231,8 +229,14 @@ sink_setcaps (GstPad *pad,
 
             param->format.video.nFrameWidth = width;
             param->format.video.nFrameHeight = height;
-            param->format.video.xFramerate = framerate;
             param->format.video.eColorFormat = color_format;
+            if (framerate)
+            {
+                /* convert to Q.16 */
+                param->format.video.xFramerate =
+                    gst_value_get_fraction_numerator (framerate) << 16 /
+                    gst_value_get_fraction_denominator (framerate);
+            }
 
             OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
         }

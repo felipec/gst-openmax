@@ -131,23 +131,12 @@ setcaps (GstBaseSink *gst_sink,
 
     {
         GstStructure *structure;
-        guint framerate = 15;
+        const GValue *framerate = NULL;
         gint width;
         gint height;
         OMX_COLOR_FORMATTYPE color_format = OMX_COLOR_FormatUnused;
 
         structure = gst_caps_get_structure (caps, 0);
-
-        {
-            const GValue *fps;
-
-            fps = gst_structure_get_value (structure, "fps");
-
-            if (fps != NULL)
-            {
-                framerate = gst_value_get_fraction_numerator (fps) / gst_value_get_fraction_denominator (fps);
-            }
-        }
 
         gst_structure_get_int (structure, "width", &width);
         gst_structure_get_int (structure, "height", &height);
@@ -155,6 +144,8 @@ setcaps (GstBaseSink *gst_sink,
         if (strcmp (gst_structure_get_name (structure), "video/x-raw-yuv") == 0)
         {
             guint32 fourcc;
+
+            framerate = gst_structure_get_value (structure, "framerate");
 
             if (gst_structure_get_fourcc (structure, "format", &fourcc))
             {
@@ -197,11 +188,17 @@ setcaps (GstBaseSink *gst_sink,
                   break;
             }
 
-            param->format.video.xFramerate = framerate;
             param->format.video.nFrameWidth = width;
             param->format.video.nFrameHeight = height;
             param->format.video.eCompressionFormat = OMX_VIDEO_CodingUnused;
             param->format.video.eColorFormat = color_format;
+            if (framerate)
+            {
+                /* convert to Q.16 */
+                param->format.video.xFramerate =
+                    gst_value_get_fraction_numerator (framerate) << 16 /
+                    gst_value_get_fraction_denominator (framerate);
+            }
 
             OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
 

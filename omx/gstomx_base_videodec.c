@@ -178,10 +178,15 @@ sink_setcaps (GstPad *pad,
 
     gst_structure_get_int (structure, "width", &width);
     gst_structure_get_int (structure, "height", &height);
-    if (!gst_structure_get_fraction (structure, "framerate", &self->framerate_num, &self->framerate_denom))
+
     {
-        self->framerate_num = 0;
-        self->framerate_denom = 1;
+        const GValue *framerate = NULL;
+        framerate = gst_structure_get_value (structure, "framerate");
+        if (framerate)
+        {
+            self->framerate_num = gst_value_get_fraction_numerator (framerate);
+            self->framerate_denom = gst_value_get_fraction_denominator (framerate);
+        }
     }
 
     param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));

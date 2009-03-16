@@ -88,7 +88,6 @@ settings_changed_cb (GOmxCore *core)
     GstOmxBaseFilter *omx_base_filter;
     guint width;
     guint height;
-    guint framerate;
 
     omx_base_filter = core->client_data;
     omx_base = GST_OMX_BASE_VIDEOENC (omx_base_filter);
@@ -109,7 +108,6 @@ settings_changed_cb (GOmxCore *core)
 
         width = param->format.video.nFrameWidth;
         height = param->format.video.nFrameHeight;
-        framerate = param->format.video.xFramerate;
 
         free (param);
     }
@@ -121,7 +119,8 @@ settings_changed_cb (GOmxCore *core)
                                         "variant", G_TYPE_STRING, "itu",
                                         "width", G_TYPE_INT, width,
                                         "height", G_TYPE_INT, height,
-                                        "framerate", GST_TYPE_FRACTION, framerate, 1,
+                                        "framerate", GST_TYPE_FRACTION,
+                                        omx_base->framerate_num, omx_base->framerate_denom,
                                         NULL);
 
         GST_INFO_OBJECT (omx_base, "caps are: %" GST_PTR_FORMAT, new_caps);
