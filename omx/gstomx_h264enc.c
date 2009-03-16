@@ -83,12 +83,14 @@ type_class_init (gpointer g_class,
 static void
 settings_changed_cb (GOmxCore *core)
 {
-    GstOmxBaseFilter *omx_base;
+    GstOmxBaseVideoEnc *omx_base;
+    GstOmxBaseFilter *omx_base_filter;
     guint width;
     guint height;
     guint framerate;
 
-    omx_base = core->client_data;
+    omx_base_filter = core->client_data;
+    omx_base = GST_OMX_BASE_VIDEOENC (omx_base_filter);
 
     GST_DEBUG_OBJECT (omx_base, "settings changed");
 
@@ -102,7 +104,7 @@ settings_changed_cb (GOmxCore *core)
         param->nVersion.s.nVersionMinor = 1;
 
         param->nPortIndex = 1;
-        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+        OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, param);
 
         width = param->format.video.nFrameWidth;
         height = param->format.video.nFrameHeight;
@@ -121,7 +123,7 @@ settings_changed_cb (GOmxCore *core)
                                         NULL);
 
         GST_INFO_OBJECT (omx_base, "caps are: %" GST_PTR_FORMAT, new_caps);
-        gst_pad_set_caps (omx_base->srcpad, new_caps);
+        gst_pad_set_caps (omx_base_filter->srcpad, new_caps);
     }
 }
 
