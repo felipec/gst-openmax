@@ -174,6 +174,47 @@ type_class_init (gpointer g_class,
     }
 }
 
+static gboolean
+sink_setcaps (GstPad *pad,
+              GstCaps *caps)
+{
+    GstOmxBaseFilter *omx_base;
+    GOmxCore *gomx;
+    gboolean ret = TRUE;
+
+    omx_base = GST_OMX_BASE_FILTER (GST_PAD_PARENT (pad));
+    gomx = (GOmxCore *) omx_base->gomx;
+
+    GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
+
+    if (!caps || gst_caps_get_size (caps) == 0)
+        goto refuse_caps;
+
+    /* some extreme checking */
+    if (!gst_pad_accept_caps (pad, caps))
+        goto refuse_caps;
+
+    /* set caps on the srcpad */
+    {
+        GstCaps *tmp_caps;
+
+        /* src template are fixed caps */
+        tmp_caps = generate_src_template ();
+
+        ret = gst_pad_set_caps (omx_base->srcpad, tmp_caps);
+        gst_caps_unref (tmp_caps);
+    }
+
+    return ret;
+
+    /* ERRORS */
+refuse_caps:
+    {
+        GST_WARNING_OBJECT (omx_base, "refused caps %" GST_PTR_FORMAT, caps);
+        return FALSE;
+    }
+}
+
 static void
 omx_setup (GstOmxBaseFilter *omx_base)
 {
@@ -215,6 +256,8 @@ type_instance_init (GTypeInstance *instance,
     self = GST_OMX_G729ENC (instance);
 
     omx_base->omx_setup = omx_setup;
+
+    gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);
 
     self->dtx = DEFAULT_DTX;
 }
