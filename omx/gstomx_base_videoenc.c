@@ -234,7 +234,7 @@ sink_setcaps (GstPad *pad,
             {
                 /* convert to Q.16 */
                 param->format.video.xFramerate =
-                    gst_value_get_fraction_numerator (framerate) << 16 /
+                    (gst_value_get_fraction_numerator (framerate) << 16) /
                     gst_value_get_fraction_denominator (framerate);
             }
 
