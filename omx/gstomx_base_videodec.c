@@ -137,14 +137,21 @@ settings_changed_cb (GOmxCore *core)
 
     {
         GstCaps *new_caps;
+        GstStructure *struc;
 
-        new_caps = gst_caps_new_simple ("video/x-raw-yuv",
-                                        "width", G_TYPE_INT, width,
-                                        "height", G_TYPE_INT, height,
-                                        "framerate", GST_TYPE_FRACTION,
-                                        self->framerate_num, self->framerate_denom,
-                                        "format", GST_TYPE_FOURCC, format,
-                                        NULL);
+        new_caps = gst_caps_new_empty ();
+        struc = gst_structure_new ("video/x-raw-yuv",
+                                   "width", G_TYPE_INT, width,
+                                   "height", G_TYPE_INT, height,
+                                   "format", GST_TYPE_FOURCC, format,
+                                   NULL);
+
+        if (self->framerate_denom != 0)
+            gst_structure_set (struc, "framerate", GST_TYPE_FRACTION,
+                               self->framerate_num, self->framerate_denom,
+                               NULL);
+
+        gst_caps_append_structure (new_caps, struc);
 
         GST_INFO_OBJECT (omx_base, "caps are: %" GST_PTR_FORMAT, new_caps);
         gst_pad_set_caps (omx_base->srcpad, new_caps);
