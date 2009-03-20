@@ -25,6 +25,8 @@
 
 #include <string.h> /* for memset */
 
+#define DEFAULT_DTX TRUE
+
 enum
 {
     ARG_0,
@@ -168,7 +170,7 @@ type_class_init (gpointer g_class,
         g_object_class_install_property (gobject_class, ARG_DTX,
                                          g_param_spec_boolean ("dtx", "DTX",
                                                                "Enable DTX",
-                                                               TRUE, G_PARAM_READWRITE));
+                                                               DEFAULT_DTX, G_PARAM_READWRITE));
     }
 }
 
@@ -214,7 +216,7 @@ type_instance_init (GTypeInstance *instance,
 
     omx_base->omx_setup = omx_setup;
 
-    self->dtx = TRUE;
+    self->dtx = DEFAULT_DTX;
 }
 
 GType
