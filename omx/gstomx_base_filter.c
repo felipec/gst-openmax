@@ -641,7 +641,16 @@ pad_chain (GstPad *pad,
 
                 if (self->use_timestamps)
                 {
-                    omx_buffer->nTimeStamp = gst_util_uint64_scale_int (GST_BUFFER_TIMESTAMP (buf),
+                    GstClockTime timestamp_offset = 0;
+
+                    if (buffer_offset && GST_BUFFER_DURATION (buf) != GST_CLOCK_TIME_NONE)
+                    {
+                        timestamp_offset = gst_util_uint64_scale_int (buffer_offset,
+                                                                      GST_BUFFER_DURATION (buf),
+                                                                      GST_BUFFER_SIZE (buf));
+                    }
+
+                    omx_buffer->nTimeStamp = gst_util_uint64_scale_int (GST_BUFFER_TIMESTAMP (buf) + timestamp_offset,
                                                                         OMX_TICKS_PER_SECOND,
                                                                         GST_SECOND);
                 }
