@@ -30,7 +30,7 @@
 enum
 {
     ARG_0,
-    ARG_QUALITY
+    ARG_QUALITY,
 };
 
 #define DEFAULT_QUALITY 90

@@ -30,7 +30,7 @@
 enum
 {
     ARG_0,
-    ARG_BITRATE
+    ARG_BITRATE,
 };
 
 #define DEFAULT_BITRATE 64000

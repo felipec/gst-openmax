@@ -28,7 +28,7 @@
 enum
 {
     ARG_0,
-    ARG_FILE_NAME
+    ARG_FILE_NAME,
 };
 
 static GstOmxBaseSrcClass *parent_class;

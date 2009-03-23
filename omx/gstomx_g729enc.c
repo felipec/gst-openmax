@@ -30,7 +30,7 @@
 enum
 {
     ARG_0,
-    ARG_DTX
+    ARG_DTX,
 };
 
 static GstOmxBaseFilterClass *parent_class;

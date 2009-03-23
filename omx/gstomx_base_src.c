@@ -30,7 +30,7 @@ enum
 {
     ARG_0,
     ARG_COMPONENT_NAME,
-    ARG_LIBRARY_NAME
+    ARG_LIBRARY_NAME,
 };
 
 static GstElementClass *parent_class;

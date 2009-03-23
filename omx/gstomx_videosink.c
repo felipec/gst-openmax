@@ -36,7 +36,7 @@ enum
     ARG_0,
     ARG_X_SCALE,
     ARG_Y_SCALE,
-    ARG_ROTATION
+    ARG_ROTATION,
 };
 
 static GstCaps *
