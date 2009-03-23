@@ -34,7 +34,7 @@ enum
     ARG_USE_TIMESTAMPS,
 };
 
-static GstElementClass *parent_class = NULL;
+static GstElementClass *parent_class;
 
 static void
 setup_ports (GstOmxBaseFilter *self)

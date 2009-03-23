@@ -31,7 +31,7 @@ enum
     ARG_FILE_NAME
 };
 
-static GstOmxBaseSrcClass *parent_class = NULL;
+static GstOmxBaseSrcClass *parent_class;
 
 static GstCaps *
 generate_src_template (void)

@@ -33,7 +33,7 @@ enum
     ARG_DTX
 };
 
-static GstOmxBaseFilterClass *parent_class = NULL;
+static GstOmxBaseFilterClass *parent_class;
 
 static GstCaps *
 generate_src_template (void)

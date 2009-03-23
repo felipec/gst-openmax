@@ -33,7 +33,7 @@ enum
     ARG_LIBRARY_NAME
 };
 
-static GstElementClass *parent_class = NULL;
+static GstElementClass *parent_class;
 
 static void
 setup_ports (GstOmxBaseSrc *self)

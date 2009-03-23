@@ -29,7 +29,7 @@
 
 #define OMX_COMPONENT_NAME "OMX.st.videosink"
 
-static GstOmxBaseSinkClass *parent_class = NULL;
+static GstOmxBaseSinkClass *parent_class;
 
 enum
 {

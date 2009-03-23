@@ -28,7 +28,7 @@
 
 #define OMX_COMPONENT_NAME "OMX.st.audio_encoder.g711"
 
-static GstOmxBaseFilterClass *parent_class = NULL;
+static GstOmxBaseFilterClass *parent_class;
 
 static GstCaps *
 generate_src_template (void)

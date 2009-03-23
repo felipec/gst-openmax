@@ -24,7 +24,7 @@
 
 #include <stdlib.h> /* For calloc, free */
 
-static GstOmxBaseFilterClass *parent_class = NULL;
+static GstOmxBaseFilterClass *parent_class;
 
 static GstCaps *
 generate_src_template (void)

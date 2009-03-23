@@ -24,7 +24,7 @@
 
 #define OMX_COMPONENT_NAME "OMX.st.video_decoder.wmv"
 
-static GstOmxBaseVideoDecClass *parent_class = NULL;
+static GstOmxBaseVideoDecClass *parent_class;
 
 static GstCaps *
 generate_sink_template (void)

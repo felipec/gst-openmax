@@ -26,7 +26,7 @@
 
 #define OMX_COMPONENT_NAME "OMX.st.video_encoder.mpeg4"
 
-static GstOmxBaseFilterClass *parent_class = NULL;
+static GstOmxBaseFilterClass *parent_class;
 
 static GstCaps *
 generate_src_template (void)

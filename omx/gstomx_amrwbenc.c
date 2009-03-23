@@ -35,7 +35,7 @@ enum
 
 #define DEFAULT_BITRATE 64000
 
-static GstOmxBaseFilterClass *parent_class = NULL;
+static GstOmxBaseFilterClass *parent_class;
 
 static GstCaps *
 generate_src_template (void)

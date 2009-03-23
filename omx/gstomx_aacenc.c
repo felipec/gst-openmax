@@ -39,7 +39,7 @@ enum
 #define DEFAULT_PROFILE OMX_AUDIO_AACObjectLC
 #define DEFAULT_OUTPUT_FORMAT OMX_AUDIO_AACStreamFormatRAW
 
-static GstOmxBaseFilterClass *parent_class = NULL;
+static GstOmxBaseFilterClass *parent_class;
 
 #define GST_TYPE_OMX_AACENC_PROFILE (gst_omx_aacenc_profile_get_type ())
 static GType

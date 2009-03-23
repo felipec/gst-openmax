@@ -26,7 +26,7 @@
 #include <stdlib.h> /* For calloc, free */
 #include <string.h> /* For memcpy */
 
-static gboolean share_input_buffer = FALSE;
+static gboolean share_input_buffer;
 
 enum
 {
@@ -35,7 +35,7 @@ enum
     ARG_LIBRARY_NAME,
 };
 
-static GstElementClass *parent_class = NULL;
+static GstElementClass *parent_class;
 
 static void
 setup_ports (GstOmxBaseSink *self)

@@ -26,7 +26,7 @@
 
 #define OMX_COMPONENT_NAME "OMX.st.alsa.alsasink"
 
-static GstOmxBaseSinkClass *parent_class = NULL;
+static GstOmxBaseSinkClass *parent_class;
 
 static GstCaps *
 generate_sink_template (void)
