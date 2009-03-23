@@ -45,52 +45,52 @@ static GstOmxBaseFilterClass *parent_class;
 static GType
 gst_omx_aacenc_profile_get_type (void)
 {
-  static GType gst_omx_aacenc_profile_type = 0;
+    static GType gst_omx_aacenc_profile_type = 0;
 
-  if (!gst_omx_aacenc_profile_type) {
-    static GEnumValue gst_omx_aacenc_profile[] = {
-      {OMX_AUDIO_AACObjectLC, "Low Complexity", "LC"},
-      {OMX_AUDIO_AACObjectMain, "Main", "Main"},
-      {OMX_AUDIO_AACObjectSSR, "Scalable Sample Rate", "SSR"},
-      {OMX_AUDIO_AACObjectLTP, "Long Term Prediction", "LTP"},
-      {OMX_AUDIO_AACObjectHE, "High Efficiency with SBR (HE-AAC v1)", "HE"},
-      {OMX_AUDIO_AACObjectScalable, "Scalable", "Scalable"},
-      {OMX_AUDIO_AACObjectERLC, "ER AAC Low Complexity object (Error Resilient AAC-LC)", "ERLC"},
-      {OMX_AUDIO_AACObjectLD, "AAC Low Delay object (Error Resilient)", "LD"},
-      {OMX_AUDIO_AACObjectHE_PS, "High Efficiency with Parametric Stereo coding (HE-AAC v2, object type PS)", "HE_PS"},
-      {0, NULL, NULL},
-    };
+    if (!gst_omx_aacenc_profile_type) {
+        static GEnumValue gst_omx_aacenc_profile[] = {
+            {OMX_AUDIO_AACObjectLC, "Low Complexity", "LC"},
+            {OMX_AUDIO_AACObjectMain, "Main", "Main"},
+            {OMX_AUDIO_AACObjectSSR, "Scalable Sample Rate", "SSR"},
+            {OMX_AUDIO_AACObjectLTP, "Long Term Prediction", "LTP"},
+            {OMX_AUDIO_AACObjectHE, "High Efficiency with SBR (HE-AAC v1)", "HE"},
+            {OMX_AUDIO_AACObjectScalable, "Scalable", "Scalable"},
+            {OMX_AUDIO_AACObjectERLC, "ER AAC Low Complexity object (Error Resilient AAC-LC)", "ERLC"},
+            {OMX_AUDIO_AACObjectLD, "AAC Low Delay object (Error Resilient)", "LD"},
+            {OMX_AUDIO_AACObjectHE_PS, "High Efficiency with Parametric Stereo coding (HE-AAC v2, object type PS)", "HE_PS"},
+            {0, NULL, NULL},
+        };
 
-    gst_omx_aacenc_profile_type = g_enum_register_static ("GstOmxAacencProfile",
-        gst_omx_aacenc_profile);
-  }
+        gst_omx_aacenc_profile_type = g_enum_register_static ("GstOmxAacencProfile",
+                                                              gst_omx_aacenc_profile);
+    }
 
-  return gst_omx_aacenc_profile_type;
+    return gst_omx_aacenc_profile_type;
 }
 
 #define GST_TYPE_OMX_AACENC_OUTPUT_FORMAT (gst_omx_aacenc_output_format_get_type ())
 static GType
 gst_omx_aacenc_output_format_get_type (void)
 {
-  static GType gst_omx_aacenc_output_format_type = 0;
+    static GType gst_omx_aacenc_output_format_type = 0;
 
-  if (!gst_omx_aacenc_output_format_type) {
-    static GEnumValue gst_omx_aacenc_output_format[] = {
-      {OMX_AUDIO_AACStreamFormatMP2ADTS, "Audio Data Transport Stream 2 format", "MP2ADTS"},
-      {OMX_AUDIO_AACStreamFormatMP4ADTS, "Audio Data Transport Stream 4 format", "MP4ADTS"},
-      {OMX_AUDIO_AACStreamFormatMP4LOAS, "Low Overhead Audio Stream format", "MP4LOAS"},
-      {OMX_AUDIO_AACStreamFormatMP4LATM, "Low overhead Audio Transport Multiplex", "MP4LATM"},
-      {OMX_AUDIO_AACStreamFormatADIF, "Audio Data Interchange Format", "ADIF"},
-      {OMX_AUDIO_AACStreamFormatMP4FF, "AAC inside MPEG-4/ISO File Format", "MP4FF"},
-      {OMX_AUDIO_AACStreamFormatRAW, "AAC Raw Format", "RAW"},
-      {0, NULL, NULL},
-    };
+    if (!gst_omx_aacenc_output_format_type) {
+        static GEnumValue gst_omx_aacenc_output_format[] = {
+            {OMX_AUDIO_AACStreamFormatMP2ADTS, "Audio Data Transport Stream 2 format", "MP2ADTS"},
+            {OMX_AUDIO_AACStreamFormatMP4ADTS, "Audio Data Transport Stream 4 format", "MP4ADTS"},
+            {OMX_AUDIO_AACStreamFormatMP4LOAS, "Low Overhead Audio Stream format", "MP4LOAS"},
+            {OMX_AUDIO_AACStreamFormatMP4LATM, "Low overhead Audio Transport Multiplex", "MP4LATM"},
+            {OMX_AUDIO_AACStreamFormatADIF, "Audio Data Interchange Format", "ADIF"},
+            {OMX_AUDIO_AACStreamFormatMP4FF, "AAC inside MPEG-4/ISO File Format", "MP4FF"},
+            {OMX_AUDIO_AACStreamFormatRAW, "AAC Raw Format", "RAW"},
+            {0, NULL, NULL},
+        };
 
-    gst_omx_aacenc_output_format_type = g_enum_register_static ("GstOmxAacencOutputFormat",
-        gst_omx_aacenc_output_format);
-  }
+        gst_omx_aacenc_output_format_type = g_enum_register_static ("GstOmxAacencOutputFormat",
+                                                                    gst_omx_aacenc_output_format);
+    }
 
-  return gst_omx_aacenc_output_format_type;
+    return gst_omx_aacenc_output_format_type;
 }
 
 static GstCaps *
@@ -323,18 +323,18 @@ sink_setcaps (GstPad *pad,
     }
 
     {
-      GstCaps *src_caps;
+        GstCaps *src_caps;
 
-      src_caps = gst_caps_new_simple ("audio/mpeg",
-          "mpegversion", G_TYPE_INT, 4,
-          "rate", G_TYPE_INT, rate,
-          "channels", G_TYPE_INT, channels,
-          NULL);
-      GST_INFO_OBJECT (omx_base, "src caps are: %" GST_PTR_FORMAT, src_caps);
+        src_caps = gst_caps_new_simple ("audio/mpeg",
+                                        "mpegversion", G_TYPE_INT, 4,
+                                        "rate", G_TYPE_INT, rate,
+                                        "channels", G_TYPE_INT, channels,
+                                        NULL);
+        GST_INFO_OBJECT (omx_base, "src caps are: %" GST_PTR_FORMAT, src_caps);
 
-      gst_pad_set_caps (omx_base->srcpad, src_caps);
+        gst_pad_set_caps (omx_base->srcpad, src_caps);
 
-      gst_caps_unref (src_caps);
+        gst_caps_unref (src_caps);
     }
 
     return gst_pad_set_caps (pad, caps);

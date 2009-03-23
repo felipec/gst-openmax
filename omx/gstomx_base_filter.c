@@ -524,7 +524,7 @@ pad_chain (GstPad *pad,
         setup_ports (self);
 
         if (!g_omx_core_prepare (self->gomx))
-          goto fail_omx_state;
+            goto fail_omx_state;
 
         self->initialized = TRUE;
         gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
@@ -542,7 +542,7 @@ pad_chain (GstPad *pad,
         {
             GST_INFO_OBJECT (self, "omx: play");
             if (!g_omx_core_start (gomx))
-              goto fail_omx_state;
+                goto fail_omx_state;
 
             /* send buffer with codec data flag */
             /** @todo move to util */
@@ -661,7 +661,7 @@ out_flushing:
         if (gomx->omx_error)
         {
             GST_ELEMENT_ERROR (self, STREAM, FAILED, (NULL),
-                ("Component in invalid state"));
+                               ("Component in invalid state"));
             self->last_pad_push_return = GST_FLOW_ERROR;
         }
         gst_buffer_unref (buf);
@@ -745,7 +745,7 @@ pad_event (GstPad *pad,
             g_omx_core_flush_stop (gomx, TRUE);
 
             if (self->initialized)
-              gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
+                gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
 
             ret = TRUE;
             break;

@@ -340,16 +340,16 @@ g_omx_core_start (GOmxCore *core)
 {
     change_state (core, OMX_StateExecuting);
     if (!wait_for_state (core, OMX_StateExecuting))
-      goto fail;
+        goto fail;
 
     core_for_each_port (core, port_start_buffers);
 
     return TRUE;
 
 fail:
-  {
-    return FALSE;
-  }
+    {
+        return FALSE;
+    }
 }
 
 gboolean
@@ -364,17 +364,17 @@ g_omx_core_finish (GOmxCore *core)
 {
     /* if component in error, do not expect it to handle state change */
     if (!core->omx_error) {
-      change_state (core, OMX_StateIdle);
-      if (!wait_for_state (core, OMX_StateIdle))
-        goto fail;
+        change_state (core, OMX_StateIdle);
+        if (!wait_for_state (core, OMX_StateIdle))
+            goto fail;
     }
 
     if (!core->omx_error)
-      change_state (core, OMX_StateLoaded);
+        change_state (core, OMX_StateLoaded);
     core_for_each_port (core, port_free_buffers);
     if (!core->omx_error) {
-      if (!wait_for_state (core, OMX_StateLoaded))
-        goto fail;
+        if (!wait_for_state (core, OMX_StateLoaded))
+            goto fail;
     }
 
     core_for_each_port (core, g_omx_port_free);
@@ -383,9 +383,9 @@ g_omx_core_finish (GOmxCore *core)
     return TRUE;
 
 fail:
-  {
-    return FALSE;
-  }
+    {
+        return FALSE;
+    }
 }
 
 GOmxPort *
@@ -447,7 +447,7 @@ void
 g_omx_core_flush_stop (GOmxCore *core, gboolean flush_port)
 {
     if (flush_port)
-      core_for_each_port (core, g_omx_port_flush);
+        core_for_each_port (core, g_omx_port_flush);
     core_for_each_port (core, g_omx_port_resume);
     g_mutex_lock (core->omx_state_mutex);
     core->flushing = FALSE;
