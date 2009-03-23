@@ -198,10 +198,12 @@ static void
 settings_changed_cb (GOmxCore *core)
 {
     GstOmxBaseFilter *omx_base;
+    GstOmxJpegEnc *self;
     guint width;
     guint height;
 
     omx_base = core->client_data;
+    self = GST_OMX_JPEGENC (omx_base);
 
     GST_DEBUG_OBJECT (omx_base, "settings changed");
 
@@ -229,7 +231,8 @@ settings_changed_cb (GOmxCore *core)
         new_caps = gst_caps_new_simple ("image/jpeg",
                                         "width", G_TYPE_INT, width,
                                         "height", G_TYPE_INT, height,
-                                        "framerate", GST_TYPE_FRACTION, 1, 1,
+                                        "framerate", GST_TYPE_FRACTION,
+                                        self->framerate_num, self->framerate_denom,
                                         NULL);
 
         GST_INFO_OBJECT (omx_base, "caps are: %" GST_PTR_FORMAT, new_caps);
@@ -243,12 +246,14 @@ sink_setcaps (GstPad *pad,
 {
     GstStructure *structure;
     GstOmxBaseFilter *omx_base;
+    GstOmxJpegEnc *self;
     GOmxCore *gomx;
     OMX_COLOR_FORMATTYPE color_format = OMX_COLOR_FormatYUV420Planar;
     gint width = 0;
     gint height = 0;
 
     omx_base = GST_OMX_BASE_FILTER (GST_PAD_PARENT (pad));
+    self = GST_OMX_JPEGENC (omx_base);
     gomx = (GOmxCore *) omx_base->gomx;
 
     GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
@@ -259,6 +264,14 @@ sink_setcaps (GstPad *pad,
 
     gst_structure_get_int (structure, "width", &width);
     gst_structure_get_int (structure, "height", &height);
+
+    if (!gst_structure_get_fraction (structure, "framerate",
+                                     &self->framerate_num,
+                                     &self->framerate_denom))
+    {
+        self->framerate_num = 0;
+        self->framerate_denom = 1;
+    }
 
     if (strcmp (gst_structure_get_name (structure), "video/x-raw-yuv") == 0)
     {
@@ -371,6 +384,8 @@ type_instance_init (GTypeInstance *instance,
 
     gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);
 
+    self->framerate_num = 0;
+    self->framerate_denom = 1;
     self->quality = DEFAULT_QUALITY;
 }
 

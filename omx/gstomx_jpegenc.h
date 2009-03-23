@@ -40,6 +40,8 @@ struct GstOmxJpegEnc
 {
     GstOmxBaseFilter omx_base;
 
+    gint framerate_num;
+    gint framerate_denom;
     guint quality;
 };
 
