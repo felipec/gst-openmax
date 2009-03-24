@@ -138,7 +138,7 @@ render (GstBaseSink *gst_base,
         setup_ports (self);
         g_omx_core_prepare (self->gomx);
 
-        self->initialized = TRUE;
+        self->ready = TRUE;
     }
 
     in_port = self->in_port;
@@ -374,7 +374,7 @@ activate_push (GstPad *pad,
     {
         GST_DEBUG_OBJECT (self, "activate");
 
-        if (self->initialized)
+        if (self->ready)
         {
             /* we do not start the task yet if the pad is not connected */
             if (gst_pad_is_linked (pad))
@@ -388,7 +388,7 @@ activate_push (GstPad *pad,
     {
         GST_DEBUG_OBJECT (self, "deactivate");
 
-        if (self->initialized)
+        if (self->ready)
         {
             /** @todo disable this until we properly reinitialize the buffers. */
 #if 0

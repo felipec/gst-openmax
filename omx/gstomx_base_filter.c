@@ -90,13 +90,13 @@ change_state (GstElement *element,
             break;
 
         case GST_STATE_CHANGE_PAUSED_TO_READY:
-            g_mutex_lock (self->initialized_lock);
-            if (self->initialized)
+            g_mutex_lock (self->ready_lock);
+            if (self->ready)
             {
                 g_omx_port_finish (self->in_port);
                 g_omx_port_finish (self->out_port);
             }
-            g_mutex_unlock (self->initialized_lock);
+            g_mutex_unlock (self->ready_lock);
             break;
 
         default:
@@ -114,15 +114,15 @@ change_state (GstElement *element,
             break;
 
         case GST_STATE_CHANGE_PAUSED_TO_READY:
-            g_mutex_lock (self->initialized_lock);
-            if (self->initialized)
+            g_mutex_lock (self->ready_lock);
+            if (self->ready)
             {
                 /* make sure to allow state change */
                 g_omx_core_flush_stop (self->gomx, FALSE);
                 g_omx_core_finish (self->gomx);
-                self->initialized = FALSE;
+                self->ready = FALSE;
             }
-            g_mutex_unlock (self->initialized_lock);
+            g_mutex_unlock (self->ready_lock);
             break;
 
         case GST_STATE_CHANGE_READY_TO_NULL:
@@ -158,7 +158,7 @@ dispose (GObject *obj)
     g_free (self->omx_component);
     g_free (self->omx_library);
 
-    g_mutex_free (self->initialized_lock);
+    g_mutex_free (self->ready_lock);
 
     G_OBJECT_CLASS (parent_class)->dispose (obj);
 }
@@ -285,9 +285,9 @@ output_loop (gpointer data)
 
     GST_LOG_OBJECT (self, "begin");
 
-    if (!self->initialized)
+    if (!self->ready)
     {
-        g_error ("not initialized");
+        g_error ("not ready");
         return;
     }
 
@@ -511,7 +511,7 @@ pad_chain (GstPad *pad,
 
     if (G_UNLIKELY (gomx->omx_state == OMX_StateLoaded))
     {
-        g_mutex_lock (self->initialized_lock);
+        g_mutex_lock (self->ready_lock);
 
         GST_INFO_OBJECT (self, "omx: prepare");
 
@@ -526,10 +526,10 @@ pad_chain (GstPad *pad,
         if (!g_omx_core_prepare (self->gomx))
             goto fail_omx_state;
 
-        self->initialized = TRUE;
+        self->ready = TRUE;
         gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
 
-        g_mutex_unlock (self->initialized_lock);
+        g_mutex_unlock (self->ready_lock);
     }
 
     in_port = self->in_port;
@@ -699,7 +699,7 @@ pad_event (GstPad *pad,
             /* if we are init'ed, and there is a running loop; then
              * if we get a buffer to inform it of EOS, let it handle the rest
              * in any other case, we send EOS */
-            if (self->initialized && self->last_pad_push_return == GST_FLOW_OK)
+            if (self->ready && self->last_pad_push_return == GST_FLOW_OK)
             {
                 /* send buffer with eos flag */
                 /** @todo move to util */
@@ -744,7 +744,7 @@ pad_event (GstPad *pad,
 
             g_omx_core_flush_stop (gomx, TRUE);
 
-            if (self->initialized)
+            if (self->ready)
                 gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
 
             ret = TRUE;
@@ -781,7 +781,7 @@ activate_push (GstPad *pad,
         /* we do not start the task yet if the pad is not connected */
         if (gst_pad_is_linked (pad))
         {
-            if (self->initialized)
+            if (self->ready)
             {
                 /** @todo link callback function also needed */
                 g_omx_core_flush_stop (self->gomx, FALSE);
@@ -794,7 +794,7 @@ activate_push (GstPad *pad,
     {
         GST_DEBUG_OBJECT (self, "deactivate");
 
-        if (self->initialized)
+        if (self->ready)
         {
             /** @todo disable this until we properly reinitialize the buffers. */
 #if 0
@@ -838,7 +838,7 @@ type_instance_init (GTypeInstance *instance,
         gomx->client_data = self;
     }
 
-    self->initialized_lock = g_mutex_new ();
+    self->ready_lock = g_mutex_new ();
 
     self->sinkpad =
         gst_pad_new_from_template (gst_element_class_get_pad_template (element_class, "sink"), "sink");
