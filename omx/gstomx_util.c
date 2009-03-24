@@ -757,6 +757,7 @@ wait_for_state (GOmxCore *core,
                 OMX_STATETYPE state)
 {
     GTimeVal tv;
+    gboolean signaled;
 
     g_mutex_lock (core->omx_state_mutex);
 
@@ -769,7 +770,13 @@ wait_for_state (GOmxCore *core,
     /* try once */
     if (core->omx_state != state)
     {
-        g_cond_timed_wait (core->omx_state_condition, core->omx_state_mutex, &tv);
+        signaled = g_cond_timed_wait (core->omx_state_condition, core->omx_state_mutex, &tv);
+
+        if (!signaled)
+        {
+            GST_ERROR ("timed out");
+            core->omx_error = OMX_ErrorUndefined;
+        }
     }
 
     if (core->omx_error != OMX_ErrorNone)
