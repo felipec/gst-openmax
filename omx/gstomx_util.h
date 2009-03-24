@@ -91,7 +91,6 @@ struct GOmxCore
     GOmxImp *imp;
 
     gboolean done;
-    gboolean flushing;
 };
 
 struct GOmxPort
@@ -126,14 +125,14 @@ GOmxCore *g_omx_core_new (void);
 void g_omx_core_free (GOmxCore *core);
 void g_omx_core_init (GOmxCore *core, const gchar *library_name, const gchar *component_name);
 void g_omx_core_deinit (GOmxCore *core);
-gboolean g_omx_core_prepare (GOmxCore *core);
-gboolean g_omx_core_start (GOmxCore *core);
-gboolean g_omx_core_pause (GOmxCore *core);
-gboolean g_omx_core_finish (GOmxCore *core);
+void g_omx_core_prepare (GOmxCore *core);
+void g_omx_core_start (GOmxCore *core);
+void g_omx_core_pause (GOmxCore *core);
+void g_omx_core_finish (GOmxCore *core);
 void g_omx_core_set_done (GOmxCore *core);
 void g_omx_core_wait_for_done (GOmxCore *core);
 void g_omx_core_flush_start (GOmxCore *core);
-void g_omx_core_flush_stop (GOmxCore *core, gboolean flush_port);
+void g_omx_core_flush_stop (GOmxCore *core);
 GOmxPort *g_omx_core_setup_port (GOmxCore *core, OMX_PARAM_PORTDEFINITIONTYPE *omx_port);
 
 GOmxPort *g_omx_port_new (GOmxCore *core);

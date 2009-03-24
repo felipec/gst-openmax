@@ -132,8 +132,6 @@ change_state (GstElement *element,
             g_mutex_lock (self->ready_lock);
             if (self->ready)
             {
-                /* make sure to allow state change */
-                g_omx_core_flush_stop (self->gomx, FALSE);
                 g_omx_core_finish (self->gomx);
                 self->ready = FALSE;
             }
@@ -540,11 +538,7 @@ pad_chain (GstPad *pad,
 
         setup_ports (self);
 
-        if (!g_omx_core_prepare (self->gomx))
-        {
-            g_mutex_unlock (self->ready_lock);
-            goto fail_omx_state;
-        }
+        g_omx_core_prepare (self->gomx);
 
         self->ready = TRUE;
         gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
@@ -561,8 +555,7 @@ pad_chain (GstPad *pad,
         if (G_UNLIKELY (gomx->omx_state == OMX_StateIdle))
         {
             GST_INFO_OBJECT (self, "omx: play");
-            if (!g_omx_core_start (gomx))
-                goto fail_omx_state;
+            g_omx_core_start (gomx);
 
             /* send buffer with codec data flag */
             /** @todo move to util */
@@ -688,9 +681,6 @@ leave:
     return ret;
 
     /* special conditions */
-fail_omx_state:
-    GST_DEBUG_OBJECT (self, "OMX component state change interrupted");
-
 out_flushing:
     if (gomx->omx_error)
     {
@@ -771,10 +761,9 @@ pad_event (GstPad *pad,
             gst_pad_push_event (self->srcpad, event);
             self->last_pad_push_return = GST_FLOW_OK;
 
-            g_omx_core_flush_stop (gomx, TRUE);
+            g_omx_core_flush_stop (gomx);
 
-            if (self->ready)
-                gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
+            gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
 
             ret = TRUE;
             break;
@@ -813,7 +802,8 @@ activate_push (GstPad *pad,
             if (self->ready)
             {
                 /** @todo link callback function also needed */
-                g_omx_core_flush_stop (self->gomx, FALSE);
+                g_omx_port_resume (self->in_port);
+                g_omx_port_resume (self->out_port);
 
                 result = gst_pad_start_task (pad, output_loop, pad);
             }
@@ -832,8 +822,8 @@ activate_push (GstPad *pad,
 #endif
 
             /* unlock loops */
-            self->last_pad_push_return = GST_FLOW_OK;
-            g_omx_core_flush_start (self->gomx);
+            g_omx_port_pause (self->in_port);
+            g_omx_port_pause (self->out_port);
         }
 
         /* make sure streaming finishes */
