@@ -14,3 +14,7 @@ config/
 configure
 libtool
 stamp-h1
+
+m4/*
+*~
+
