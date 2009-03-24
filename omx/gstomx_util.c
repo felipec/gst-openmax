@@ -756,15 +756,20 @@ static inline void
 wait_for_state (GOmxCore *core,
                 OMX_STATETYPE state)
 {
+    GTimeVal tv;
+
     g_mutex_lock (core->omx_state_mutex);
 
     if (core->omx_error != OMX_ErrorNone)
         goto leave;
 
+    g_get_current_time (&tv);
+    g_time_val_add (&tv, 1000000);
+
     /* try once */
     if (core->omx_state != state)
     {
-        g_cond_wait (core->omx_state_condition, core->omx_state_mutex);
+        g_cond_timed_wait (core->omx_state_condition, core->omx_state_mutex, &tv);
     }
 
     if (core->omx_error != OMX_ErrorNone)
