@@ -44,8 +44,8 @@ version_check ()
   if test ! -z "$MICRO"; then VERSION=$VERSION.$MICRO; else MICRO=0; fi
 
   debug "major $MAJOR minor $MINOR micro $MICRO"
-  
-  for SUGGESTION in $PKG_PATH; do 
+
+  for SUGGESTION in $PKG_PATH; do
     COMMAND="$SUGGESTION"
 
     # don't check if asked not to
@@ -61,7 +61,7 @@ version_check ()
     }
 
     debug "checking version with $COMMAND"
-    ($COMMAND --version) < /dev/null > /dev/null 2>&1 || 
+    ($COMMAND --version) < /dev/null > /dev/null 2>&1 ||
     {
       echo "not found."
       continue

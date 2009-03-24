@@ -45,7 +45,7 @@ AC_DEFUN([AG_GST_ARG_PROFILING],
         no)  USE_PROFILING=no ;;
         *)   AC_MSG_ERROR(bad value ${enableval} for --enable-profiling) ;;
       esac
-    ], 
+    ],
     [USE_PROFILING=no]) dnl Default value
 ])
 
@@ -145,7 +145,7 @@ AC_DEFUN([AG_GST_ARG_EXAMPLES],
 AC_DEFUN([AG_GST_ARG_WITH_PKG_CONFIG_PATH],
 [
   dnl possibly modify pkg-config path
-  AC_ARG_WITH(pkg-config-path, 
+  AC_ARG_WITH(pkg-config-path,
      AC_HELP_STRING([--with-pkg-config-path],
                     [colon-separated list of pkg-config(1) dirs]),
      [
@@ -168,14 +168,14 @@ AC_DEFUN([AG_GST_ARG_WITH_PACKAGE_NAME],
         no)  AC_MSG_ERROR(bad value ${withval} for --with-package-name) ;;
         *)   GST_PACKAGE_NAME="${withval}" ;;
       esac
-    ], 
+    ],
     [
       P=$1
       if test "x$P" = "x"
       then
         P=$PACKAGE_NAME
       fi
-      
+
       dnl default value
       if test "x$GST_CVS" = "xyes"
       then
@@ -204,7 +204,7 @@ AC_DEFUN([AG_GST_ARG_WITH_PACKAGE_ORIGIN],
         no)  AC_MSG_ERROR(bad value ${withval} for --with-package-origin) ;;
         *)   GST_PACKAGE_ORIGIN="${withval}" ;;
       esac
-    ], 
+    ],
     [GST_PACKAGE_ORIGIN="[Unknown package origin]"] dnl Default value
   )
   AC_MSG_NOTICE(Using $GST_PACKAGE_ORIGIN as package origin)
@@ -268,7 +268,7 @@ AC_DEFUN([AG_GST_CHECK_PLUGIN],
   fi
   if echo " [$WITHOUT_PLUGINS] " | tr , ' ' | grep -i " [$1] " > /dev/null; then
     GST_PLUGINS_SELECTED=`echo " $GST_PLUGINS_SELECTED " | $SED -e 's/ [$1] / /'`
-  fi  
+  fi
   AM_CONDITIONAL([USE_PLUGIN_]translit([$1], a-z, A-Z), echo " $GST_PLUGINS_SELECTED " | grep -i " [$1] " > /dev/null)
 ])
 

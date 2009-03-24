@@ -23,12 +23,12 @@ AC_DEFUN([AG_GST_SET_ERROR_CFLAGS],
   AC_REQUIRE([AC_PROG_CC])
   AC_REQUIRE([AS_COMPILER_FLAG])
 
-  
+
   dnl if we support -Wall, set it unconditionally
   AS_COMPILER_FLAG(-Wall,
                    ERROR_CFLAGS="-Wall",
                    ERROR_CFLAGS="")
- 
+
   dnl Warn if declarations after statements are used (C99 extension)
   AS_COMPILER_FLAG(-Wdeclaration-after-statement,
         ERROR_CFLAGS="$ERROR_CFLAGS -Wdeclaration-after-statement")
@@ -54,7 +54,7 @@ AC_DEFUN([AG_GST_SET_ERROR_CFLAGS],
           dnl try -errwarn=%all,no%E_EMPTY_DECLARATION,
           dnl no%E_STATEMENT_NOT_REACHED,no%E_ARGUEMENT_MISMATCH,
           dnl no%E_MACRO_REDEFINED (Sun Forte case)
-          dnl For Forte we need disable "empty declaration" warning produced by un-needed semicolon 
+          dnl For Forte we need disable "empty declaration" warning produced by un-needed semicolon
           dnl "statement not reached" disabled because there is g_assert_not_reached () in some places
           dnl "macro redefined" because of gst/gettext.h
           dnl FIXME: is it really supposed to be 'ARGUEMENT' and not 'ARGUMENT'?

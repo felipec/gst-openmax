@@ -99,18 +99,18 @@ AC_DEFUN([AG_GST_CHECK_GST_BASE],
   AG_GST_CHECK_MODULES(GST_BASE, gstreamer-base-[$1], [$2],
     [GStreamer Base Libraries], [$3])
 ])
-  
+
 AC_DEFUN([AG_GST_CHECK_GST_GDP],
 [
   AG_GST_CHECK_MODULES(GST_GDP, gstreamer-dataprotocol-[$1], [$2],
     [GStreamer Data Protocol Library], [$3])
 ])
-  
+
 AC_DEFUN([AG_GST_CHECK_GST_CONTROLLER],
 [
   AG_GST_CHECK_MODULES(GST_CONTROLLER, gstreamer-controller-[$1], [$2],
     [GStreamer Controller Library], [$3])
-])  
+])
 
 AC_DEFUN([AG_GST_CHECK_GST_CHECK],
 [
