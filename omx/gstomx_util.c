@@ -345,7 +345,8 @@ g_omx_core_start (GOmxCore *core)
     change_state (core, OMX_StateExecuting);
     wait_for_state (core, OMX_StateExecuting);
 
-    core_for_each_port (core, port_start_buffers);
+    if (!core->omx_error)
+        core_for_each_port (core, port_start_buffers);
 }
 
 void
@@ -757,11 +758,26 @@ wait_for_state (GOmxCore *core,
 {
     g_mutex_lock (core->omx_state_mutex);
 
-    while (core->omx_state != state)
+    if (core->omx_error != OMX_ErrorNone)
+        goto leave;
+
+    /* try once */
+    if (core->omx_state != state)
     {
         g_cond_wait (core->omx_state_condition, core->omx_state_mutex);
     }
 
+    if (core->omx_error != OMX_ErrorNone)
+        goto leave;
+
+    if (core->omx_state != state)
+    {
+        GST_ERROR ("wrong state received: state=%d, expected=%d",
+                   core->omx_state, state);
+        core->omx_error = OMX_ErrorUndefined;
+    }
+
+leave:
     g_mutex_unlock (core->omx_state_mutex);
 }
 
@@ -894,6 +910,10 @@ EventHandler (OMX_HANDLETYPE omx_handle,
                         /* component might leave us waiting for buffers, unblock */
                         g_omx_core_flush_start (core);
                         core->omx_error = data_1;
+                        /* unlock wait_for_state */
+                        g_mutex_lock (core->omx_state_mutex);
+                        g_cond_signal (core->omx_state_condition);
+                        g_mutex_unlock (core->omx_state_mutex);
                         GST_ERROR ("unrecoverable error: %lx", data_1);
                         break;
                     default:

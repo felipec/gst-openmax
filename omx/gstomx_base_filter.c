@@ -136,6 +136,8 @@ change_state (GstElement *element,
                 self->ready = FALSE;
             }
             g_mutex_unlock (self->ready_lock);
+            if (self->gomx->omx_error)
+                return GST_STATE_CHANGE_FAILURE;
             break;
 
         case GST_STATE_CHANGE_READY_TO_NULL:
@@ -494,6 +496,9 @@ leave:
 
     self->last_pad_push_return = ret;
 
+    if (gomx->omx_error != OMX_ErrorNone)
+        ret = GST_FLOW_ERROR;
+
     if (ret != GST_FLOW_OK)
     {
         GST_INFO_OBJECT (self, "pause task, reason:  %s",
@@ -540,10 +545,16 @@ pad_chain (GstPad *pad,
 
         g_omx_core_prepare (self->gomx);
 
-        self->ready = TRUE;
-        gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
+        if (gomx->omx_error == OMX_ErrorNone)
+        {
+            self->ready = TRUE;
+            gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
+        }
 
         g_mutex_unlock (self->ready_lock);
+
+        if (gomx->omx_error != OMX_ErrorNone)
+            goto out_flushing;
     }
 
     in_port = self->in_port;
@@ -556,6 +567,9 @@ pad_chain (GstPad *pad,
         {
             GST_INFO_OBJECT (self, "omx: play");
             g_omx_core_start (gomx);
+
+            if (gomx->omx_error != OMX_ErrorNone)
+                goto out_flushing;
 
             /* send buffer with codec data flag */
             /** @todo move to util */
