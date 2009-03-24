@@ -9,7 +9,7 @@ AC_CONFIG_FILES([Makefile \
 		 util/Makefile \
 		 tests/Makefile \
 		 common/Makefile \
-		 common/m4/Makefile])
+		 m4/Makefile])
 
 dnl versions of GStreamer
 GST_MAJORMINOR=0.10
@@ -27,7 +27,7 @@ AC_PROG_LIBTOOL
 PKG_CHECK_MODULES([CHECK], [check], HAVE_CHECK=yes, HAVE_CHECK=no)
 
 dnl Keep correct libtool macros in-tree.
-dnl AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_MACRO_DIR([m4])
 
 dnl initialize GStreamer macros
 AG_GST_INIT

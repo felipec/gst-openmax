@@ -3,14 +3,6 @@
 
 package=gst-openmax
 
-# Make sure we have common
-if test ! -f common/gst-autogen.sh;
-then
-  echo "+ Setting up common submodule"
-  git submodule init
-fi
-git submodule update
-
 # source helper functions
 if test ! -f common/gst-autogen.sh;
 then
@@ -56,7 +48,7 @@ fi
 
 toplevel_check $srcfile
 
-tool_run "$aclocal" "-I common/m4 $ACLOCAL_FLAGS"
+tool_run "$aclocal" "-I m4 $ACLOCAL_FLAGS"
 tool_run "$libtoolize" "--copy --force"
 tool_run "$autoheader"
 
