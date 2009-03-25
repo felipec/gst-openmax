@@ -22,7 +22,7 @@
 #include "gstomx_h264enc.h"
 #include "gstomx.h"
 
-#include <stdlib.h> /* For calloc, free */
+#include <string.h> /* for memset */
 
 #define OMX_COMPONENT_NAME "OMX.st.video_encoder.avc"
 
@@ -94,21 +94,18 @@ settings_changed_cb (GOmxCore *core)
     GST_DEBUG_OBJECT (omx_base, "settings changed");
 
     {
-        OMX_PARAM_PORTDEFINITIONTYPE *param;
+        OMX_PARAM_PORTDEFINITIONTYPE param;
 
-        param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
+        memset (&param, 0, sizeof (param));
+        param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
+        param.nVersion.s.nVersionMajor = 1;
+        param.nVersion.s.nVersionMinor = 1;
 
-        param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-        param->nVersion.s.nVersionMajor = 1;
-        param->nVersion.s.nVersionMinor = 1;
+        param.nPortIndex = 1;
+        OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, &param);
 
-        param->nPortIndex = 1;
-        OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, param);
-
-        width = param->format.video.nFrameWidth;
-        height = param->format.video.nFrameHeight;
-
-        free (param);
+        width = param.format.video.nFrameWidth;
+        height = param.format.video.nFrameHeight;
     }
 
     {

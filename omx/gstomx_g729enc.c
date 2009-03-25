@@ -23,7 +23,7 @@
 #include "gstomx_base_filter.h"
 #include "gstomx.h"
 
-#include <stdlib.h> /* For calloc, free */
+#include <string.h> /* for memset */
 
 #define OMX_COMPONENT_NAME "OMX.st.audio_encoder.g729"
 
@@ -186,21 +186,19 @@ omx_setup (GstOmxBaseFilter *omx_base)
     GST_INFO_OBJECT (omx_base, "begin");
 
     {
-        OMX_AUDIO_PARAM_G729TYPE *param;
+        OMX_AUDIO_PARAM_G729TYPE param;
 
-        param = calloc (1, sizeof (OMX_AUDIO_PARAM_G729TYPE));
-        param->nSize = sizeof (OMX_AUDIO_PARAM_G729TYPE);
-        param->nVersion.s.nVersionMajor = 1;
-        param->nVersion.s.nVersionMinor = 1;
+        memset (&param, 0, sizeof (param));
+        param.nSize = sizeof (OMX_AUDIO_PARAM_G729TYPE);
+        param.nVersion.s.nVersionMajor = 1;
+        param.nVersion.s.nVersionMinor = 1;
 
-        param->nPortIndex = 1;
-        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioG729, param);
+        param.nPortIndex = 1;
+        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioG729, &param);
 
-        param->bDTX = self->dtx;
+        param.bDTX = self->dtx;
 
-        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioG729, param);
-
-        free (param);
+        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioG729, &param);
     }
 
     GST_INFO_OBJECT (omx_base, "end");

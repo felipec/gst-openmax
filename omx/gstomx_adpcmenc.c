@@ -23,7 +23,7 @@
 #include "gstomx_base_filter.h"
 #include "gstomx.h"
 
-#include <stdlib.h> /* For calloc, free */
+#include <string.h> /* for memset */
 
 #define OMX_COMPONENT_NAME "OMX.st.audio_encoder.adpcm"
 
@@ -121,19 +121,17 @@ settings_changed_cb (GOmxCore *core)
     GST_DEBUG_OBJECT (omx_base, "settings changed");
 
     {
-        OMX_AUDIO_PARAM_ADPCMTYPE *param;
+        OMX_AUDIO_PARAM_ADPCMTYPE param;
 
-        param = calloc (1, sizeof (OMX_AUDIO_PARAM_ADPCMTYPE));
-        param->nSize = sizeof (OMX_AUDIO_PARAM_ADPCMTYPE);
-        param->nVersion.s.nVersionMajor = 1;
-        param->nVersion.s.nVersionMinor = 1;
+        memset (&param, 0, sizeof (param));
+        param.nSize = sizeof (OMX_AUDIO_PARAM_ADPCMTYPE);
+        param.nVersion.s.nVersionMajor = 1;
+        param.nVersion.s.nVersionMinor = 1;
 
-        param->nPortIndex = 1;
-        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioAdpcm, param);
+        param.nPortIndex = 1;
+        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioAdpcm, &param);
 
-        rate = param->nSampleRate;
-
-        free (param);
+        rate = param.nSampleRate;
     }
 
     {
@@ -187,21 +185,19 @@ sink_setcaps (GstPad *pad,
 
     /* Input port configuration. */
     {
-        OMX_AUDIO_PARAM_PCMMODETYPE *param;
+        OMX_AUDIO_PARAM_PCMMODETYPE param;
 
-        param = calloc (1, sizeof (OMX_AUDIO_PARAM_PCMMODETYPE));
-        param->nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
-        param->nVersion.s.nVersionMajor = 1;
-        param->nVersion.s.nVersionMinor = 1;
+        memset (&param, 0, sizeof (param));
+        param.nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
+        param.nVersion.s.nVersionMajor = 1;
+        param.nVersion.s.nVersionMinor = 1;
 
-        param->nPortIndex = 0;
-        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, param);
+        param.nPortIndex = 0;
+        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
 
-        param->nSamplingRate = rate;
+        param.nSamplingRate = rate;
 
-        OMX_SetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, param);
-
-        free (param);
+        OMX_SetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
     }
 
     /* set caps on the srcpad */

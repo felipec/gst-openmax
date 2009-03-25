@@ -22,7 +22,7 @@
 #include "gstomx_base_videodec.h"
 #include "gstomx.h"
 
-#include <stdlib.h> /* For calloc, free */
+#include <string.h> /* for memset */
 
 static GstOmxBaseFilterClass *parent_class;
 
@@ -109,20 +109,20 @@ settings_changed_cb (GOmxCore *core)
     GST_DEBUG_OBJECT (omx_base, "settings changed");
 
     {
-        OMX_PARAM_PORTDEFINITIONTYPE *param;
+        OMX_PARAM_PORTDEFINITIONTYPE param;
 
-        param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
+        memset (&param, 0, sizeof (param));
 
-        param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-        param->nVersion.s.nVersionMajor = 1;
-        param->nVersion.s.nVersionMinor = 1;
+        param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
+        param.nVersion.s.nVersionMajor = 1;
+        param.nVersion.s.nVersionMinor = 1;
 
-        param->nPortIndex = 1;
-        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+        param.nPortIndex = 1;
+        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
 
-        width = param->format.video.nFrameWidth;
-        height = param->format.video.nFrameHeight;
-        switch (param->format.video.eColorFormat)
+        width = param.format.video.nFrameWidth;
+        height = param.format.video.nFrameHeight;
+        switch (param.format.video.eColorFormat)
         {
             case OMX_COLOR_FormatYUV420Planar:
                 format = GST_MAKE_FOURCC ('I', '4', '2', '0'); break;
@@ -133,8 +133,6 @@ settings_changed_cb (GOmxCore *core)
             default:
                 break;
         }
-
-        free (param);
     }
 
     {
@@ -161,7 +159,7 @@ sink_setcaps (GstPad *pad,
     GstOmxBaseVideoDec *self;
     GstOmxBaseFilter *omx_base;
     GOmxCore *gomx;
-    OMX_PARAM_PORTDEFINITIONTYPE *param;
+    OMX_PARAM_PORTDEFINITIONTYPE param;
     gint width = 0;
     gint height = 0;
 
@@ -189,10 +187,10 @@ sink_setcaps (GstPad *pad,
         }
     }
 
-    param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
-    param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-    param->nVersion.s.nVersionMajor = 1;
-    param->nVersion.s.nVersionMinor = 1;
+    memset (&param, 0, sizeof (param));
+    param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
+    param.nVersion.s.nVersionMajor = 1;
+    param.nVersion.s.nVersionMinor = 1;
 
     {
         const GValue *codec_data;
@@ -209,16 +207,14 @@ sink_setcaps (GstPad *pad,
 
     /* Input port configuration. */
     {
-        param->nPortIndex = 0;
-        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+        param.nPortIndex = 0;
+        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
 
-        param->format.video.nFrameWidth = width;
-        param->format.video.nFrameHeight = height;
+        param.format.video.nFrameWidth = width;
+        param.format.video.nFrameHeight = height;
 
-        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
     }
-
-    free (param);
 
     return gst_pad_set_caps (pad, caps);
 }
@@ -235,24 +231,22 @@ omx_setup (GstOmxBaseFilter *omx_base)
     GST_INFO_OBJECT (omx_base, "begin");
 
     {
-        OMX_PARAM_PORTDEFINITIONTYPE *param;
+        OMX_PARAM_PORTDEFINITIONTYPE param;
 
-        param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
-        param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-        param->nVersion.s.nVersionMajor = 1;
-        param->nVersion.s.nVersionMinor = 1;
+        memset (&param, 0, sizeof (param));
+        param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
+        param.nVersion.s.nVersionMajor = 1;
+        param.nVersion.s.nVersionMinor = 1;
 
         /* Input port configuration. */
         {
-            param->nPortIndex = 0;
-            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+            param.nPortIndex = 0;
+            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
 
-            param->format.video.eCompressionFormat = self->compression_format;
+            param.format.video.eCompressionFormat = self->compression_format;
 
-            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
         }
-
-        free (param);
     }
 
     GST_INFO_OBJECT (omx_base, "end");

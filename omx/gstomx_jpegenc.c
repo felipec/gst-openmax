@@ -207,21 +207,18 @@ settings_changed_cb (GOmxCore *core)
     GST_DEBUG_OBJECT (omx_base, "settings changed");
 
     {
-        OMX_PARAM_PORTDEFINITIONTYPE *param;
+        OMX_PARAM_PORTDEFINITIONTYPE param;
 
-        param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
+        memset (&param, 0, sizeof (param));
+        param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
+        param.nVersion.s.nVersionMajor = 1;
+        param.nVersion.s.nVersionMinor = 1;
 
-        param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-        param->nVersion.s.nVersionMajor = 1;
-        param->nVersion.s.nVersionMinor = 1;
+        param.nPortIndex = 1;
+        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
 
-        param->nPortIndex = 1;
-        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamPortDefinition, param);
-
-        width = param->format.image.nFrameWidth;
-        height = param->format.image.nFrameHeight;
-
-        free (param);
+        width = param.format.image.nFrameWidth;
+        height = param.format.image.nFrameHeight;
     }
 
     {
@@ -291,25 +288,24 @@ sink_setcaps (GstPad *pad,
     }
 
     {
-        OMX_PARAM_PORTDEFINITIONTYPE *param;
-        param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
-        param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-        param->nVersion.s.nVersionMajor = 1;
-        param->nVersion.s.nVersionMinor = 1;
+        OMX_PARAM_PORTDEFINITIONTYPE param;
+
+        memset (&param, 0, sizeof (param));
+        param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
+        param.nVersion.s.nVersionMajor = 1;
+        param.nVersion.s.nVersionMinor = 1;
 
         /* Input port configuration. */
         {
-            param->nPortIndex = 0;
-            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+            param.nPortIndex = 0;
+            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
 
-            param->format.image.nFrameWidth = width;
-            param->format.image.nFrameHeight = height;
-            param->format.image.eColorFormat = color_format;
+            param.format.image.nFrameWidth = width;
+            param.format.image.nFrameHeight = height;
+            param.format.image.eColorFormat = color_format;
 
-            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
         }
-
-        free (param);
     }
 
     return gst_pad_set_caps (pad, caps);
@@ -327,40 +323,36 @@ omx_setup (GstOmxBaseFilter *omx_base)
     GST_INFO_OBJECT (omx_base, "begin");
 
     {
-        OMX_PARAM_PORTDEFINITIONTYPE *param;
+        OMX_PARAM_PORTDEFINITIONTYPE param;
 
-        param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
-        param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-        param->nVersion.s.nVersionMajor = 1;
-        param->nVersion.s.nVersionMinor = 1;
+        memset (&param, 0, sizeof (param));
+        param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
+        param.nVersion.s.nVersionMajor = 1;
+        param.nVersion.s.nVersionMinor = 1;
 
         /* Output port configuration. */
         {
-            param->nPortIndex = 1;
-            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+            param.nPortIndex = 1;
+            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
 
-            param->format.image.eCompressionFormat = OMX_IMAGE_CodingJPEG;
+            param.format.image.eCompressionFormat = OMX_IMAGE_CodingJPEG;
 
-            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
         }
-
-        free (param);
     }
 
     {
-        OMX_IMAGE_PARAM_QFACTORTYPE *param;
+        OMX_IMAGE_PARAM_QFACTORTYPE param;
 
-        param = calloc (1, sizeof (OMX_IMAGE_PARAM_QFACTORTYPE));
-        param->nSize = sizeof (OMX_IMAGE_PARAM_QFACTORTYPE);
-        param->nVersion.s.nVersionMajor = 1;
-        param->nVersion.s.nVersionMinor = 1;
+        memset (&param, 0, sizeof (param));
+        param.nSize = sizeof (OMX_IMAGE_PARAM_QFACTORTYPE);
+        param.nVersion.s.nVersionMajor = 1;
+        param.nVersion.s.nVersionMinor = 1;
 
-        param->nQFactor = self->quality;
-        param->nPortIndex = 1;
+        param.nQFactor = self->quality;
+        param.nPortIndex = 1;
 
-        OMX_SetConfig (gomx->omx_handle, OMX_IndexParamQFactor, param);
-
-        free (param);
+        OMX_SetConfig (gomx->omx_handle, OMX_IndexParamQFactor, &param);
     }
 
     GST_INFO_OBJECT (omx_base, "end");

@@ -23,8 +23,7 @@
 #include "gstomx.h"
 #include "gstomx_interface.h"
 
-#include <stdlib.h> /* For calloc, free */
-#include <string.h> /* For memcpy */
+#include <string.h> /* for memset, memcpy */
 
 enum
 {
@@ -40,30 +39,28 @@ static void
 setup_ports (GstOmxBaseFilter *self)
 {
     GOmxCore *core;
-    OMX_PARAM_PORTDEFINITIONTYPE *param;
+    OMX_PARAM_PORTDEFINITIONTYPE param;
 
     core = self->gomx;
 
-    param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
-    param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-    param->nVersion.s.nVersionMajor = 1;
-    param->nVersion.s.nVersionMinor = 1;
+    memset (&param, 0, sizeof (param));
+    param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
+    param.nVersion.s.nVersionMajor = 1;
+    param.nVersion.s.nVersionMinor = 1;
 
     /* Input port configuration. */
 
-    param->nPortIndex = 0;
-    OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, param);
-    self->in_port = g_omx_core_setup_port (core, param);
+    param.nPortIndex = 0;
+    OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, &param);
+    self->in_port = g_omx_core_setup_port (core, &param);
     gst_pad_set_element_private (self->sinkpad, self->in_port);
 
     /* Output port configuration. */
 
-    param->nPortIndex = 1;
-    OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, param);
-    self->out_port = g_omx_core_setup_port (core, param);
+    param.nPortIndex = 1;
+    OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, &param);
+    self->out_port = g_omx_core_setup_port (core, &param);
     gst_pad_set_element_private (self->srcpad, self->out_port);
-
-    free (param);
 }
 
 static GstStateChangeReturn

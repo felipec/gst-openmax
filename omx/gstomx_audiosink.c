@@ -22,7 +22,7 @@
 #include "gstomx_audiosink.h"
 #include "gstomx.h"
 
-#include <stdlib.h> /* For calloc, free */
+#include <string.h> /* for memset */
 
 #define OMX_COMPONENT_NAME "OMX.st.alsa.alsasink"
 
@@ -111,23 +111,23 @@ setcaps (GstBaseSink *gst_sink,
         }
 
         {
-            OMX_AUDIO_PARAM_PCMMODETYPE *param;
+            OMX_AUDIO_PARAM_PCMMODETYPE param;
 
-            param = calloc (1, sizeof (OMX_AUDIO_PARAM_PCMMODETYPE));
-            param->nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
-            param->nVersion.s.nVersionMajor = 1;
-            param->nVersion.s.nVersionMinor = 1;
+            memset (&param, 0, sizeof (param));
+            param.nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
+            param.nVersion.s.nVersionMajor = 1;
+            param.nVersion.s.nVersionMinor = 1;
 
-            param->nPortIndex = 0;
-            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, param);
+            param.nPortIndex = 0;
+            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
 
-            param->nChannels = channels;
-            param->eNumData = is_signed ? OMX_NumericalDataSigned : OMX_NumericalDataUnsigned;
-            param->eEndian = is_bigendian ? OMX_EndianBig : OMX_EndianLittle;
-            param->nBitPerSample = width;
-            param->nSamplingRate = rate;
+            param.nChannels = channels;
+            param.eNumData = is_signed ? OMX_NumericalDataSigned : OMX_NumericalDataUnsigned;
+            param.eEndian = is_bigendian ? OMX_EndianBig : OMX_EndianLittle;
+            param.nBitPerSample = width;
+            param.nSamplingRate = rate;
 
-            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, param);
+            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
         }
     }
 

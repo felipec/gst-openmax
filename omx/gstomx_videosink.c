@@ -23,8 +23,7 @@
 #include "gstomx_base_sink.h"
 #include "gstomx.h"
 
-#include <stdlib.h> /* For calloc, free */
-#include <string.h> /* For strcmp */
+#include <string.h> /* for memset, strcmp */
 
 #define OMX_COMPONENT_NAME "OMX.st.videosink"
 
@@ -164,81 +163,75 @@ setcaps (GstBaseSink *gst_sink,
         }
 
         {
-            OMX_PARAM_PORTDEFINITIONTYPE *param;
+            OMX_PARAM_PORTDEFINITIONTYPE param;
 
-            param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
-            param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-            param->nVersion.s.nVersionMajor = 1;
-            param->nVersion.s.nVersionMinor = 1;
+            memset (&param, 0, sizeof (param));
+            param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
+            param.nVersion.s.nVersionMajor = 1;
+            param.nVersion.s.nVersionMinor = 1;
 
-            param->nPortIndex = 0;
-            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+            param.nPortIndex = 0;
+            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
 
             switch (color_format)
             {
                 case OMX_COLOR_FormatYUV420Planar:
-                    param->nBufferSize = (width * height * 1.5);
+                    param.nBufferSize = (width * height * 1.5);
                     break;
                 case OMX_COLOR_FormatYCbYCr:
                 case OMX_COLOR_FormatCbYCrY:
-                    param->nBufferSize = (width * height * 2);
+                    param.nBufferSize = (width * height * 2);
                     break;
                 default:
                   break;
             }
 
-            param->format.video.nFrameWidth = width;
-            param->format.video.nFrameHeight = height;
-            param->format.video.eCompressionFormat = OMX_VIDEO_CodingUnused;
-            param->format.video.eColorFormat = color_format;
+            param.format.video.nFrameWidth = width;
+            param.format.video.nFrameHeight = height;
+            param.format.video.eCompressionFormat = OMX_VIDEO_CodingUnused;
+            param.format.video.eColorFormat = color_format;
             if (framerate)
             {
                 /* convert to Q.16 */
-                param->format.video.xFramerate =
+                param.format.video.xFramerate =
                     (gst_value_get_fraction_numerator (framerate) << 16) /
                     gst_value_get_fraction_denominator (framerate);
             }
 
-            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
-
-            free (param);
+            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
         }
 
         {
-            OMX_CONFIG_ROTATIONTYPE *config;
+            OMX_CONFIG_ROTATIONTYPE config;
 
-            config = calloc (1, sizeof (OMX_CONFIG_ROTATIONTYPE));
-            config->nSize = sizeof (OMX_CONFIG_ROTATIONTYPE);
-            config->nVersion.s.nVersionMajor = 1;
-            config->nVersion.s.nVersionMinor = 1;
+            memset (&config, 0, sizeof (config));
+            config.nSize = sizeof (OMX_CONFIG_ROTATIONTYPE);
+            config.nVersion.s.nVersionMajor = 1;
+            config.nVersion.s.nVersionMinor = 1;
 
-            config->nPortIndex = 0;
-            OMX_GetConfig (gomx->omx_handle, OMX_IndexConfigCommonScale, config);
+            config.nPortIndex = 0;
+            OMX_GetConfig (gomx->omx_handle, OMX_IndexConfigCommonScale, &config);
 
-            config->nRotation = self->rotation;
+            config.nRotation = self->rotation;
 
-            OMX_SetConfig (gomx->omx_handle, OMX_IndexConfigCommonRotate, config);
-
-            free (config);
+            OMX_SetConfig (gomx->omx_handle, OMX_IndexConfigCommonRotate, &config);
         }
 
         {
-            OMX_CONFIG_SCALEFACTORTYPE *config;
+            OMX_CONFIG_SCALEFACTORTYPE config;
 
-            config = calloc (1, sizeof (OMX_CONFIG_SCALEFACTORTYPE));
-            config->nSize = sizeof (OMX_CONFIG_SCALEFACTORTYPE);
-            config->nVersion.s.nVersionMajor = 1;
-            config->nVersion.s.nVersionMinor = 1;
+            memset (&config, 0, sizeof (config));
+            config.nSize = sizeof (OMX_CONFIG_SCALEFACTORTYPE);
+            config.nVersion.s.nVersionMajor = 1;
+            config.nVersion.s.nVersionMinor = 1;
 
-            config->nPortIndex = 0;
-            OMX_GetConfig (gomx->omx_handle, OMX_IndexConfigCommonScale, config);
+            config.nPortIndex = 0;
+            OMX_GetConfig (gomx->omx_handle, OMX_IndexConfigCommonScale, &config);
 
-            config->xWidth = self->x_scale;
-            config->xHeight = self->y_scale;
+            config.xWidth = self->x_scale;
+            config.xHeight = self->y_scale;
 
-            OMX_SetConfig (gomx->omx_handle, OMX_IndexConfigCommonScale, config);
-
-            free (config);
+            OMX_SetConfig (gomx->omx_handle, OMX_IndexConfigCommonScale, &config);
         }
     }
 

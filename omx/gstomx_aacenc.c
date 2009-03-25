@@ -23,7 +23,7 @@
 #include "gstomx_base_filter.h"
 #include "gstomx.h"
 
-#include <stdlib.h> /* For calloc, free */
+#include <string.h> /* for memset */
 
 #define OMX_COMPONENT_NAME "OMX.st.audio_encoder.aac"
 
@@ -304,22 +304,20 @@ sink_setcaps (GstPad *pad,
 
     /* Input port configuration. */
     {
-        OMX_AUDIO_PARAM_PCMMODETYPE *param;
+        OMX_AUDIO_PARAM_PCMMODETYPE param;
 
-        param = calloc (1, sizeof (OMX_AUDIO_PARAM_PCMMODETYPE));
-        param->nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
-        param->nVersion.s.nVersionMajor = 1;
-        param->nVersion.s.nVersionMinor = 1;
+        memset (&param, 0, sizeof (param));
+        param.nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
+        param.nVersion.s.nVersionMajor = 1;
+        param.nVersion.s.nVersionMinor = 1;
 
-        param->nPortIndex = 0;
-        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, param);
+        param.nPortIndex = 0;
+        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
 
-        param->nSamplingRate = rate;
-        param->nChannels = channels;
+        param.nSamplingRate = rate;
+        param.nChannels = channels;
 
-        OMX_SetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, param);
-
-        free (param);
+        OMX_SetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
     }
 
     {
@@ -352,68 +350,64 @@ omx_setup (GstOmxBaseFilter *omx_base)
     GST_INFO_OBJECT (omx_base, "begin");
 
     {
-        OMX_AUDIO_PARAM_AACPROFILETYPE *param;
+        OMX_AUDIO_PARAM_AACPROFILETYPE param;
 
-        param = calloc (1, sizeof (OMX_AUDIO_PARAM_AACPROFILETYPE));
-        param->nSize = sizeof (OMX_AUDIO_PARAM_AACPROFILETYPE);
-        param->nVersion.s.nVersionMajor = 1;
-        param->nVersion.s.nVersionMinor = 1;
+        memset (&param, 0, sizeof (param));
+        param.nSize = sizeof (OMX_AUDIO_PARAM_AACPROFILETYPE);
+        param.nVersion.s.nVersionMajor = 1;
+        param.nVersion.s.nVersionMinor = 1;
 
         /* Output port configuration. */
         {
-            param->nPortIndex = 1;
-            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioAac, param);
+            param.nPortIndex = 1;
+            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioAac, &param);
 
             GST_DEBUG_OBJECT (omx_base, "setting bitrate: %i", self->bitrate);
-            param->nBitRate = self->bitrate;
+            param.nBitRate = self->bitrate;
 
             GST_DEBUG_OBJECT (omx_base, "setting profile: %i", self->profile);
-            param->eAACProfile = self->profile;
+            param.eAACProfile = self->profile;
 
             GST_DEBUG_OBJECT (omx_base, "setting output format: %i",
                               self->output_format);
-            param->eAACStreamFormat = self->output_format;
+            param.eAACStreamFormat = self->output_format;
 
-            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioAac, param);
+            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioAac, &param);
         }
     }
 
     /* some workarounds. */
 #if 0
     {
-        OMX_AUDIO_PARAM_PCMMODETYPE *param;
+        OMX_AUDIO_PARAM_PCMMODETYPE param;
 
-        param = calloc (1, sizeof (OMX_AUDIO_PARAM_PCMMODETYPE));
-        param->nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
-        param->nVersion.s.nVersionMajor = 1;
-        param->nVersion.s.nVersionMinor = 1;
+        memset (&param, 0, sizeof (param));
+        param.nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
+        param.nVersion.s.nVersionMajor = 1;
+        param.nVersion.s.nVersionMinor = 1;
 
-        param->nPortIndex = 0;
-        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, param);
+        param.nPortIndex = 0;
+        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
 
-        rate = param->nSamplingRate;
-        channels = param->nChannels;
-
-        free (param);
+        rate = param.nSamplingRate;
+        channels = param.nChannels;
     }
 
     {
-        OMX_AUDIO_PARAM_AACPROFILETYPE *param;
+        OMX_AUDIO_PARAM_AACPROFILETYPE param;
 
-        param = calloc (1, sizeof (OMX_AUDIO_PARAM_AACPROFILETYPE));
-        param->nSize = sizeof (OMX_AUDIO_PARAM_AACPROFILETYPE);
-        param->nVersion.s.nVersionMajor = 1;
-        param->nVersion.s.nVersionMinor = 1;
+        memset (&param, 0, sizeof (param));
+        param.nSize = sizeof (OMX_AUDIO_PARAM_AACPROFILETYPE);
+        param.nVersion.s.nVersionMajor = 1;
+        param.nVersion.s.nVersionMinor = 1;
 
-        param->nPortIndex = 1;
-        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioAac, param);
+        param.nPortIndex = 1;
+        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioAac, &param);
 
-        param->nSampleRate = rate;
-        param->nChannels = channels;
+        param.nSampleRate = rate;
+        param.nChannels = channels;
 
-        OMX_SetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioAac, param);
-
-        free (param);
+        OMX_SetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioAac, &param);
     }
 #endif
 

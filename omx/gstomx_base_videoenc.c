@@ -22,8 +22,7 @@
 #include "gstomx_base_videoenc.h"
 #include "gstomx.h"
 
-#include <stdlib.h> /* For calloc, free */
-#include <string.h> /* For strcmp */
+#include <string.h> /* for memset, strcmp */
 
 enum
 {
@@ -216,32 +215,30 @@ sink_setcaps (GstPad *pad,
     }
 
     {
-        OMX_PARAM_PORTDEFINITIONTYPE *param;
-        param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
-        param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-        param->nVersion.s.nVersionMajor = 1;
-        param->nVersion.s.nVersionMinor = 1;
+        OMX_PARAM_PORTDEFINITIONTYPE param;
+        memset (&param, 0, sizeof (param));
+        param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
+        param.nVersion.s.nVersionMajor = 1;
+        param.nVersion.s.nVersionMinor = 1;
 
         /* Input port configuration. */
         {
-            param->nPortIndex = 0;
-            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+            param.nPortIndex = 0;
+            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
 
-            param->format.video.nFrameWidth = width;
-            param->format.video.nFrameHeight = height;
-            param->format.video.eColorFormat = color_format;
+            param.format.video.nFrameWidth = width;
+            param.format.video.nFrameHeight = height;
+            param.format.video.eColorFormat = color_format;
             if (framerate)
             {
                 /* convert to Q.16 */
-                param->format.video.xFramerate =
+                param.format.video.xFramerate =
                     (gst_value_get_fraction_numerator (framerate) << 16) /
                     gst_value_get_fraction_denominator (framerate);
             }
 
-            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
         }
-
-        free (param);
     }
 
     return gst_pad_set_caps (pad, caps);
@@ -259,27 +256,25 @@ omx_setup (GstOmxBaseFilter *omx_base)
     GST_INFO_OBJECT (omx_base, "begin");
 
     {
-        OMX_PARAM_PORTDEFINITIONTYPE *param;
+        OMX_PARAM_PORTDEFINITIONTYPE param;
 
-        param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
-        param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-        param->nVersion.s.nVersionMajor = 1;
-        param->nVersion.s.nVersionMinor = 1;
+        memset (&param, 0, sizeof (param));
+        param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
+        param.nVersion.s.nVersionMajor = 1;
+        param.nVersion.s.nVersionMinor = 1;
 
         /* Output port configuration. */
         {
-            param->nPortIndex = 1;
-            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+            param.nPortIndex = 1;
+            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
 
-            param->format.video.eCompressionFormat = self->compression_format;
+            param.format.video.eCompressionFormat = self->compression_format;
 
             /** @todo this should be set with a property */
-            param->format.video.nBitrate = self->bitrate;
+            param.format.video.nBitrate = self->bitrate;
 
-            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, param);
+            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
         }
-
-        free (param);
     }
 
     GST_INFO_OBJECT (omx_base, "end");

@@ -23,8 +23,7 @@
 #include "gstomx_base_filter.h"
 #include "gstomx.h"
 
-#include <stdlib.h> /* For calloc, free */
-#include <string.h> /* For strcmp */
+#include <string.h> /* for memset, strcmp */
 
 #define OMX_COMPONENT_NAME "OMX.st.audio_decoder.g711"
 
@@ -143,24 +142,22 @@ sink_setcaps (GstPad *pad,
 
     /* Output port configuration. */
     {
-        OMX_AUDIO_PARAM_PCMMODETYPE *param;
+        OMX_AUDIO_PARAM_PCMMODETYPE param;
 
-        param = calloc (1, sizeof (OMX_AUDIO_PARAM_PCMMODETYPE));
-        param->nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
-        param->nVersion.s.nVersionMajor = 1;
-        param->nVersion.s.nVersionMinor = 1;
+        memset (&param, 0, sizeof (param));
+        param.nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
+        param.nVersion.s.nVersionMajor = 1;
+        param.nVersion.s.nVersionMinor = 1;
 
-        param->nPortIndex = 0;
-        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, param);
+        param.nPortIndex = 0;
+        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
 
         if (strcmp (mode, "audio/x-alaw") == 0)
-            param->ePCMMode = OMX_AUDIO_PCMModeALaw;
+            param.ePCMMode = OMX_AUDIO_PCMModeALaw;
         else if (strcmp (mode, "audio/x-mulaw") == 0)
-            param->ePCMMode = OMX_AUDIO_PCMModeMULaw;
+            param.ePCMMode = OMX_AUDIO_PCMModeMULaw;
 
-        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, param);
-
-        free (param);
+        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
     }
 
     /* set caps on the srcpad */

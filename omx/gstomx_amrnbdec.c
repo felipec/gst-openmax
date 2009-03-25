@@ -23,7 +23,7 @@
 #include "gstomx_base_filter.h"
 #include "gstomx.h"
 
-#include <stdlib.h> /* For calloc, free */
+#include <string.h> /* for memset */
 
 #define OMX_COMPONENT_NAME "OMX.st.audio_decoder.amrnb"
 
@@ -117,20 +117,18 @@ settings_changed_cb (GOmxCore *core)
     GST_DEBUG_OBJECT (omx_base, "settings changed");
 
     {
-        OMX_AUDIO_PARAM_PCMMODETYPE *param;
+        OMX_AUDIO_PARAM_PCMMODETYPE param;
 
-        param = calloc (1, sizeof (OMX_AUDIO_PARAM_PCMMODETYPE));
-        param->nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
-        param->nVersion.s.nVersionMajor = 1;
-        param->nVersion.s.nVersionMinor = 1;
+        memset (&param, 0, sizeof (param));
+        param.nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
+        param.nVersion.s.nVersionMajor = 1;
+        param.nVersion.s.nVersionMinor = 1;
 
-        param->nPortIndex = 1;
-        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, param);
+        param.nPortIndex = 1;
+        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
 
-        rate = param->nSamplingRate;
-        channels = param->nChannels;
-
-        free (param);
+        rate = param.nSamplingRate;
+        channels = param.nChannels;
     }
 
     {

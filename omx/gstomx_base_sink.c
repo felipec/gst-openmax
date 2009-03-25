@@ -23,8 +23,7 @@
 #include "gstomx.h"
 #include "gstomx_interface.h"
 
-#include <stdlib.h> /* For calloc, free */
-#include <string.h> /* For memcpy */
+#include <string.h> /* for memset, memcpy */
 
 static gboolean share_input_buffer;
 
@@ -41,23 +40,21 @@ static void
 setup_ports (GstOmxBaseSink *self)
 {
     GOmxCore *core;
-    OMX_PARAM_PORTDEFINITIONTYPE *param;
+    OMX_PARAM_PORTDEFINITIONTYPE param;
 
     core = self->gomx;
 
-    param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
-    param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-    param->nVersion.s.nVersionMajor = 1;
-    param->nVersion.s.nVersionMinor = 1;
+    memset (&param, 0, sizeof (param));
+    param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
+    param.nVersion.s.nVersionMajor = 1;
+    param.nVersion.s.nVersionMinor = 1;
 
     /* Input port configuration. */
 
-    param->nPortIndex = 0;
-    OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, param);
-    self->in_port = g_omx_core_setup_port (core, param);
+    param.nPortIndex = 0;
+    OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, &param);
+    self->in_port = g_omx_core_setup_port (core, &param);
     gst_pad_set_element_private (self->sinkpad, self->in_port);
-
-    free (param);
 }
 
 static gboolean

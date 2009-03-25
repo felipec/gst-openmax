@@ -22,8 +22,7 @@
 #include "gstomx_base_src.h"
 #include "gstomx.h"
 
-#include <stdlib.h> /* For calloc, free */
-#include <string.h> /* For memcpy */
+#include <string.h> /* for memset, memcpy */
 
 enum
 {
@@ -38,22 +37,20 @@ static void
 setup_ports (GstOmxBaseSrc *self)
 {
     GOmxCore *core;
-    OMX_PARAM_PORTDEFINITIONTYPE *param;
+    OMX_PARAM_PORTDEFINITIONTYPE param;
 
     core = self->gomx;
 
-    param = calloc (1, sizeof (OMX_PARAM_PORTDEFINITIONTYPE));
-    param->nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-    param->nVersion.s.nVersionMajor = 1;
-    param->nVersion.s.nVersionMinor = 1;
+    memset (&param, 0, sizeof (param));
+    param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
+    param.nVersion.s.nVersionMajor = 1;
+    param.nVersion.s.nVersionMinor = 1;
 
     /* Input port configuration. */
 
-    param->nPortIndex = 0;
-    OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, param);
-    self->out_port = g_omx_core_setup_port (core, param);
-
-    free (param);
+    param.nPortIndex = 0;
+    OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, &param);
+    self->out_port = g_omx_core_setup_port (core, &param);
 
     if (self->setup_ports)
     {
