@@ -42,6 +42,7 @@ struct GstOmxBaseVideoEnc
     guint bitrate;
     gint framerate_num;
     gint framerate_denom;
+    GstOmxBaseFilterCb omx_setup;
 };
 
 struct GstOmxBaseVideoEncClass

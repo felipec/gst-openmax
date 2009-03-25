@@ -77,6 +77,20 @@ type_class_init (gpointer g_class,
 }
 
 static void
+omx_setup (GstOmxBaseFilter *omx_base)
+{
+    GstOmxBaseVideoEnc *self;
+    GOmxCore *gomx;
+
+    self = GST_OMX_BASE_VIDEOENC (omx_base);
+    gomx = (GOmxCore *) omx_base->gomx;
+
+    GST_INFO_OBJECT (omx_base, "begin");
+
+    GST_INFO_OBJECT (omx_base, "end");
+}
+
+static void
 settings_changed_cb (GOmxCore *core)
 {
     GstOmxBaseVideoEnc *omx_base;
@@ -128,6 +142,8 @@ type_instance_init (GTypeInstance *instance,
 
     omx_base_filter = GST_OMX_BASE_FILTER (instance);
     omx_base = GST_OMX_BASE_VIDEOENC (instance);
+
+    omx_base->omx_setup = omx_setup;
 
     omx_base->compression_format = OMX_VIDEO_CodingAVC;
 

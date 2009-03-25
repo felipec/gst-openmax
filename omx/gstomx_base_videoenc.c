@@ -326,6 +326,9 @@ omx_setup (GstOmxBaseFilter *omx_base)
         }
     }
 
+    if (self->omx_setup)
+        self->omx_setup (GST_OMX_BASE_FILTER (self));
+
     GST_INFO_OBJECT (omx_base, "end");
 }
 
