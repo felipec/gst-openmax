@@ -648,27 +648,26 @@ pad_chain (GstPad *pad,
         gst_buffer_unref (buf);
     }
 
+leave:
+
     GST_LOG_OBJECT (self, "end");
 
     return ret;
 
     /* special conditions */
-out_flushing:
-    {
-        if (gomx->omx_error)
-        {
-            GST_ELEMENT_ERROR (self, STREAM, FAILED, (NULL),
-                               ("Component in invalid state"));
-            self->last_pad_push_return = GST_FLOW_ERROR;
-        }
-        gst_buffer_unref (buf);
-        return self->last_pad_push_return;
-    }
 fail_omx_state:
+    GST_DEBUG_OBJECT (self, "OMX component state change interrupted");
+
+out_flushing:
+    if (gomx->omx_error)
     {
-        GST_DEBUG_OBJECT (self, "OMX component state change interrupted");
-        goto out_flushing;
+        GST_ELEMENT_ERROR (self, STREAM, FAILED, (NULL),
+                           ("Error from OpenMAX detected"));
+        ret = GST_FLOW_ERROR;
     }
+    gst_buffer_unref (buf);
+
+    goto leave;
 }
 
 static gboolean

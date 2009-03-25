@@ -217,7 +217,10 @@ g_omx_init (void)
     {
         /* safe as plugin_init is safe */
         imp_mutex = g_mutex_new ();
-        implementations = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) imp_free);
+        implementations = g_hash_table_new_full (g_str_hash,
+                                                 g_str_equal,
+                                                 g_free,
+                                                 (GDestroyNotify) imp_free);
         initialized = TRUE;
     }
 }
@@ -286,7 +289,10 @@ g_omx_core_init (GOmxCore *core,
         return;
     }
 
-    core->omx_error = core->imp->sym_table.get_handle (&core->omx_handle, (gchar *) component_name, core, &callbacks);
+    core->omx_error = core->imp->sym_table.get_handle (&core->omx_handle,
+                                                       (gchar *) component_name,
+                                                       core,
+                                                       &callbacks);
     core->omx_state = OMX_StateLoaded;
 }
 
@@ -363,29 +369,28 @@ gboolean
 g_omx_core_finish (GOmxCore *core)
 {
     /* if component in error, do not expect it to handle state change */
-    if (!core->omx_error) {
+    if (!core->omx_error)
+    {
         change_state (core, OMX_StateIdle);
         if (!wait_for_state (core, OMX_StateIdle))
-            goto fail;
+            return FALSE;
     }
 
     if (!core->omx_error)
         change_state (core, OMX_StateLoaded);
+
     core_for_each_port (core, port_free_buffers);
-    if (!core->omx_error) {
+
+    if (!core->omx_error)
+    {
         if (!wait_for_state (core, OMX_StateLoaded))
-            goto fail;
+            return FALSE;
     }
 
     core_for_each_port (core, g_omx_port_free);
     g_ptr_array_clear (core->ports);
 
     return TRUE;
-
-fail:
-    {
-        return FALSE;
-    }
 }
 
 GOmxPort *
@@ -910,7 +915,7 @@ EventHandler (OMX_HANDLETYPE omx_handle,
                         /* component might leave us waiting for buffers, unblock */
                         g_omx_core_flush_start (core);
                         core->omx_error = data_1;
-                        GST_ERROR ("unrecoverable error");
+                        GST_ERROR ("unrecoverable error: %lx", data_1);
                         break;
                     default:
                         /* might be common, let's not cause panic by _ERROR */
