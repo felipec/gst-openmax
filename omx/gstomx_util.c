@@ -905,6 +905,8 @@ EventHandler (OMX_HANDLETYPE omx_handle,
                     case OMX_ErrorInvalidState:
                     case OMX_ErrorInsufficientResources:
                     case OMX_ErrorFormatNotDetected:
+                    case OMX_ErrorNotImplemented:
+                    case OMX_ErrorHardware:
                         /* component might leave us waiting for buffers, unblock */
                         g_omx_core_flush_start (core);
                         core->omx_error = data_1;
