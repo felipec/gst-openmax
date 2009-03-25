@@ -124,7 +124,7 @@ settings_changed_cb (GOmxCore *core)
         height = param.format.video.nFrameHeight;
         switch (param.format.video.eColorFormat)
         {
-            case OMX_COLOR_FormatYUV420Planar:
+            case OMX_COLOR_FormatYUV420PackedPlanar:
                 format = GST_MAKE_FOURCC ('I', '4', '2', '0'); break;
             case OMX_COLOR_FormatYCbYCr:
                 format = GST_MAKE_FOURCC ('Y', 'U', 'Y', '2'); break;
@@ -286,7 +286,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
                     case OMX_COLOR_FormatCbYCrY:
                         param.nBufferSize = (width * height) * 2;
                         break;
-                    case OMX_COLOR_FormatYUV420Planar:
+                    case OMX_COLOR_FormatYUV420PackedPlanar:
                         param.nBufferSize = (width * height) * 3 / 2;
                         break;
                     default:

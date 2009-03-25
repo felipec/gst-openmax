@@ -202,7 +202,7 @@ sink_setcaps (GstPad *pad,
             switch (fourcc)
             {
                 case GST_MAKE_FOURCC ('I', '4', '2', '0'):
-                    color_format = OMX_COLOR_FormatYUV420Planar;
+                    color_format = OMX_COLOR_FormatYUV420PackedPlanar;
                     break;
                 case GST_MAKE_FOURCC ('Y', 'U', 'Y', '2'):
                     color_format = OMX_COLOR_FormatYCbYCr;
@@ -299,7 +299,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
                     case OMX_COLOR_FormatCbYCrY:
                         param.nBufferSize = (width * height) * 2;
                         break;
-                    case OMX_COLOR_FormatYUV420Planar:
+                    case OMX_COLOR_FormatYUV420PackedPlanar:
                         param.nBufferSize = (width * height) * 3 / 2;
                         break;
                     default:
