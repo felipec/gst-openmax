@@ -202,7 +202,7 @@ sink_setcaps (GstPad *pad,
             switch (fourcc)
             {
                 case GST_MAKE_FOURCC ('I', '4', '2', '0'):
-                    color_format = OMX_COLOR_FormatYUV420Planar;
+                    color_format = OMX_COLOR_FormatYUV420PackedPlanar;
                     break;
                 case GST_MAKE_FOURCC ('Y', 'U', 'Y', '2'):
                     color_format = OMX_COLOR_FormatYCbYCr;
