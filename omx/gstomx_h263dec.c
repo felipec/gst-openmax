@@ -38,7 +38,7 @@ generate_sink_template (void)
                                "variant", G_TYPE_STRING, "itu",
                                "width", GST_TYPE_INT_RANGE, 16, 4096,
                                "height", GST_TYPE_INT_RANGE, 16, 4096,
-                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
+                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, G_MAXINT, 1,
                                NULL);
 
     gst_caps_append_structure (caps, struc);

@@ -39,7 +39,7 @@ generate_sink_template (void)
                                "systemstream", G_TYPE_BOOLEAN, FALSE,
                                "width", GST_TYPE_INT_RANGE, 16, 4096,
                                "height", GST_TYPE_INT_RANGE, 16, 4096,
-                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
+                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, G_MAXINT, 1,
                                NULL);
 
     gst_caps_append_structure (caps, struc);
@@ -48,7 +48,7 @@ generate_sink_template (void)
                                "divxversion", GST_TYPE_INT_RANGE, 4, 5,
                                "width", GST_TYPE_INT_RANGE, 16, 4096,
                                "height", GST_TYPE_INT_RANGE, 16, 4096,
-                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
+                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, G_MAXINT, 1,
                                NULL);
 
     gst_caps_append_structure (caps, struc);
@@ -56,7 +56,7 @@ generate_sink_template (void)
     struc = gst_structure_new ("video/x-xvid",
                                "width", GST_TYPE_INT_RANGE, 16, 4096,
                                "height", GST_TYPE_INT_RANGE, 16, 4096,
-                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
+                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, G_MAXINT, 1,
                                NULL);
 
     gst_caps_append_structure (caps, struc);
@@ -64,7 +64,7 @@ generate_sink_template (void)
     struc = gst_structure_new ("video/x-3ivx",
                                "width", GST_TYPE_INT_RANGE, 16, 4096,
                                "height", GST_TYPE_INT_RANGE, 16, 4096,
-                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, 100, 1,
+                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, G_MAXINT, 1,
                                NULL);
 
     gst_caps_append_structure (caps, struc);
