@@ -24,7 +24,6 @@
 
 #include <stdlib.h> /* For calloc, free */
 #include <string.h> /* For memcpy */
-#include <stdbool.h>
 
 enum
 {
@@ -77,7 +76,7 @@ start (GstBaseSrc *gst_base)
 
     GST_LOG_OBJECT (self, "end");
 
-    return true;
+    return TRUE;
 }
 
 static gboolean
@@ -97,7 +96,7 @@ stop (GstBaseSrc *gst_base)
 
     GST_LOG_OBJECT (self, "end");
 
-    return true;
+    return TRUE;
 }
 
 static void
@@ -350,7 +349,7 @@ handle_event (GstBaseSrc *gst_base,
 
     GST_LOG_OBJECT (self, "end");
 
-    return true;
+    return TRUE;
 }
 
 static void

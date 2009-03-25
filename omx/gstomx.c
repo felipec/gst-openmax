@@ -53,8 +53,6 @@
 
 #include "config.h"
 
-#include <stdbool.h>
-
 GST_DEBUG_CATEGORY (gstomx_debug);
 
 #define DEFAULT_RANK GST_RANK_PRIMARY
@@ -69,155 +67,155 @@ plugin_init (GstPlugin *plugin)
 
     if (!gst_element_register (plugin, "omx_dummy", GST_RANK_NONE, GST_OMX_DUMMY_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_mpeg4dec", DEFAULT_RANK, GST_OMX_MPEG4DEC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_h263dec", DEFAULT_RANK, GST_OMX_H263DEC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_h264dec", DEFAULT_RANK, GST_OMX_H264DEC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_wmvdec", DEFAULT_RANK, GST_OMX_WMVDEC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_mpeg4enc", DEFAULT_RANK, GST_OMX_MPEG4ENC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_h264enc", DEFAULT_RANK, GST_OMX_H264ENC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_h263enc", DEFAULT_RANK, GST_OMX_H263ENC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_vorbisdec", DEFAULT_RANK, GST_OMX_VORBISDEC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_mp3dec", DEFAULT_RANK, GST_OMX_MP3DEC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_mp2dec", DEFAULT_RANK, GST_OMX_MP2DEC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_amrnbdec", DEFAULT_RANK, GST_OMX_AMRNBDEC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_amrnbenc", DEFAULT_RANK, GST_OMX_AMRNBENC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_amrwbdec", DEFAULT_RANK, GST_OMX_AMRWBDEC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_amrwbenc", DEFAULT_RANK, GST_OMX_AMRWBENC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_aacdec", DEFAULT_RANK, GST_OMX_AACDEC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_aacenc", DEFAULT_RANK, GST_OMX_AACENC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_adpcmdec", DEFAULT_RANK, GST_OMX_ADPCMDEC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_adpcmenc", DEFAULT_RANK, GST_OMX_ADPCMENC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_g711dec", DEFAULT_RANK, GST_OMX_G711DEC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_g711enc", DEFAULT_RANK, GST_OMX_G711ENC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_g729dec", DEFAULT_RANK, GST_OMX_G729DEC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_g729enc", DEFAULT_RANK, GST_OMX_G729ENC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_ilbcdec", DEFAULT_RANK, GST_OMX_ILBCDEC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_ilbcenc", DEFAULT_RANK, GST_OMX_ILBCENC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_jpegenc", DEFAULT_RANK, GST_OMX_JPEGENC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_audiosink", GST_RANK_NONE, GST_OMX_AUDIOSINK_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_videosink", GST_RANK_NONE, GST_OMX_VIDEOSINK_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_filereadersrc", GST_RANK_NONE, GST_OMX_FILEREADERSRC_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
     if (!gst_element_register (plugin, "omx_volume", GST_RANK_NONE, GST_OMX_VOLUME_TYPE))
     {
-        return false;
+        return FALSE;
     }
 
-    return true;
+    return TRUE;
 }
 
 GST_PLUGIN_DEFINE (GST_VERSION_MAJOR,

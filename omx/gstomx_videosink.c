@@ -25,7 +25,6 @@
 
 #include <stdlib.h> /* For calloc, free */
 #include <string.h> /* For strcmp */
-#include <stdbool.h>
 
 #define OMX_COMPONENT_NAME "OMX.st.videosink"
 
@@ -243,7 +242,7 @@ setcaps (GstBaseSink *gst_sink,
         }
     }
 
-    return true;
+    return TRUE;
 }
 
 static void

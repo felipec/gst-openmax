@@ -218,7 +218,7 @@ g_omx_init (void)
         /* safe as plugin_init is safe */
         imp_mutex = g_mutex_new ();
         implementations = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) imp_free);
-        initialized = true;
+        initialized = TRUE;
     }
 }
 
@@ -229,7 +229,7 @@ g_omx_deinit (void)
     {
         g_hash_table_destroy (implementations);
         g_mutex_free (imp_mutex);
-        initialized = false;
+        initialized = FALSE;
     }
 }
 

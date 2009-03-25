@@ -88,7 +88,7 @@ setcaps (GstBaseSrc *gst_src,
 
     g_return_val_if_fail (gst_caps_get_size (caps) == 1, FALSE);
 
-    return true;
+    return TRUE;
 }
 
 static void
