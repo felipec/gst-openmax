@@ -61,6 +61,24 @@ setup_ports (GstOmxBaseFilter *self)
     OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, &param);
     self->out_port = g_omx_core_setup_port (core, &param);
     gst_pad_set_element_private (self->srcpad, self->out_port);
+
+    if (g_getenv ("OMX_ALLOCATE_ON"))
+    {
+        self->in_port->omx_allocate = TRUE;
+        self->out_port->omx_allocate = TRUE;
+        self->share_input_buffer = FALSE;
+        self->share_output_buffer = FALSE;
+    }
+    else if (g_getenv ("OMX_SHARE_HACK_ON"))
+    {
+        self->share_input_buffer = TRUE;
+        self->share_output_buffer = TRUE;
+    }
+    else if (g_getenv ("OMX_SHARE_HACK_OFF"))
+    {
+        self->share_input_buffer = FALSE;
+        self->share_output_buffer = FALSE;
+    }
 }
 
 static GstStateChangeReturn
