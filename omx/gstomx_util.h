@@ -106,6 +106,7 @@ struct GOmxPort
 
     GMutex *mutex;
     gboolean enabled;
+    gboolean omx_allocate; /**< Setup with OMX_AllocateBuffer rather than OMX_UseBuffer */
     AsyncQueue *queue;
 };
 

@@ -30,8 +30,6 @@ GST_DEBUG_CATEGORY (gstomx_util_debug);
 #undef GST_CAT_DEFAULT
 #define GST_CAT_DEFAULT gstomx_util_debug
 
-/* #define USE_ALLOCATE_BUFFER */
-
 /*
  * Forward declarations
  */
@@ -526,26 +524,29 @@ port_allocate_buffers (GOmxPort *port)
 
     for (i = 0; i < port->num_buffers; i++)
     {
-        gpointer buffer_data;
         guint size;
 
         size = port->buffer_size;
-        buffer_data = g_malloc (size);
 
-#ifdef USE_ALLOCATE_BUFFER
-        OMX_AllocateBuffer (port->core->omx_handle,
-                            &port->buffers[i],
-                            port->port_index,
-                            NULL,
-                            size);
-#else
-        OMX_UseBuffer (port->core->omx_handle,
-                       &port->buffers[i],
-                       port->port_index,
-                       NULL,
-                       size,
-                       buffer_data);
-#endif /* USE_ALLOCATE_BUFFER */
+        if (port->omx_allocate)
+        {
+            OMX_AllocateBuffer (port->core->omx_handle,
+                                &port->buffers[i],
+                                port->port_index,
+                                NULL,
+                                size);
+        }
+        else
+        {
+            gpointer buffer_data;
+            buffer_data = g_malloc (size);
+            OMX_UseBuffer (port->core->omx_handle,
+                           &port->buffers[i],
+                           port->port_index,
+                           NULL,
+                           size,
+                           buffer_data);
+        }
     }
 }
 
@@ -562,11 +563,11 @@ port_free_buffers (GOmxPort *port)
 
         if (omx_buffer)
         {
-#if 0
-            /** @todo how shall we free that buffer? */
-            g_free (omx_buffer->pBuffer);
-            omx_buffer->pBuffer = NULL;
-#endif
+            if (!port->omx_allocate)
+            {
+                g_free (omx_buffer->pBuffer);
+                omx_buffer->pBuffer = NULL;
+            }
 
             OMX_FreeBuffer (port->core->omx_handle, port->port_index, omx_buffer);
             port->buffers[i] = NULL;
