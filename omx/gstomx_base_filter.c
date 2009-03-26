@@ -402,11 +402,13 @@ output_loop (gpointer data)
                     if (self->share_output_buffer)
                     {
                         GST_WARNING_OBJECT (self, "couldn't zero-copy");
-                        /** @todo only the first buffer must be freed (the one
-                         * allocated by us), the rest are allocated by the next
-                         * element. */
-                        /* g_free (omx_buffer->pBuffer); */
-                        omx_buffer->pBuffer = NULL;
+                        /* If pAppPrivate is NULL, it means it was a dummy
+                         * allocation, free it. */
+                        if (!omx_buffer->pAppPrivate)
+                        {
+                            g_free (omx_buffer->pBuffer);
+                            omx_buffer->pBuffer = NULL;
+                        }
                     }
 
                     ret = push_buffer (self, buf);
