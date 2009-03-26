@@ -902,6 +902,7 @@ EventHandler (OMX_HANDLETYPE omx_handle,
                 {
                     core->settings_changed_cb (core);
                 }
+                break;
             }
         case OMX_EventError:
             {
@@ -922,6 +923,7 @@ EventHandler (OMX_HANDLETYPE omx_handle,
                         GST_WARNING ("unhandled error: %lx", data_1);
                         break;
                 }
+                break;
             }
         default:
             break;
