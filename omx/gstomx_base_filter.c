@@ -540,7 +540,10 @@ pad_chain (GstPad *pad,
         setup_ports (self);
 
         if (!g_omx_core_prepare (self->gomx))
+        {
+            g_mutex_unlock (self->ready_lock);
             goto fail_omx_state;
+        }
 
         self->ready = TRUE;
         gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
