@@ -352,7 +352,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
         param.nQFactor = self->quality;
         param.nPortIndex = 1;
 
-        OMX_SetConfig (gomx->omx_handle, OMX_IndexParamQFactor, &param);
+        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamQFactor, &param);
     }
 
     GST_INFO_OBJECT (omx_base, "end");
