@@ -22,8 +22,6 @@
 #include "gstomx_h263dec.h"
 #include "gstomx.h"
 
-#define OMX_COMPONENT_NAME "OMX.st.video_decoder.h263"
-
 static GstOmxBaseVideoDecClass *parent_class;
 
 static GstCaps *
@@ -92,7 +90,6 @@ type_instance_init (GTypeInstance *instance,
     omx_base_filter = GST_OMX_BASE_FILTER (instance);
     omx_base = GST_OMX_BASE_VIDEODEC (instance);
 
-    omx_base_filter->omx_component = g_strdup (OMX_COMPONENT_NAME);
     omx_base->compression_format = OMX_VIDEO_CodingH263;
 }
 

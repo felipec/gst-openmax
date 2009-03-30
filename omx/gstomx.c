@@ -57,162 +57,81 @@ GST_DEBUG_CATEGORY (gstomx_debug);
 
 #define DEFAULT_RANK GST_RANK_PRIMARY
 
+typedef struct TableItem
+{
+    const gchar *name;
+    const gchar *library_name;
+    const gchar *component_name;
+    guint rank;
+    GType (*get_type) (void);
+} TableItem;
+
+TableItem element_table[] = 
+{
+    { "omx_dummy", "libomxil-bellagio.so.0", "OMX.st.dummy", GST_RANK_NONE, gst_omx_dummy_get_type },
+    { "omx_mpeg4dec", "libomxil-bellagio.so.0", "OMX.st.video_decoder.mpeg4", DEFAULT_RANK, gst_omx_mpeg4dec_get_type },
+    { "omx_h264dec", "libomxil-bellagio.so.0", "OMX.st.video_decoder.avc", DEFAULT_RANK, gst_omx_h264dec_get_type },
+    { "omx_h263dec", "libomxil-bellagio.so.0", "OMX.st.video_decoder.h263", DEFAULT_RANK, gst_omx_h263dec_get_type },
+    { "omx_wmvdec", "libomxil-bellagio.so.0", "OMX.st.video_decoder.wmv", DEFAULT_RANK, gst_omx_wmvdec_get_type },
+    { "omx_mpeg4enc", "libomxil-bellagio.so.0", "OMX.st.video_encoder.mpeg4", DEFAULT_RANK, gst_omx_mpeg4enc_get_type },
+    { "omx_h264enc", "libomxil-bellagio.so.0", "OMX.st.video_encoder.avc", DEFAULT_RANK, gst_omx_h264enc_get_type },
+    { "omx_h263enc", "libomxil-bellagio.so.0", "OMX.st.video_encoder.h263", DEFAULT_RANK, gst_omx_h263enc_get_type },
+    { "omx_vorbisdec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.ogg.single", DEFAULT_RANK, gst_omx_vorbisdec_get_type },
+    { "omx_mp3dec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.mp3.mad", DEFAULT_RANK, gst_omx_mp3dec_get_type },
+    { "omx_mp2dec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.mp3.mad", DEFAULT_RANK, gst_omx_mp2dec_get_type },
+    { "omx_amrnbdec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.amrnb", DEFAULT_RANK, gst_omx_amrnbdec_get_type },
+    { "omx_amrnbenc", "libomxil-bellagio.so.0", "OMX.st.audio_encoder.amrnb", DEFAULT_RANK, gst_omx_amrnbenc_get_type },
+    { "omx_amrwbdec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.amrwb", DEFAULT_RANK, gst_omx_amrwbdec_get_type },
+    { "omx_amrwbenc", "libomxil-bellagio.so.0", "OMX.st.audio_encoder.amrwb", DEFAULT_RANK, gst_omx_amrwbenc_get_type },
+    { "omx_aacdec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.aac", DEFAULT_RANK, gst_omx_aacdec_get_type },
+    { "omx_aacenc", "libomxil-bellagio.so.0", "OMX.st.audio_encoder.aac", DEFAULT_RANK, gst_omx_aacenc_get_type },
+    { "omx_adpcmdec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.adpcm", DEFAULT_RANK, gst_omx_adpcmdec_get_type },
+    { "omx_adpcmenc", "libomxil-bellagio.so.0", "OMX.st.audio_encoder.adpcm", DEFAULT_RANK, gst_omx_adpcmenc_get_type },
+    { "omx_g711dec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.g711", DEFAULT_RANK, gst_omx_g711dec_get_type },
+    { "omx_g711enc", "libomxil-bellagio.so.0", "OMX.st.audio_encoder.g711", DEFAULT_RANK, gst_omx_g711enc_get_type },
+    { "omx_g729dec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.g729", DEFAULT_RANK, gst_omx_g729dec_get_type },
+    { "omx_g729enc", "libomxil-bellagio.so.0", "OMX.st.audio_encoder.g729", DEFAULT_RANK, gst_omx_g729enc_get_type },
+    { "omx_ilbcdec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.ilbc", DEFAULT_RANK, gst_omx_ilbcdec_get_type },
+    { "omx_ilbcenc", "libomxil-bellagio.so.0", "OMX.st.audio_encoder.ilbc", DEFAULT_RANK, gst_omx_ilbcenc_get_type },
+    { "omx_jpegenc", "libomxil-bellagio.so.0", "OMX.st.image_encoder.jpeg", DEFAULT_RANK, gst_omx_jpegenc_get_type },
+    { "omx_audiosink", "libomxil-bellagio.so.0", "OMX.st.alsa.alsasink", GST_RANK_NONE, gst_omx_audiosink_get_type },
+    { "omx_videosink", "libomxil-bellagio.so.0", "OMX.st.videosink", GST_RANK_NONE, gst_omx_videosink_get_type },
+    { "omx_filereadersrc", "libomxil-bellagio.so.0", "OMX.st.audio_filereader", GST_RANK_NONE, gst_omx_filereadersrc_get_type },
+    { "omx_volume", "libomxil-bellagio.so.0", "OMX.st.volume.component", GST_RANK_NONE, gst_omx_volume_get_type },
+    { NULL, NULL, NULL, 0, NULL },
+};
+
 static gboolean
 plugin_init (GstPlugin *plugin)
 {
+    GQuark library_name_quark;
+    GQuark component_name_quark;
     GST_DEBUG_CATEGORY_INIT (gstomx_debug, "omx", 0, "gst-openmax");
     GST_DEBUG_CATEGORY_INIT (gstomx_util_debug, "omx_util", 0, "gst-openmax utility");
 
+    library_name_quark = g_quark_from_static_string ("library-name");
+    component_name_quark = g_quark_from_static_string ("component-name");
+
     g_omx_init ();
 
-    if (!gst_element_register (plugin, "omx_dummy", GST_RANK_NONE, GST_OMX_DUMMY_TYPE))
     {
-        return FALSE;
-    }
+        guint i;
+        for (i = 0; element_table[i].name; i++)
+        {
+            TableItem *element;
+            GType type;
 
-    if (!gst_element_register (plugin, "omx_mpeg4dec", DEFAULT_RANK, GST_OMX_MPEG4DEC_TYPE))
-    {
-        return FALSE;
-    }
+            element = &element_table[i];
+            type = element->get_type ();
+            g_type_set_qdata (type, library_name_quark, (gpointer) element->library_name);
+            g_type_set_qdata (type, component_name_quark, (gpointer) element->component_name);
 
-    if (!gst_element_register (plugin, "omx_h263dec", DEFAULT_RANK, GST_OMX_H263DEC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_h264dec", DEFAULT_RANK, GST_OMX_H264DEC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_wmvdec", DEFAULT_RANK, GST_OMX_WMVDEC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_mpeg4enc", DEFAULT_RANK, GST_OMX_MPEG4ENC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_h264enc", DEFAULT_RANK, GST_OMX_H264ENC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_h263enc", DEFAULT_RANK, GST_OMX_H263ENC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_vorbisdec", DEFAULT_RANK, GST_OMX_VORBISDEC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_mp3dec", DEFAULT_RANK, GST_OMX_MP3DEC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_mp2dec", DEFAULT_RANK, GST_OMX_MP2DEC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_amrnbdec", DEFAULT_RANK, GST_OMX_AMRNBDEC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_amrnbenc", DEFAULT_RANK, GST_OMX_AMRNBENC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_amrwbdec", DEFAULT_RANK, GST_OMX_AMRWBDEC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_amrwbenc", DEFAULT_RANK, GST_OMX_AMRWBENC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_aacdec", DEFAULT_RANK, GST_OMX_AACDEC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_aacenc", DEFAULT_RANK, GST_OMX_AACENC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_adpcmdec", DEFAULT_RANK, GST_OMX_ADPCMDEC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_adpcmenc", DEFAULT_RANK, GST_OMX_ADPCMENC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_g711dec", DEFAULT_RANK, GST_OMX_G711DEC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_g711enc", DEFAULT_RANK, GST_OMX_G711ENC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_g729dec", DEFAULT_RANK, GST_OMX_G729DEC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_g729enc", DEFAULT_RANK, GST_OMX_G729ENC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_ilbcdec", DEFAULT_RANK, GST_OMX_ILBCDEC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_ilbcenc", DEFAULT_RANK, GST_OMX_ILBCENC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_jpegenc", DEFAULT_RANK, GST_OMX_JPEGENC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_audiosink", GST_RANK_NONE, GST_OMX_AUDIOSINK_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_videosink", GST_RANK_NONE, GST_OMX_VIDEOSINK_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_filereadersrc", GST_RANK_NONE, GST_OMX_FILEREADERSRC_TYPE))
-    {
-        return FALSE;
-    }
-
-    if (!gst_element_register (plugin, "omx_volume", GST_RANK_NONE, GST_OMX_VOLUME_TYPE))
-    {
-        return FALSE;
+            if (!gst_element_register (plugin, element->name, element->rank, type))
+            {
+                g_warning ("failed registering '%s'", element->name);
+                return FALSE;
+            }
+        }
     }
 
     return TRUE;

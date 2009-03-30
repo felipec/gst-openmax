@@ -24,8 +24,6 @@
 
 #include <string.h> /* for memset */
 
-#define OMX_COMPONENT_NAME "OMX.st.video_encoder.mpeg4"
-
 static GstOmxBaseFilterClass *parent_class;
 
 static GstCaps *
@@ -137,7 +135,6 @@ type_instance_init (GTypeInstance *instance,
     omx_base_filter = GST_OMX_BASE_FILTER (instance);
     omx_base = GST_OMX_BASE_VIDEOENC (instance);
 
-    omx_base_filter->omx_component = g_strdup (OMX_COMPONENT_NAME);
     omx_base->compression_format = OMX_VIDEO_CodingMPEG4;
 
     omx_base_filter->gomx->settings_changed_cb = settings_changed_cb;

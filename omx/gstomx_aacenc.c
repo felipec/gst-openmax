@@ -25,8 +25,6 @@
 
 #include <string.h> /* for memset */
 
-#define OMX_COMPONENT_NAME "OMX.st.audio_encoder.aac"
-
 enum
 {
     ARG_0,
@@ -424,7 +422,6 @@ type_instance_init (GTypeInstance *instance,
     omx_base = GST_OMX_BASE_FILTER (instance);
     self = GST_OMX_AACENC (instance);
 
-    omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
     omx_base->omx_setup = omx_setup;
 
     gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);

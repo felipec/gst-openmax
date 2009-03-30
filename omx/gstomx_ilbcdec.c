@@ -23,8 +23,6 @@
 #include "gstomx_base_filter.h"
 #include "gstomx.h"
 
-#define OMX_COMPONENT_NAME "OMX.st.audio_decoder.ilbc"
-
 static GstOmxBaseFilterClass *parent_class;
 
 static GstCaps *
@@ -180,8 +178,6 @@ type_instance_init (GTypeInstance *instance,
 
     omx_base = GST_OMX_BASE_FILTER (instance);
     self = GST_OMX_ILBCDEC (instance);
-
-    omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
 
     gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);
 }

@@ -25,8 +25,6 @@
 
 #include <string.h> /* for memset */
 
-#define OMX_COMPONENT_NAME "OMX.st.audio_decoder.ogg.single"
-
 static GstOmxBaseFilterClass *parent_class;
 
 static GstCaps *
@@ -158,7 +156,6 @@ type_instance_init (GTypeInstance *instance,
 
     GST_DEBUG_OBJECT (omx_base, "start");
 
-    omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
     omx_base->use_timestamps = FALSE;
 
     omx_base->gomx->settings_changed_cb = settings_changed_cb;

@@ -24,8 +24,6 @@
 
 #include <string.h> /* for memset */
 
-#define OMX_COMPONENT_NAME "OMX.st.alsa.alsasink"
-
 static GstOmxBaseSinkClass *parent_class;
 
 static GstCaps *
@@ -155,8 +153,6 @@ type_instance_init (GTypeInstance *instance,
     omx_base = GST_OMX_BASE_SINK (instance);
 
     GST_DEBUG_OBJECT (omx_base, "start");
-
-    omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
 }
 
 GType

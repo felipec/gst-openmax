@@ -23,8 +23,6 @@
 #include "gstomx_base_src.h"
 #include "gstomx.h"
 
-#define OMX_COMPONENT_NAME "OMX.st.audio_filereader"
-
 enum
 {
     ARG_0,
@@ -201,7 +199,6 @@ type_instance_init (GTypeInstance *instance,
 
     GST_DEBUG_OBJECT (omx_base, "begin");
 
-    omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
     omx_base->setup_ports = setup_ports;
 
     omx_base->gomx->settings_changed_cb = settings_changed_cb;

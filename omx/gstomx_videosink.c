@@ -25,8 +25,6 @@
 
 #include <string.h> /* for memset, strcmp */
 
-#define OMX_COMPONENT_NAME "OMX.st.videosink"
-
 static GstOmxBaseSinkClass *parent_class;
 
 enum
@@ -334,8 +332,6 @@ type_instance_init (GTypeInstance *instance,
     omx_base = GST_OMX_BASE_SINK (instance);
 
     GST_DEBUG_OBJECT (omx_base, "start");
-
-    omx_base->omx_component = g_strdup (OMX_COMPONENT_NAME);
 }
 
 GType

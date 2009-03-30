@@ -874,7 +874,15 @@ type_instance_init (GTypeInstance *instance,
     gst_element_add_pad (GST_ELEMENT (self), self->sinkpad);
     gst_element_add_pad (GST_ELEMENT (self), self->srcpad);
 
-    self->omx_library = g_strdup (DEFAULT_LIBRARY_NAME);
+    {
+        const char *tmp;
+        tmp = g_type_get_qdata (G_OBJECT_CLASS_TYPE (g_class),
+                                g_quark_from_static_string ("library-name"));
+        self->omx_library = g_strdup (tmp);
+        tmp = g_type_get_qdata (G_OBJECT_CLASS_TYPE (g_class),
+                                g_quark_from_static_string ("component-name"));
+        self->omx_component = g_strdup (tmp);
+    }
 
     GST_LOG_OBJECT (self, "end");
 }
