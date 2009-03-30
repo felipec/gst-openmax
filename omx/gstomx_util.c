@@ -563,11 +563,14 @@ port_free_buffers (GOmxPort *port)
 
         if (omx_buffer)
         {
+#if 0
+            /** @todo how shall we free that buffer? */
             if (!port->omx_allocate)
             {
                 g_free (omx_buffer->pBuffer);
                 omx_buffer->pBuffer = NULL;
             }
+#endif
 
             OMX_FreeBuffer (port->core->omx_handle, port->port_index, omx_buffer);
             port->buffers[i] = NULL;
