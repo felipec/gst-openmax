@@ -156,7 +156,7 @@ change_state (GstElement *element,
 }
 
 static void
-dispose (GObject *obj)
+finalize (GObject *obj)
 {
     GstOmxBaseFilter *self;
 
@@ -175,7 +175,7 @@ dispose (GObject *obj)
 
     g_mutex_free (self->ready_lock);
 
-    G_OBJECT_CLASS (parent_class)->dispose (obj);
+    G_OBJECT_CLASS (parent_class)->finalize (obj);
 }
 
 static void
@@ -246,7 +246,7 @@ type_class_init (gpointer g_class,
 
     parent_class = g_type_class_ref (GST_TYPE_ELEMENT);
 
-    gobject_class->dispose = dispose;
+    gobject_class->finalize = finalize;
     gstelement_class->change_state = change_state;
 
     /* Properties stuff */

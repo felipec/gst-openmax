@@ -97,7 +97,7 @@ stop (GstBaseSrc *gst_base)
 }
 
 static void
-dispose (GObject *obj)
+finalize (GObject *obj)
 {
     GstOmxBaseSrc *self;
 
@@ -108,7 +108,7 @@ dispose (GObject *obj)
     g_free (self->omx_component);
     g_free (self->omx_library);
 
-    G_OBJECT_CLASS (parent_class)->dispose (obj);
+    G_OBJECT_CLASS (parent_class)->finalize (obj);
 }
 
 static GstFlowReturn
@@ -419,7 +419,7 @@ type_class_init (gpointer g_class,
 
     parent_class = g_type_class_ref (GST_TYPE_ELEMENT);
 
-    gobject_class->dispose = dispose;
+    gobject_class->finalize = finalize;
 
     gst_base_src_class->start = start;
     gst_base_src_class->stop = stop;
