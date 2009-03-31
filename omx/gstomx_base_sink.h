@@ -50,6 +50,7 @@ struct GstOmxBaseSink
     char *omx_library;
 
     gboolean ready;
+    GstPadActivateModeFunction base_activatepush;
 };
 
 struct GstOmxBaseSinkClass

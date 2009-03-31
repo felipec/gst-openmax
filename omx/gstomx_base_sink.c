@@ -400,6 +400,9 @@ activate_push (GstPad *pad,
 
     gst_object_unref (self);
 
+    if (result)
+        result = self->base_activatepush (pad, active);
+
     return result;
 }
 
@@ -436,6 +439,7 @@ type_instance_init (GTypeInstance *instance,
     {
         GstPad *sinkpad;
         self->sinkpad = sinkpad = GST_BASE_SINK_PAD (self);
+        self->base_activatepush = GST_PAD_ACTIVATEPUSHFUNC (sinkpad);
         gst_pad_set_activatepush_function (sinkpad, activate_push);
     }
 
