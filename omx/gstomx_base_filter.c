@@ -763,7 +763,8 @@ pad_event (GstPad *pad,
 
             g_omx_core_flush_stop (gomx);
 
-            gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
+            if (self->ready)
+                gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
 
             ret = TRUE;
             break;
