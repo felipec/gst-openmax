@@ -320,6 +320,7 @@ output_loop (gpointer data)
         if (G_UNLIKELY (!omx_buffer))
         {
             GST_WARNING_OBJECT (self, "null buffer: leaving");
+            ret = GST_FLOW_WRONG_STATE;
             goto leave;
         }
 
@@ -401,11 +402,11 @@ output_loop (gpointer data)
                 /* This is only meant for the first OpenMAX buffers,
                  * which need to be pre-allocated. */
                 /* Also for the very last one. */
-                gst_pad_alloc_buffer_and_set_caps (self->srcpad,
-                                                   GST_BUFFER_OFFSET_NONE,
-                                                   omx_buffer->nFilledLen,
-                                                   GST_PAD_CAPS (self->srcpad),
-                                                   &buf);
+                ret = gst_pad_alloc_buffer_and_set_caps (self->srcpad,
+                                                         GST_BUFFER_OFFSET_NONE,
+                                                         omx_buffer->nFilledLen,
+                                                         GST_PAD_CAPS (self->srcpad),
+                                                         &buf);
 
                 if (G_LIKELY (buf))
                 {
@@ -664,6 +665,7 @@ pad_chain (GstPad *pad,
             else
             {
                 GST_WARNING_OBJECT (self, "null buffer");
+                ret = GST_FLOW_WRONG_STATE;
                 goto out_flushing;
             }
         }
