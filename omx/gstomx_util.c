@@ -919,6 +919,7 @@ EventHandler (OMX_HANDLETYPE omx_handle,
                     case OMX_ErrorFormatNotDetected:
                     case OMX_ErrorNotImplemented:
                     case OMX_ErrorHardware:
+                        GST_ERROR ("unrecoverable error: %lx", data_1);
                         /* component might leave us waiting for buffers, unblock */
                         g_omx_core_flush_start (core);
                         core->omx_error = data_1;
@@ -926,7 +927,6 @@ EventHandler (OMX_HANDLETYPE omx_handle,
                         g_mutex_lock (core->omx_state_mutex);
                         g_cond_signal (core->omx_state_condition);
                         g_mutex_unlock (core->omx_state_mutex);
-                        GST_ERROR ("unrecoverable error: %lx", data_1);
                         break;
                     default:
                         /* might be common, let's not cause panic by _ERROR */
