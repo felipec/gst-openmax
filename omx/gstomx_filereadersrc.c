@@ -45,9 +45,7 @@ static void
 type_base_init (gpointer g_class)
 {
     GstElementClass *element_class;
-    GstOmxBaseSrcClass *omx_base_class;
 
-    omx_base_class = GST_OMX_BASE_SRC_CLASS (g_class);
     element_class = GST_ELEMENT_CLASS (g_class);
 
     {
@@ -77,10 +75,8 @@ setcaps (GstBaseSrc *gst_src,
          GstCaps *caps)
 {
     GstOmxBaseSrc *self;
-    GOmxCore *gomx;
 
     self = GST_OMX_BASE_SRC (gst_src);
-    gomx = (GOmxCore *) self->gomx;
 
     GST_INFO_OBJECT (self, "setcaps (src): %" GST_PTR_FORMAT, caps);
 

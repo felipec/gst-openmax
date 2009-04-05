@@ -132,11 +132,11 @@ sink_setcaps (GstPad *pad,
         param.nVersion.s.nVersionMinor = 1;
 
         param.nPortIndex = 1;
-        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
+        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
 
         param.nSamplingRate = rate;
 
-        OMX_SetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
+        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
     }
 
     /* set caps on the srcpad */

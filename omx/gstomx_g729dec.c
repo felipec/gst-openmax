@@ -103,10 +103,6 @@ static void
 type_class_init (gpointer g_class,
                  gpointer class_data)
 {
-    GObjectClass *gobject_class;
-
-    gobject_class = G_OBJECT_CLASS (g_class);
-
     parent_class = g_type_class_ref (GST_OMX_BASE_FILTER_TYPE);
 }
 
@@ -141,10 +137,8 @@ type_instance_init (GTypeInstance *instance,
                     gpointer g_class)
 {
     GstOmxBaseFilter *omx_base;
-    GstOmxG729Dec *self;
 
     omx_base = GST_OMX_BASE_FILTER (instance);
-    self = GST_OMX_G729DEC (instance);
 
     omx_base->gomx->settings_changed_cb = settings_changed_cb;
 }

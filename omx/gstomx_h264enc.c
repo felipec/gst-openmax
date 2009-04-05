@@ -44,9 +44,7 @@ static void
 type_base_init (gpointer g_class)
 {
     GstElementClass *element_class;
-    GstOmxBaseFilterClass *omx_base_class;
 
-    omx_base_class = GST_OMX_BASE_FILTER_CLASS (g_class);
     element_class = GST_ELEMENT_CLASS (g_class);
 
     {

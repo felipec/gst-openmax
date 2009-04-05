@@ -324,11 +324,9 @@ type_class_init (gpointer g_class,
                  gpointer class_data)
 {
     GObjectClass *gobject_class;
-    GstElementClass *gstelement_class;
     GstBaseSinkClass *gst_base_sink_class;
 
     gobject_class = G_OBJECT_CLASS (g_class);
-    gstelement_class = GST_ELEMENT_CLASS (g_class);
     gst_base_sink_class = GST_BASE_SINK_CLASS (g_class);
 
     parent_class = g_type_class_ref (GST_TYPE_ELEMENT);
@@ -411,9 +409,6 @@ type_instance_init (GTypeInstance *instance,
                     gpointer g_class)
 {
     GstOmxBaseSink *self;
-    GstElementClass *element_class;
-
-    element_class = GST_ELEMENT_CLASS (g_class);
 
     self = GST_OMX_BASE_SINK (instance);
 

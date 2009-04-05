@@ -149,10 +149,8 @@ type_instance_init (GTypeInstance *instance,
                     gpointer g_class)
 {
     GstOmxBaseFilter *omx_base;
-    GstElementClass *element_class;
 
     omx_base = GST_OMX_BASE_FILTER (instance);
-    element_class = GST_ELEMENT_CLASS (g_class);
 
     GST_DEBUG_OBJECT (omx_base, "start");
 

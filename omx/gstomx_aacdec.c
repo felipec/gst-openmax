@@ -179,10 +179,8 @@ sink_setcaps (GstPad *pad,
 {
     GstStructure *structure;    
     GstOmxBaseFilter *omx_base;
-    GOmxCore *gomx;
 
     omx_base = GST_OMX_BASE_FILTER (GST_PAD_PARENT (pad));
-    gomx = (GOmxCore *) omx_base->gomx;
 
     GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
 

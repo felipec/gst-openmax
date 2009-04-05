@@ -714,13 +714,11 @@ pad_event (GstPad *pad,
     GstOmxBaseFilter *self;
     GOmxCore *gomx;
     GOmxPort *in_port;
-    GOmxPort *out_port;
     gboolean ret = TRUE;
 
     self = GST_OMX_BASE_FILTER (GST_OBJECT_PARENT (pad));
     gomx = self->gomx;
     in_port = self->in_port;
-    out_port = self->out_port;
 
     GST_LOG_OBJECT (self, "begin");
 

@@ -238,12 +238,12 @@ sink_setcaps (GstPad *pad,
         param.nVersion.s.nVersionMinor = 1;
 
         param.nPortIndex = 0;
-        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
+        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
 
         param.nSamplingRate = rate;
         param.nChannels = channels;
 
-        OMX_SetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
+        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
     }
 
     return gst_pad_set_caps (pad, caps);
@@ -252,12 +252,6 @@ sink_setcaps (GstPad *pad,
 static void
 omx_setup (GstOmxBaseFilter *omx_base)
 {
-    GstOmxAmrNbEnc *self;
-    GOmxCore *gomx;
-
-    self = GST_OMX_AMRNBENC (omx_base);
-    gomx = (GOmxCore *) omx_base->gomx;
-
     GST_INFO_OBJECT (omx_base, "begin");
 
 #if 0
@@ -295,7 +289,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
         param.nVersion.s.nVersionMinor = 1;
 
         param.nPortIndex = 0;
-        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
+        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
 
         channels = param.nChannels;
     }
@@ -311,7 +305,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
         param.nVersion.s.nVersionMinor = 1;
 
         param.nPortIndex = 1;
-        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioAmr, &param);
+        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioAmr, &param);
 
         param.nChannels = channels;
 #if 0
@@ -320,7 +314,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
         param.eAMRFrameFormat = OMX_AUDIO_AMRFrameFormatFSF;
 #endif
 
-        OMX_SetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioAmr, &param);
+        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioAmr, &param);
     }
 #endif
 

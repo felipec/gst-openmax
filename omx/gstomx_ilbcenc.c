@@ -122,10 +122,6 @@ static void
 type_class_init (gpointer g_class,
                  gpointer class_data)
 {
-    GObjectClass *gobject_class;
-
-    gobject_class = G_OBJECT_CLASS (g_class);
-
     parent_class = g_type_class_ref (GST_OMX_BASE_FILTER_TYPE);
 }
 
@@ -134,10 +130,8 @@ sink_setcaps (GstPad *pad,
               GstCaps *caps)
 {
     GstOmxBaseFilter *omx_base;
-    GOmxCore *gomx;
 
     omx_base = GST_OMX_BASE_FILTER (GST_PAD_PARENT (pad));
-    gomx = (GOmxCore *) omx_base->gomx;
 
     GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
 
@@ -166,12 +160,6 @@ sink_setcaps (GstPad *pad,
 static void
 omx_setup (GstOmxBaseFilter *omx_base)
 {
-    GstOmxIlbcEnc *self;
-    GOmxCore *gomx;
-
-    self = GST_OMX_ILBCENC (omx_base);
-    gomx = (GOmxCore *) omx_base->gomx;
-
     GST_INFO_OBJECT (omx_base, "begin");
 
     GST_INFO_OBJECT (omx_base, "end");
@@ -182,10 +170,8 @@ type_instance_init (GTypeInstance *instance,
                     gpointer g_class)
 {
     GstOmxBaseFilter *omx_base;
-    GstOmxIlbcEnc *self;
 
     omx_base = GST_OMX_BASE_FILTER (instance);
-    self = GST_OMX_ILBCENC (instance);
 
     omx_base->omx_setup = omx_setup;
 

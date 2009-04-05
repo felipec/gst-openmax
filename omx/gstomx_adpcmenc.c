@@ -101,10 +101,6 @@ static void
 type_class_init (gpointer g_class,
                  gpointer class_data)
 {
-    GObjectClass *gobject_class;
-
-    gobject_class = G_OBJECT_CLASS (g_class);
-
     parent_class = g_type_class_ref (GST_OMX_BASE_FILTER_TYPE);
 }
 
@@ -191,11 +187,11 @@ sink_setcaps (GstPad *pad,
         param.nVersion.s.nVersionMinor = 1;
 
         param.nPortIndex = 0;
-        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
+        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
 
         param.nSamplingRate = rate;
 
-        OMX_SetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
+        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
     }
 
     /* set caps on the srcpad */
@@ -232,10 +228,8 @@ type_instance_init (GTypeInstance *instance,
                     gpointer g_class)
 {
     GstOmxBaseFilter *omx_base;
-    GstOmxAdpcmEnc *self;
 
     omx_base = GST_OMX_BASE_FILTER (instance);
-    self = GST_OMX_ADPCMENC (instance);
 
     omx_base->gomx->settings_changed_cb = settings_changed_cb;
 
