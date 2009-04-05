@@ -25,6 +25,7 @@
 #include <glib.h>
 
 #include <stdlib.h> /* For calloc, free */
+#include <string.h> /* For memcpy */
 
 #include "async_queue.h"
 

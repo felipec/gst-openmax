@@ -33,9 +33,9 @@ struct GSem
     gint counter;
 };
 
-GSem *g_omx_sem_new (void);
-void g_omx_sem_free (GSem *sem);
-void g_omx_sem_down (GSem *sem);
-void g_omx_sem_up (GSem *sem);
+GSem *g_sem_new (void);
+void g_sem_free (GSem *sem);
+void g_sem_down (GSem *sem);
+void g_sem_up (GSem *sem);
 
 #endif /* SEM_H */
