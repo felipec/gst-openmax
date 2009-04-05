@@ -28,12 +28,12 @@
 #include <OMX_Component.h>
 
 #include <async_queue.h>
+#include <sem.h>
 
 /* Typedefs. */
 
 typedef struct GOmxCore GOmxCore;
 typedef struct GOmxPort GOmxPort;
-typedef struct GOmxSem GOmxSem;
 typedef struct GOmxImp GOmxImp;
 typedef struct GOmxSymbolTable GOmxSymbolTable;
 typedef enum GOmxPortType GOmxPortType;
@@ -83,9 +83,9 @@ struct GOmxCore
 
     gpointer client_data; /**< Placeholder for the client data. */
 
-    GOmxSem *done_sem;
-    GOmxSem *flush_sem;
-    GOmxSem *port_sem;
+    GSem *done_sem;
+    GSem *flush_sem;
+    GSem *port_sem;
 
     GOmxCb settings_changed_cb;
     GOmxImp *imp;
@@ -107,13 +107,6 @@ struct GOmxPort
     gboolean enabled;
     gboolean omx_allocate; /**< Setup with OMX_AllocateBuffer rather than OMX_UseBuffer */
     AsyncQueue *queue;
-};
-
-struct GOmxSem
-{
-    GCond *condition;
-    GMutex *mutex;
-    gint counter;
 };
 
 /* Functions. */
@@ -147,10 +140,5 @@ void g_omx_port_flush (GOmxPort *port);
 void g_omx_port_enable (GOmxPort *port);
 void g_omx_port_disable (GOmxPort *port);
 void g_omx_port_finish (GOmxPort *port);
-
-GOmxSem *g_omx_sem_new (void);
-void g_omx_sem_free (GOmxSem *sem);
-void g_omx_sem_down (GOmxSem *sem);
-void g_omx_sem_up (GOmxSem *sem);
 
 #endif /* GSTOMX_UTIL_H */

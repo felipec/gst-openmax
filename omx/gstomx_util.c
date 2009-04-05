@@ -250,9 +250,9 @@ g_omx_core_new (void)
     core->omx_state_condition = g_cond_new ();
     core->omx_state_mutex = g_mutex_new ();
 
-    core->done_sem = g_omx_sem_new ();
-    core->flush_sem = g_omx_sem_new ();
-    core->port_sem = g_omx_sem_new ();
+    core->done_sem = g_sem_new ();
+    core->flush_sem = g_sem_new ();
+    core->port_sem = g_sem_new ();
 
     core->omx_state = OMX_StateInvalid;
 
@@ -262,9 +262,9 @@ g_omx_core_new (void)
 void
 g_omx_core_free (GOmxCore *core)
 {
-    g_omx_sem_free (core->port_sem);
-    g_omx_sem_free (core->flush_sem);
-    g_omx_sem_free (core->done_sem);
+    g_sem_free (core->port_sem);
+    g_sem_free (core->flush_sem);
+    g_sem_free (core->done_sem);
 
     g_mutex_free (core->omx_state_mutex);
     g_cond_free (core->omx_state_condition);
@@ -414,13 +414,13 @@ g_omx_core_get_port (GOmxCore *core,
 void
 g_omx_core_set_done (GOmxCore *core)
 {
-    g_omx_sem_up (core->done_sem);
+    g_sem_up (core->done_sem);
 }
 
 void
 g_omx_core_wait_for_done (GOmxCore *core)
 {
-    g_omx_sem_down (core->done_sem);
+    g_sem_down (core->done_sem);
 }
 
 void
@@ -634,7 +634,7 @@ g_omx_port_flush (GOmxPort *port)
     else
     {
         OMX_SendCommand (port->core->omx_handle, OMX_CommandFlush, port->port_index, NULL);
-        g_omx_sem_down (port->core->flush_sem);
+        g_sem_down (port->core->flush_sem);
     }
 }
 
@@ -651,7 +651,7 @@ g_omx_port_enable (GOmxPort *port)
         port_start_buffers (port);
     g_omx_port_resume (port);
 
-    g_omx_sem_down (core->port_sem);
+    g_sem_down (core->port_sem);
 }
 
 void
@@ -666,7 +666,7 @@ g_omx_port_disable (GOmxPort *port)
     g_omx_port_flush (port);
     port_free_buffers (port);
 
-    g_omx_sem_down (core->port_sem);
+    g_sem_down (core->port_sem);
 }
 
 void
@@ -674,57 +674,6 @@ g_omx_port_finish (GOmxPort *port)
 {
     port->enabled = FALSE;
     async_queue_disable (port->queue);
-}
-
-/*
- * Semaphore
- */
-
-GOmxSem *
-g_omx_sem_new (void)
-{
-    GOmxSem *sem;
-
-    sem = g_new (GOmxSem, 1);
-    sem->condition = g_cond_new ();
-    sem->mutex = g_mutex_new ();
-    sem->counter = 0;
-
-    return sem;
-}
-
-void
-g_omx_sem_free (GOmxSem *sem)
-{
-    g_cond_free (sem->condition);
-    g_mutex_free (sem->mutex);
-    g_free (sem);
-}
-
-void
-g_omx_sem_down (GOmxSem *sem)
-{
-    g_mutex_lock (sem->mutex);
-
-    while (sem->counter == 0)
-    {
-        g_cond_wait (sem->condition, sem->mutex);
-    }
-
-    sem->counter--;
-
-    g_mutex_unlock (sem->mutex);
-}
-
-void
-g_omx_sem_up (GOmxSem *sem)
-{
-    g_mutex_lock (sem->mutex);
-
-    sem->counter++;
-    g_cond_signal (sem->condition);
-
-    g_mutex_unlock (sem->mutex);
 }
 
 /*
@@ -883,11 +832,11 @@ EventHandler (OMX_HANDLETYPE omx_handle,
                         complete_change_state (core, data_2);
                         break;
                     case OMX_CommandFlush:
-                        g_omx_sem_up (core->flush_sem);
+                        g_sem_up (core->flush_sem);
                         break;
                     case OMX_CommandPortDisable:
                     case OMX_CommandPortEnable:
-                        g_omx_sem_up (core->port_sem);
+                        g_sem_up (core->port_sem);
                     default:
                         break;
                 }

@@ -255,7 +255,7 @@ handle_event (GstBaseSink *gst_base,
             break;
 
         case GST_EVENT_FLUSH_STOP:
-            g_omx_sem_down (gomx->flush_sem);
+            g_sem_down (gomx->flush_sem);
 
             g_omx_port_resume (in_port);
             break;
