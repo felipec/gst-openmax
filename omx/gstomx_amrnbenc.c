@@ -250,78 +250,6 @@ sink_setcaps (GstPad *pad,
 }
 
 static void
-omx_setup (GstOmxBaseFilter *omx_base)
-{
-    GST_INFO_OBJECT (omx_base, "begin");
-
-#if 0
-    {
-        OMX_AUDIO_PARAM_AMRTYPE param;
-        OMX_COLOR_FORMATTYPE color_format;
-        gint width, height;
-        guint framerate;
-
-        memset (&param, 0, sizeof (param));
-        param.nSize = sizeof (OMX_AUDIO_PARAM_AMRTYPE);
-        param.nVersion.s.nVersionMajor = 1;
-        param.nVersion.s.nVersionMinor = 1;
-
-        /* Output port configuration. */
-        {
-            param.nPortIndex = 1;
-            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioAmr, &param);
-
-            param.nBitRate = self->bitrate;
-
-            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioAmr, &param);
-        }
-    }
-#endif
-
-    /* some workarounds. */
-#if 0
-    {
-        OMX_AUDIO_PARAM_PCMMODETYPE param;
-
-        memset (&param, 0, sizeof (param));
-        param.nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
-        param.nVersion.s.nVersionMajor = 1;
-        param.nVersion.s.nVersionMinor = 1;
-
-        param.nPortIndex = 0;
-        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
-
-        channels = param.nChannels;
-    }
-#endif
-
-#if 0
-    {
-        OMX_AUDIO_PARAM_AMRTYPE param;
-
-        memset (&param, 0, sizeof (param));
-        param.nSize = sizeof (OMX_AUDIO_PARAM_AMRTYPE);
-        param.nVersion.s.nVersionMajor = 1;
-        param.nVersion.s.nVersionMinor = 1;
-
-        param.nPortIndex = 1;
-        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioAmr, &param);
-
-        param.nChannels = channels;
-#if 0
-        param.eAMRBandMode = OMX_AUDIO_AMRBandModeNB7;
-        param.eAMRDTXMode = OMX_AUDIO_AMRDTXModeOnAuto;
-        param.eAMRFrameFormat = OMX_AUDIO_AMRFrameFormatFSF;
-#endif
-
-        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioAmr, &param);
-    }
-#endif
-
-    GST_INFO_OBJECT (omx_base, "end");
-}
-
-static void
 type_instance_init (GTypeInstance *instance,
                     gpointer g_class)
 {
@@ -330,8 +258,6 @@ type_instance_init (GTypeInstance *instance,
 
     omx_base = GST_OMX_BASE_FILTER (instance);
     self = GST_OMX_AMRNBENC (instance);
-
-    omx_base->omx_setup = omx_setup;
 
     omx_base->gomx->settings_changed_cb = settings_changed_cb;
 
