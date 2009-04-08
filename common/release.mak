@@ -23,3 +23,6 @@ distcheck-hook:
           find $(distdir) -name \*-enumtypes.[ch] | grep -v win32 && \
           find $(distdir) -name \*-marshal.[ch] && \
           false )
+
+dist-hook:
+	echo $(VERSION) > $(distdir)/.tarball-version
