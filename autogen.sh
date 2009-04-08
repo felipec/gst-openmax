@@ -3,14 +3,7 @@
 
 package=gst-openmax
 
-# source helper functions
-if test ! -f common/gst-autogen.sh;
-then
-  echo There is something wrong with your source tree.
-  echo You are missing common/gst-autogen.sh
-  exit 1
-fi
-. common/gst-autogen.sh
+. build-aux/gst-autogen.sh
 
 mkdir -p config
 

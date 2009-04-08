@@ -1,5 +1,5 @@
 # include this snippet to add a common release: target by using
-# include $(top_srcdir)/common/release.mak
+# include $(top_srcdir)/build-aux/release.mak
 
 # make bz2 as well
 AUTOMAKE_OPTIONS = dist-bzip2

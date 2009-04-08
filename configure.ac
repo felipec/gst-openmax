@@ -10,7 +10,6 @@ AC_CONFIG_FILES([Makefile \
 		 omx/Makefile \
 		 util/Makefile \
 		 tests/Makefile \
-		 common/Makefile \
 		 m4/Makefile \
 		 shave \
 		 shave-libtool])
