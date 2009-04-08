@@ -9,7 +9,9 @@ AC_CONFIG_FILES([Makefile \
 		 util/Makefile \
 		 tests/Makefile \
 		 common/Makefile \
-		 m4/Makefile])
+		 m4/Makefile \
+		 shave \
+		 shave-libtool])
 
 dnl versions of GStreamer
 GST_MAJORMINOR=0.10
@@ -99,6 +101,6 @@ dnl whatevertarget_LIBS and -L flags here affect the rest of the linking
 GST_PLUGIN_LDFLAGS="-module -avoid-version -export-symbols-regex '^[_]*gst_plugin_desc\$\$' $GST_ALL_LDFLAGS"
 AC_SUBST(GST_PLUGIN_LDFLAGS)
 
-dnl *** output ***
+SHAVE_INIT
 
 AC_OUTPUT
