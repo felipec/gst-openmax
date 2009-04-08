@@ -3,16 +3,9 @@ AC_PREREQ([2.52])
 AC_INIT([gst-openmax], m4_esyscmd([build-aux/git-version-gen]),
         [http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer&component=gst-openmax])
 
-AC_CONFIG_AUX_DIR([config])
+AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([-Wall -Wno-portability])
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([Makefile \
-		 omx/Makefile \
-		 util/Makefile \
-		 tests/Makefile \
-		 m4/Makefile \
-		 shave \
-		 shave-libtool])
 
 dnl versions of GStreamer
 GST_MAJORMINOR=0.10
@@ -103,5 +96,12 @@ GST_PLUGIN_LDFLAGS="-module -avoid-version -export-symbols-regex '^[_]*gst_plugi
 AC_SUBST(GST_PLUGIN_LDFLAGS)
 
 SHAVE_INIT
+AC_CONFIG_FILES([shave shave-libtool])
+
+AC_CONFIG_FILES([Makefile \
+		 omx/Makefile \
+		 util/Makefile \
+		 tests/Makefile \
+		 m4/Makefile])
 
 AC_OUTPUT
