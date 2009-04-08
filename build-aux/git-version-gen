@@ -4,7 +4,7 @@ if test -f .tarball-version
 then
 	v=`cat .tarball-version`
 else
-        v=`git describe --tags --match='v*'`
+        v=`git describe --tags`
 fi
 
 # remove initial 'v'
