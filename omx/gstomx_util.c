@@ -288,7 +288,7 @@ g_omx_core_init (GOmxCore *core,
     }
 
     core->omx_error = core->imp->sym_table.get_handle (&core->omx_handle,
-                                                       (gchar *) component_name,
+                                                       (char *) component_name,
                                                        core,
                                                        &callbacks);
     core->omx_state = OMX_StateLoaded;

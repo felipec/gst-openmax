@@ -108,6 +108,7 @@ change_state (GstElement *element,
             g_mutex_lock (self->ready_lock);
             if (self->ready)
             {
+                /* unlock */
                 g_omx_port_finish (self->in_port);
                 g_omx_port_finish (self->out_port);
             }
@@ -125,9 +126,6 @@ change_state (GstElement *element,
 
     switch (transition)
     {
-        case GST_STATE_CHANGE_PLAYING_TO_PAUSED:
-            break;
-
         case GST_STATE_CHANGE_PAUSED_TO_READY:
             g_mutex_lock (self->ready_lock);
             if (self->ready)
