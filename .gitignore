@@ -2,7 +2,7 @@
 *.l[oa]
 .deps
 .libs
-*.in
+Makefile.in
 
 INSTALL
 Makefile
@@ -10,8 +10,15 @@ aclocal.m4
 autom4te.cache
 autoregen.sh
 config.*
-config/
 configure
 libtool
 stamp-h1
-m4/
+stamp-h.in
+shave
+shave-libtool
+
+build-aux/compile
+build-aux/depcomp
+build-aux/install-sh
+build-aux/ltmain.sh
+build-aux/missing
