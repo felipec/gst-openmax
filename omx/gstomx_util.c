@@ -282,16 +282,14 @@ g_omx_core_init (GOmxCore *core,
     core->imp = request_imp (library_name);
 
     if (!core->imp)
-    {
-        core->omx_error = OMX_ErrorUndefined;
         return;
-    }
 
     core->omx_error = core->imp->sym_table.get_handle (&core->omx_handle,
                                                        (char *) component_name,
                                                        core,
                                                        &callbacks);
-    core->omx_state = OMX_StateLoaded;
+    if (!core->omx_error)
+        core->omx_state = OMX_StateLoaded;
 }
 
 void
@@ -300,10 +298,12 @@ g_omx_core_deinit (GOmxCore *core)
     if (!core->imp)
         return;
 
-    core->omx_error = core->imp->sym_table.free_handle (core->omx_handle);
-
-    if (core->omx_error)
-        return;
+    if (core->omx_state == OMX_StateLoaded ||
+        core->omx_state == OMX_StateInvalid)
+    {
+        if (core->omx_handle)
+            core->omx_error = core->imp->sym_table.free_handle (core->omx_handle);
+    }
 
     release_imp (core->imp);
     core->imp = NULL;
@@ -345,7 +345,7 @@ g_omx_core_start (GOmxCore *core)
     change_state (core, OMX_StateExecuting);
     wait_for_state (core, OMX_StateExecuting);
 
-    if (!core->omx_error)
+    if (core->omx_state == OMX_StateExecuting)
         core_for_each_port (core, port_start_buffers);
 }
 
@@ -359,20 +359,25 @@ g_omx_core_pause (GOmxCore *core)
 void
 g_omx_core_finish (GOmxCore *core)
 {
-    /* if component in error, do not expect it to handle state change */
-    if (!core->omx_error)
+    if (core->omx_state == OMX_StateExecuting ||
+        core->omx_state == OMX_StatePause)
     {
         change_state (core, OMX_StateIdle);
         wait_for_state (core, OMX_StateIdle);
     }
 
-    if (!core->omx_error)
-        change_state (core, OMX_StateLoaded);
+    if (core->omx_state == OMX_StateIdle ||
+        core->omx_state == OMX_StateWaitForResources ||
+        core->omx_state == OMX_StateInvalid)
+    {
+        if (core->omx_state != OMX_StateInvalid)
+            change_state (core, OMX_StateLoaded);
 
-    core_for_each_port (core, port_free_buffers);
+        core_for_each_port (core, port_free_buffers);
 
-    if (!core->omx_error)
-        wait_for_state (core, OMX_StateLoaded);
+        if (core->omx_state != OMX_StateInvalid)
+            wait_for_state (core, OMX_StateLoaded);
+    }
 
     core_for_each_port (core, g_omx_port_free);
     g_ptr_array_clear (core->ports);

@@ -87,8 +87,10 @@ change_state (GstElement *element,
 {
     GstStateChangeReturn ret = GST_STATE_CHANGE_SUCCESS;
     GstOmxBaseFilter *self;
+    GOmxCore *core;
 
     self = GST_OMX_BASE_FILTER (element);
+    core = self->gomx;
 
     GST_LOG_OBJECT (self, "begin");
 
@@ -99,8 +101,8 @@ change_state (GstElement *element,
     switch (transition)
     {
         case GST_STATE_CHANGE_NULL_TO_READY:
-            g_omx_core_init (self->gomx, self->omx_library, self->omx_component);
-            if (self->gomx->omx_error)
+            g_omx_core_init (core, self->omx_library, self->omx_component);
+            if (core->omx_state != OMX_StateLoaded)
                 return GST_STATE_CHANGE_FAILURE;
             break;
 
@@ -130,18 +132,19 @@ change_state (GstElement *element,
             g_mutex_lock (self->ready_lock);
             if (self->ready)
             {
-                g_omx_core_finish (self->gomx);
+                g_omx_core_finish (core);
                 self->ready = FALSE;
             }
             g_mutex_unlock (self->ready_lock);
-            if (self->gomx->omx_error)
+            if (core->omx_state != OMX_StateLoaded &&
+                core->omx_state != OMX_StateInvalid)
+            {
                 return GST_STATE_CHANGE_FAILURE;
+            }
             break;
 
         case GST_STATE_CHANGE_READY_TO_NULL:
-            g_omx_core_deinit (self->gomx);
-            if (self->gomx->omx_error)
-                return GST_STATE_CHANGE_FAILURE;
+            g_omx_core_deinit (core);
             break;
 
         default:
@@ -543,7 +546,7 @@ pad_chain (GstPad *pad,
 
         g_omx_core_prepare (self->gomx);
 
-        if (gomx->omx_error == OMX_ErrorNone)
+        if (gomx->omx_state == OMX_StateIdle)
         {
             self->ready = TRUE;
             gst_pad_start_task (self->srcpad, output_loop, self->srcpad);
@@ -551,7 +554,7 @@ pad_chain (GstPad *pad,
 
         g_mutex_unlock (self->ready_lock);
 
-        if (gomx->omx_error != OMX_ErrorNone)
+        if (gomx->omx_state != OMX_StateIdle)
             goto out_flushing;
     }
 
@@ -566,7 +569,7 @@ pad_chain (GstPad *pad,
             GST_INFO_OBJECT (self, "omx: play");
             g_omx_core_start (gomx);
 
-            if (gomx->omx_error != OMX_ErrorNone)
+            if (gomx->omx_state != OMX_StateExecuting)
                 goto out_flushing;
 
             /* send buffer with codec data flag */
@@ -600,7 +603,9 @@ pad_chain (GstPad *pad,
         {
             OMX_BUFFERHEADERTYPE *omx_buffer;
 
-            if (self->last_pad_push_return != GST_FLOW_OK || self->gomx->omx_error)
+            if (self->last_pad_push_return != GST_FLOW_OK ||
+                !(gomx->omx_state == OMX_StateExecuting ||
+                  gomx->omx_state == OMX_StatePause))
             {
                 goto out_flushing;
             }
@@ -694,15 +699,29 @@ leave:
 
     /* special conditions */
 out_flushing:
-    if (gomx->omx_error)
     {
-        GST_ELEMENT_ERROR (self, STREAM, FAILED, (NULL),
-                           ("Error from OpenMAX detected"));
-        ret = GST_FLOW_ERROR;
-    }
-    gst_buffer_unref (buf);
+        const gchar *error_msg = NULL;
 
-    goto leave;
+        if (gomx->omx_error)
+        {
+            error_msg = "Error from OpenMAX component";
+        }
+        else if (gomx->omx_state != OMX_StateExecuting &&
+                 gomx->omx_state != OMX_StatePause)
+        {
+            error_msg = "OpenMAX component in wrong state";
+        }
+
+        if (error_msg)
+        {
+            GST_ELEMENT_ERROR (self, STREAM, FAILED, (NULL), (error_msg));
+            ret = GST_FLOW_ERROR;
+        }
+
+        gst_buffer_unref (buf);
+
+        goto leave;
+    }
 }
 
 static gboolean
