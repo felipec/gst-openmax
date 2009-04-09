@@ -106,17 +106,6 @@ change_state (GstElement *element,
                 return GST_STATE_CHANGE_FAILURE;
             break;
 
-        case GST_STATE_CHANGE_PAUSED_TO_READY:
-            g_mutex_lock (self->ready_lock);
-            if (self->ready)
-            {
-                /* unlock */
-                g_omx_port_finish (self->in_port);
-                g_omx_port_finish (self->out_port);
-            }
-            g_mutex_unlock (self->ready_lock);
-            break;
-
         default:
             break;
     }
@@ -132,6 +121,10 @@ change_state (GstElement *element,
             g_mutex_lock (self->ready_lock);
             if (self->ready)
             {
+                /* unlock */
+                g_omx_port_finish (self->in_port);
+                g_omx_port_finish (self->out_port);
+
                 g_omx_core_finish (core);
                 self->ready = FALSE;
             }
