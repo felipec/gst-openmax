@@ -729,7 +729,6 @@ wait_for_state (GOmxCore *core,
         if (!signaled)
         {
             GST_ERROR ("timed out");
-            core->omx_error = OMX_ErrorUndefined;
         }
     }
 
@@ -740,7 +739,6 @@ wait_for_state (GOmxCore *core,
     {
         GST_ERROR ("wrong state received: state=%d, expected=%d",
                    core->omx_state, state);
-        core->omx_error = OMX_ErrorUndefined;
     }
 
 leave:
