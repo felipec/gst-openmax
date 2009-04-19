@@ -99,7 +99,7 @@ type_base_init (gpointer g_class)
         GstElementDetails details;
 
         details.longname = "OpenMAX IL JPEG image encoder";
-        details.klass = "Codec/Encoder/Audio";
+        details.klass = "Codec/Encoder/Image";
         details.description = "Encodes image in JPEG format with OpenMAX IL";
         details.author = "Felipe Contreras";
 
