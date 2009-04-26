@@ -27,9 +27,6 @@
 
 GST_DEBUG_CATEGORY (gstomx_util_debug);
 
-#undef GST_CAT_DEFAULT
-#define GST_CAT_DEFAULT gstomx_util_debug
-
 /*
  * Forward declarations
  */
@@ -692,7 +689,7 @@ static inline void
 change_state (GOmxCore *core,
               OMX_STATETYPE state)
 {
-    GST_LOG ("state=%d", state);
+    GST_DEBUG_OBJECT (core->object, "state=%d", state);
     OMX_SendCommand (core->omx_handle, OMX_CommandStateSet, state, NULL);
 }
 
@@ -704,7 +701,7 @@ complete_change_state (GOmxCore *core,
 
     core->omx_state = state;
     g_cond_signal (core->omx_state_condition);
-    GST_LOG ("state=%d", state);
+    GST_DEBUG_OBJECT (core->object, "state=%d", state);
 
     g_mutex_unlock (core->omx_state_mutex);
 }
@@ -731,7 +728,7 @@ wait_for_state (GOmxCore *core,
 
         if (!signaled)
         {
-            GST_ERROR ("timed out");
+            GST_ERROR_OBJECT (core->object, "timed out");
         }
     }
 
@@ -740,8 +737,8 @@ wait_for_state (GOmxCore *core,
 
     if (core->omx_state != state)
     {
-        GST_ERROR ("wrong state received: state=%d, expected=%d",
-                   core->omx_state, state);
+        GST_ERROR_OBJECT (core->object, "wrong state received: state=%d, expected=%d",
+                          core->omx_state, state);
     }
 
 leave:
@@ -868,8 +865,8 @@ EventHandler (OMX_HANDLETYPE omx_handle,
         case OMX_EventError:
             {
                 core->omx_error = data_1;
-                GST_ERROR ("unrecoverable error: %s (0x%lx)",
-                           omx_error_to_str (data_1), data_1);
+                GST_ERROR_OBJECT (core->object, "unrecoverable error: %s (0x%lx)",
+                                  omx_error_to_str (data_1), data_1);
                 /* component might leave us waiting for buffers, unblock */
                 g_omx_core_flush_start (core);
                 /* unlock wait_for_state */
@@ -896,7 +893,7 @@ EmptyBufferDone (OMX_HANDLETYPE omx_handle,
     core = (GOmxCore*) app_data;
     port = g_omx_core_get_port (core, omx_buffer->nInputPortIndex);
 
-    GST_LOG ("omx_buffer=%p", omx_buffer);
+    GST_CAT_LOG_OBJECT (gstomx_util_debug, core->object, "omx_buffer=%p", omx_buffer);
     got_buffer (core, port, omx_buffer);
 
     return OMX_ErrorNone;
@@ -913,7 +910,7 @@ FillBufferDone (OMX_HANDLETYPE omx_handle,
     core = (GOmxCore *) app_data;
     port = g_omx_core_get_port (core, omx_buffer->nOutputPortIndex);
 
-    GST_LOG ("omx_buffer=%p", omx_buffer);
+    GST_CAT_LOG_OBJECT (gstomx_util_debug, core->object, "omx_buffer=%p", omx_buffer);
     got_buffer (core, port, omx_buffer);
 
     return OMX_ErrorNone;
