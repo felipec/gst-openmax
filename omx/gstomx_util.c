@@ -93,6 +93,10 @@ static GMutex *imp_mutex;
 static GHashTable *implementations;
 static gboolean initialized;
 
+/*
+ * Util
+ */
+
 static void
 g_ptr_array_clear (GPtrArray *array)
 {
@@ -112,6 +116,25 @@ g_ptr_array_insert (GPtrArray *array,
     }
 
     array->pdata[index] = data;
+}
+
+typedef void (*GOmxPortFunc) (GOmxPort *port);
+
+static void inline
+core_for_each_port (GOmxCore *core,
+                    GOmxPortFunc func)
+{
+    guint index;
+
+    for (index = 0; index < core->ports->len; index++)
+    {
+        GOmxPort *port;
+
+        port = g_omx_core_get_port (core, index);
+
+        if (port)
+            func (port);
+    }
 }
 
 /*
@@ -307,25 +330,6 @@ g_omx_core_deinit (GOmxCore *core)
 
     release_imp (core->imp);
     core->imp = NULL;
-}
-
-typedef void (*GOmxPortFunc) (GOmxPort *port);
-
-static void inline
-core_for_each_port (GOmxCore *core,
-                    GOmxPortFunc func)
-{
-    guint index;
-
-    for (index = 0; index < core->ports->len; index++)
-    {
-        GOmxPort *port;
-
-        port = g_omx_core_get_port (core, index);
-
-        if (port)
-            func (port);
-    }
 }
 
 void
