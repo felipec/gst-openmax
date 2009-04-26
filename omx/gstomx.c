@@ -74,7 +74,7 @@ static TableItem element_table[] =
     { "omx_mpeg4enc", "libomxil-bellagio.so.0", "OMX.st.video_encoder.mpeg4", GST_RANK_PRIMARY, gst_omx_mpeg4enc_get_type },
     { "omx_h264enc", "libomxil-bellagio.so.0", "OMX.st.video_encoder.avc", GST_RANK_PRIMARY, gst_omx_h264enc_get_type },
     { "omx_h263enc", "libomxil-bellagio.so.0", "OMX.st.video_encoder.h263", GST_RANK_PRIMARY, gst_omx_h263enc_get_type },
-    { "omx_vorbisdec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.ogg.single", GST_RANK_PRIMARY, gst_omx_vorbisdec_get_type },
+    { "omx_vorbisdec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.ogg.single", GST_RANK_SECONDARY, gst_omx_vorbisdec_get_type },
     { "omx_mp3dec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.mp3.mad", GST_RANK_PRIMARY, gst_omx_mp3dec_get_type },
     { "omx_mp2dec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.mp3.mad", GST_RANK_PRIMARY, gst_omx_mp2dec_get_type },
     { "omx_amrnbdec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.amrnb", GST_RANK_PRIMARY, gst_omx_amrnbdec_get_type },
