@@ -64,7 +64,7 @@ typedef struct TableItem
     GType (*get_type) (void);
 } TableItem;
 
-TableItem element_table[] =
+static TableItem element_table[] =
 {
     { "omx_dummy", "libomxil-bellagio.so.0", "OMX.st.dummy", GST_RANK_NONE, gst_omx_dummy_get_type },
     { "omx_mpeg4dec", "libomxil-bellagio.so.0", "OMX.st.video_decoder.mpeg4", GST_RANK_PRIMARY, gst_omx_mpeg4dec_get_type },
