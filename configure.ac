@@ -41,6 +41,12 @@ AG_GST_ARG_WITH_PKG_CONFIG_PATH
 AG_GST_ARG_WITH_PACKAGE_NAME
 AG_GST_ARG_WITH_PACKAGE_ORIGIN
 
+AC_ARG_ENABLE([experimental], AC_HELP_STRING([--enable-experimental]), [EXPERIMENTAL=$enableval], [EXPERIMENTAL=no])
+AM_CONDITIONAL([EXPERIMENTAL], [test x$EXPERIMENTAL = xyes])
+if test x$EXPERIMENTAL = xyes; then
+        AC_DEFINE([EXPERIMENTAL], , [Enable experimental elements])
+fi
+
 dnl ** checks **
 
 dnl Check for GLib

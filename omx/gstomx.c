@@ -19,6 +19,8 @@
  *
  */
 
+#include "config.h"
+
 #include "gstomx.h"
 #include "gstomx_dummy.h"
 #include "gstomx_mpeg4dec.h"
@@ -30,6 +32,7 @@
 #include "gstomx_h263enc.h"
 #include "gstomx_vorbisdec.h"
 #include "gstomx_mp3dec.h"
+#ifdef EXPERIMENTAL
 #include "gstomx_mp2dec.h"
 #include "gstomx_aacdec.h"
 #include "gstomx_aacenc.h"
@@ -46,12 +49,13 @@
 #include "gstomx_ilbcdec.h"
 #include "gstomx_ilbcenc.h"
 #include "gstomx_jpegenc.h"
+#endif /* EXPERIMENTAL */
 #include "gstomx_audiosink.h"
+#ifdef EXPERIMENTAL
 #include "gstomx_videosink.h"
 #include "gstomx_filereadersrc.h"
+#endif /* EXPERIMENTAL */
 #include "gstomx_volume.h"
-
-#include "config.h"
 
 GST_DEBUG_CATEGORY (gstomx_debug);
 
@@ -76,6 +80,7 @@ static TableItem element_table[] =
     { "omx_h263enc", "libomxil-bellagio.so.0", "OMX.st.video_encoder.h263", GST_RANK_PRIMARY, gst_omx_h263enc_get_type },
     { "omx_vorbisdec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.ogg.single", GST_RANK_SECONDARY, gst_omx_vorbisdec_get_type },
     { "omx_mp3dec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.mp3.mad", GST_RANK_PRIMARY, gst_omx_mp3dec_get_type },
+#ifdef EXPERIMENTAL
     { "omx_mp2dec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.mp3.mad", GST_RANK_PRIMARY, gst_omx_mp2dec_get_type },
     { "omx_amrnbdec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.amrnb", GST_RANK_PRIMARY, gst_omx_amrnbdec_get_type },
     { "omx_amrnbenc", "libomxil-bellagio.so.0", "OMX.st.audio_encoder.amrnb", GST_RANK_PRIMARY, gst_omx_amrnbenc_get_type },
@@ -92,9 +97,12 @@ static TableItem element_table[] =
     { "omx_ilbcdec", "libomxil-bellagio.so.0", "OMX.st.audio_decoder.ilbc", GST_RANK_PRIMARY, gst_omx_ilbcdec_get_type },
     { "omx_ilbcenc", "libomxil-bellagio.so.0", "OMX.st.audio_encoder.ilbc", GST_RANK_PRIMARY, gst_omx_ilbcenc_get_type },
     { "omx_jpegenc", "libomxil-bellagio.so.0", "OMX.st.image_encoder.jpeg", GST_RANK_PRIMARY, gst_omx_jpegenc_get_type },
+#endif /* EXPERIMENTAL */
     { "omx_audiosink", "libomxil-bellagio.so.0", "OMX.st.alsa.alsasink", GST_RANK_NONE, gst_omx_audiosink_get_type },
+#ifdef EXPERIMENTAL
     { "omx_videosink", "libomxil-bellagio.so.0", "OMX.st.videosink", GST_RANK_NONE, gst_omx_videosink_get_type },
     { "omx_filereadersrc", "libomxil-bellagio.so.0", "OMX.st.audio_filereader", GST_RANK_NONE, gst_omx_filereadersrc_get_type },
+#endif /* EXPERIMENTAL */
     { "omx_volume", "libomxil-bellagio.so.0", "OMX.st.volume.component", GST_RANK_NONE, gst_omx_volume_get_type },
     { NULL, NULL, NULL, 0, NULL },
 };
