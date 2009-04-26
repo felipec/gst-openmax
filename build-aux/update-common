@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Don't rely blindly on this command, further cleanup is needed after running
+# this script.
+
+orig=${1:-"../common"}
+
+cp $orig/gst-autogen.sh build-aux/gst-autogen.sh
+cp $orig/release.mak build-aux/release.mak
+cp $orig/m4/as-ac-expand.m4 m4/as-ac-expand.m4
+cp $orig/m4/as-compiler-flag.m4 m4/as-compiler-flag.m4
+cp $orig/m4/gst-args.m4 m4/gst-args.m4
+cp $orig/m4/gst-check.m4 m4/gst-check.m4
+cp $orig/m4/gst-error.m4 m4/gst-error.m4
+cp $orig/m4/gst-plugindir.m4 m4/gst-plugindir.m4
+cp $orig/m4/gst.m4 m4/gst.m4
+cp $orig/m4/shave.m4 m4/shave.m4
+cp $orig/shave-libtool.in shave-libtool.in
+cp $orig/shave.in shave.in
