@@ -25,4 +25,4 @@ distcheck-hook:
           false )
 
 dist-hook:
-	echo $(VERSION) > $(distdir)/.tarball-version
+	echo $(VERSION) > $(distdir)/.version

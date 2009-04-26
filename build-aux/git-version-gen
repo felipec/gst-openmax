@@ -1,14 +1,10 @@
 #!/bin/sh
 
-if test -f .tarball-version
-then
-	v=`cat .tarball-version`
+if test -f .version; then
+        v=`cat .version`
 else
-        v=`git describe --tags`
+        v=`git describe --tags | sed 's/^v//'`
 fi
-
-# remove initial 'v'
-v=`echo "$v" |sed 's/^v//'`
 
 # for m4_esyscmd
 echo "$v" | tr -d '\012'
