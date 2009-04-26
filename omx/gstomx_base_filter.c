@@ -103,7 +103,10 @@ change_state (GstElement *element,
         case GST_STATE_CHANGE_NULL_TO_READY:
             g_omx_core_init (core, self->omx_library, self->omx_component);
             if (core->omx_state != OMX_StateLoaded)
-                return GST_STATE_CHANGE_FAILURE;
+            {
+                ret = GST_STATE_CHANGE_FAILURE;
+                goto leave;
+            }
             break;
 
         default:
@@ -113,7 +116,7 @@ change_state (GstElement *element,
     ret = GST_ELEMENT_CLASS (parent_class)->change_state (element, transition);
 
     if (ret == GST_STATE_CHANGE_FAILURE)
-        return ret;
+        goto leave;
 
     switch (transition)
     {
@@ -132,7 +135,8 @@ change_state (GstElement *element,
             if (core->omx_state != OMX_StateLoaded &&
                 core->omx_state != OMX_StateInvalid)
             {
-                return GST_STATE_CHANGE_FAILURE;
+                ret = GST_STATE_CHANGE_FAILURE;
+                goto leave;
             }
             break;
 
@@ -144,6 +148,7 @@ change_state (GstElement *element,
             break;
     }
 
+leave:
     GST_LOG_OBJECT (self, "end");
 
     return ret;
