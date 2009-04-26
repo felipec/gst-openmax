@@ -1,125 +1,133 @@
-= GstOpenMAX =
-
-GstOpenMAX is a GStreamer plug-in that allows communication with OpenMAX IL
+'gst-openmax' is a GStreamer plug-in that allows communication with OpenMAX IL
 components.
 
 OpenMAX IL is an industry standard that provides an abstraction layer for
 computer graphics, video, and sound routines.
 
-You'll need an OpenMAX IL implementation. Luckily STMicroelectronics has
-provided an useful sample implementation in the Bellagio project which is Open
-Source.
+This project is a collaboration between Nokia, NXP, Collabora,
+STMicroelectronics, Texas Instruments, and the open source community.
 
-For more information check:
-http://freedesktop.org/wiki/GstOpenMAX
+== What's the status? ==
 
-== Why is it good? ==
+Many component wrappers have been developed for different OpenMAX IL
+implemenatations.
 
-The easiest way to see OpenMAX IL is to think about OpenGL. both standards are
-controlled by the Khronos Group, both standards are open and royalty free.
+=== ti (OMAP-3430) ===
 
-In a similar way you can think of Bellagio/OpenMAX IL as Mesa/Open GL. They are
-not official implementations, but they follow the standard.
+Hardware-accelerated through DSP.
 
-There are many Open Source encoders/decoders, but they all have different
-API's, so in order to use it you need to learn the API. In fact some projects
-as FFmpeg constantly change their API, so it makes things difficult.
+ * H.264 video encoder/decoder
+ * H.263 video encoder/decoder
+ * MPEG4 video encoder/decoder
+ * WMV video decoder
+ * JPEG image encoder
 
-If you use Bellagio's omxil you don't have to worry about FFmpeg's API changes,
-those are wrapped inside a standard API.
+=== Maemo ===
 
-The standard has been reviewed by several parties including: Texas Instruments,
-ARM, ATI Technologies, Beatnik, Broadcom, Emuzed, Fraunhofer, Freescale,
-Infineon, Intel, Motorola, Nokia, NVIDIA, Philips, SKY MobileMedia, Samsung,
-Sasken, Siemens, ST Microelectronics, and Symbian.
+Uses bellagio.
 
-The gst-openmax project is a collaboration between Fluendo, Nokia,
-STMicroelectronics, Texas Instruments and the Open Source community.
+ * MP3 audio decoder
+ * AAC audio encoder/decoder
+ * G.711 audio encoder/decoder
+ * G.719 audio encoder/decoder
+ * iLBC audio encoder/decoder
+ * AMR-NB audio encoder/decoder
+ * AMR-WB audio encoder/decoder
 
-== What's bad? ==
+=== bellagio ===
 
-Not all of the codecs are defined. For example Vorbis is defined, but not
-Theora. Of course it could be added as an extension, but that API wouldn't be
-set in stone
+ * MP3 audio decoder (libmad)
+ * Vorbis audio decoder
+ * MPEG4 video decoder (FFmpeg)
+ * H.263 video decoder (FFmpeg)
+ * Audio sink (ALSA... not maintained)
 
-== How to build omxil ==
 
-Download the source code from:
+We are missing:
 
- * http://omxil.sourceforge.net/
-
-Or directly from:
-
- * http://dl.sourceforge.net/sourceforge/omxil/libomxil-B-0.3.3.tar.gz
-
-Install as usual:
-
- ./configure --prefix="$HOME/omx"
- make
- make install
-
-Register the components:
-
- $HOME/omx/bin/omxregister -v
-
-You'll get an output like this:
-
- Component OMX.st.volume.component registered
-   Specific role OMX.st.volume.component registered
- Component OMX.st.audio_decoder.ogg.single registered
-   Specific role OMX.st.audio_decoder.ogg.single registered
- Component OMX.st.alsa.alsasink registered
-   Specific role OMX.st.alsa.alsasink registered
- Component OMX.st.audio_filereader registered
- Component OMX.st.audio_decoder registered
-   Specific role OMX.st.audio_decoder.mp3 registered
-   Specific role OMX.st.audio_decoder.ogg registered
-   Specific role OMX.st.audio_decoder.aac registered
- Component OMX.st.video_decoder registered
-   Specific role OMX.st.video_decoder.mpeg4 registered
-   Specific role OMX.st.video_decoder.avc registered
- Component OMX.st.video_colorconv.ffmpeg registered
-   Specific role OMX.st.video_colorconv.ffmpeg registered
- Component OMX.st.audio_decoder.mp3.mad registered
-   Specific role OMX.st.audio_decoder.mp3.mad registered
-
-  8 OpenMAX IL ST static components with 11 roles succesfully scanned
-
-Make sure you have:
-
- * "OMX.st.audio_decoder.mp3.mad" for MP3 decoding
- * "OMX.st.audio_decoder.ogg.single" for Vorbis decoding
- * "OMX.st.video_decoder.mpeg4" for MPEG4 video decoding
- * "OMX.st.alsa.alsasink" for ALSA sound output
-
-== How to build gst-openmax ==
-
-If you are fetching it from CVS:
-
- ./autogen.sh --noconfigure
-
-If you want to install it into your home directory:
-
- ./configure --prefix="$HOME/omx"
-
- make
-
-Then as root (depending on your prefix):
-
- make install
+ * OpenMAX IL facilities (tunneling, clock)
 
 == How to try it ==
 
- export GST_PLUGIN_PATH=$HOME/omx/lib/gstreamer-0.10
- export LD_LIBRARY_PATH=$HOME/omx/lib
+It depends on your platform, but if want to try on x86 you can use Bellagio's
+implementation:
 
-You'll be able to play videos with MP3, Vorbis, MPEG-4, H.264 or H.263 content using Bellagio's components.
+=== omxil ===
+
+So, first install Bellagio's omxil from http://omxil.sourceforge.net/, or
+http://downloads.sourceforge.net/omxil/libomxil-bellagio-0.9.1.tar.gz. Version
+0.9.1 is recommended.
+
+Install as usual:
+
+        ./configure --prefix="$HOME/omx"
+        make
+        make install
+
+Register the components:
+
+        $HOME/omx/bin/omxregister-bellagio -v
+
+You'll get an output like this:
+
+         Scanning directory /home/felipec/omx/lib/bellagio/
+
+         Scanning openMAX libary /home/felipec/omx/lib/bellagio/libomxvorbis.so
+        Component OMX.st.audio_decoder.ogg.single registered
+          Specific role OMX.st.audio_decoder.ogg.single registered
+
+         1 OpenMAX IL ST static components with 1 roles succesfully scanned
+
+Make sure you have:
+ * "OMX.st.audio_decoder.mp3.mad" for MP3 decoding
+ * "OMX.st.audio_decoder.ogg.single" for Vorbis decoding
+ * "OMX.st.video_decoder.mpeg4" for MPEG4 video decoding
+
+=== omap ===
+
+In order to use gst-openmax on Texas Instruments' OMAP platform you first need
+to apply the patches in 'patches/omap'.
+
+=== gst-openmax ===
+
+        ./autogen.sh --noconfigure
+        ./configure --prefix="$HOME/omx"
+        make install
+
+=== Running ===
+
+To actually use the plug-in:
+
+        export GST_PLUGIN_PATH=$HOME/omx/lib/gstreamer-0.10
+        export LD_LIBRARY_PATH=$HOME/omx/lib
+
+You'll be able to play audio and video with MP3, Vorbis, MPEG4, H.264, or H.263
+content using Bellagio's components.
+
+For MP3 you'll also need the mp3parse element, otherwise you'll get:
+
+        GStreamer-CRITICAL **: gst_segment_clip: assertion `segment->format == format' failed
 
 If you want to see what's happening:
 
- export GST_DEBUG=omx:4
+        export GST_DEBUG=omx:4
 
-== Links ==
+== How to contribute ==
 
- * http://omxil.sourceforge.net/
- * http://freedesktop.org/wiki/GstOpenMAX
+Suscribe to the mailing list, or send a direct e-mail to gstreamer-openmax@lists.sourceforge.net.
+ * mailing list: https://lists.sourceforge.net/lists/listinfo/gstreamer-openmax
+
+If you find any issues please fill a bug report:
+ * http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer&component=gst-openmax
+
+== Roadmap ==
+
+ * Merge tunneling branch
+ * Documentation
+ * More unit tests
+ * First real release
+
+== External Links ==
+
+ * OpenMAX's homepage: http://www.khronos.org/openmax/
+ * Bellagio's homepage: http://omxil.sourceforge.net/
