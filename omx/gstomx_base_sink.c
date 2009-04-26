@@ -208,7 +208,8 @@ render (GstBaseSink *gst_base,
             else
             {
                 GST_WARNING_OBJECT (self, "null buffer");
-                /* ret = GST_FLOW_ERROR; */
+                ret = GST_FLOW_UNEXPECTED;
+                break;
             }
         }
     }
