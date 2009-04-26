@@ -103,7 +103,7 @@ settings_changed_cb (GOmxCore *core)
     guint height;
     guint32 format = 0;
 
-    omx_base = core->client_data;
+    omx_base = core->object;
     self = GST_OMX_BASE_VIDEODEC (omx_base);
 
     GST_DEBUG_OBJECT (omx_base, "settings changed");

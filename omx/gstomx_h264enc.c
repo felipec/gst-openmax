@@ -84,7 +84,7 @@ settings_changed_cb (GOmxCore *core)
     guint width;
     guint height;
 
-    omx_base_filter = core->client_data;
+    omx_base_filter = core->object;
     omx_base = GST_OMX_BASE_VIDEOENC (omx_base_filter);
 
     GST_DEBUG_OBJECT (omx_base, "settings changed");

@@ -72,6 +72,8 @@ struct GOmxImp
 
 struct GOmxCore
 {
+    gpointer object; /**< GStreamer element. */
+
     OMX_HANDLETYPE omx_handle;
     OMX_ERRORTYPE omx_error;
 
@@ -80,8 +82,6 @@ struct GOmxCore
     GMutex *omx_state_mutex;
 
     GPtrArray *ports;
-
-    gpointer client_data; /**< Placeholder for the client data. */
 
     GSem *done_sem;
     GSem *flush_sem;

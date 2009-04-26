@@ -90,7 +90,7 @@ settings_changed_cb (GOmxCore *core)
 {
     GstOmxBaseSrc *omx_base;
 
-    omx_base = core->client_data;
+    omx_base = core->object;
 
     GST_DEBUG_OBJECT (omx_base, "settings changed");
 

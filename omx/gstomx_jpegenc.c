@@ -199,7 +199,7 @@ settings_changed_cb (GOmxCore *core)
     guint width;
     guint height;
 
-    omx_base = core->client_data;
+    omx_base = core->object;
     self = GST_OMX_JPEGENC (omx_base);
 
     GST_DEBUG_OBJECT (omx_base, "settings changed");

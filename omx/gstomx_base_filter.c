@@ -877,7 +877,7 @@ type_instance_init (GTypeInstance *instance,
     {
         GOmxCore *gomx;
         self->gomx = gomx = g_omx_core_new ();
-        gomx->client_data = self;
+        gomx->object = self;
     }
 
     self->ready_lock = g_mutex_new ();
