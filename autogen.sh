@@ -5,7 +5,7 @@ package=gst-openmax
 
 . build-aux/gst-autogen.sh
 
-mkdir -p config
+touch ChangeLog
 
 CONFIGURE_DEF_OPT='--enable-maintainer-mode'
 
