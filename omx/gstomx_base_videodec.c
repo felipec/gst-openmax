@@ -274,9 +274,6 @@ omx_setup (GstOmxBaseFilter *omx_base)
                 width = param.format.video.nFrameWidth;
                 height = param.format.video.nFrameHeight;
 
-                /* this is against the standard; nBufferSize is read-only. */
-                param.nBufferSize = (width * height) / 2;
-
                 OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
             }
 
@@ -292,20 +289,6 @@ omx_setup (GstOmxBaseFilter *omx_base)
                 param.format.video.eColorFormat = OMX_COLOR_FormatCbYCrY;
 
                 color_format = param.format.video.eColorFormat;
-
-                /* this is against the standard; nBufferSize is read-only. */
-                switch (color_format)
-                {
-                    case OMX_COLOR_FormatYCbYCr:
-                    case OMX_COLOR_FormatCbYCrY:
-                        param.nBufferSize = (width * height) * 2;
-                        break;
-                    case OMX_COLOR_FormatYUV420PackedPlanar:
-                        param.nBufferSize = (width * height) * 3 / 2;
-                        break;
-                    default:
-                        break;
-                }
 
                 OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
             }

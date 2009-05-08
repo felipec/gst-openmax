@@ -614,6 +614,17 @@ pad_chain (GstPad *pad,
             GST_ERROR_OBJECT (self, "Whoa! very wrong");
         }
 
+        {
+            static guint count = 0;
+            if (count == 10)
+            {
+                g_debug ("reconfig test");
+                g_omx_core_disable (gomx, 0);
+                g_omx_core_enable (gomx, 0);
+            }
+            count++;
+        }
+
         while (G_LIKELY (buffer_offset < GST_BUFFER_SIZE (buf)))
         {
             OMX_BUFFERHEADERTYPE *omx_buffer;

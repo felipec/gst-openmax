@@ -91,6 +91,7 @@ struct GOmxCore
     GOmxImp *imp;
 
     gboolean done;
+    gboolean settings_changed;
 };
 
 struct GOmxPort
