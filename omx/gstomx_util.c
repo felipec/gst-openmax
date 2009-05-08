@@ -89,6 +89,9 @@ port_allocate_buffers (GOmxPort *port);
 static inline void
 port_start_buffers (GOmxPort *port);
 
+static inline void
+port_cleanup (GOmxPort *port);
+
 static OMX_CALLBACKTYPE callbacks = { EventHandler, EmptyBufferDone, FillBufferDone };
 
 /* protect implementations hash_table */
@@ -452,6 +455,74 @@ g_omx_core_flush_stop (GOmxCore *core)
     core_for_each_port (core, g_omx_port_resume);
 }
 
+void
+g_omx_core_enable (GOmxCore *core,
+                   int port_index)
+{
+    if (port_index == -1)
+    {
+        OMX_SendCommand (core->omx_handle, OMX_CommandPortEnable, OMX_ALL, NULL);
+        core_for_each_port (core, port_allocate_buffers);
+        g_sem_down (core->port_sem);
+        g_sem_down (core->port_sem);
+
+        core_for_each_port (core, port_start_buffers);
+        core_for_each_port (core, g_omx_port_resume);
+    }
+    else
+    {
+        GOmxPort *port;
+
+        port = g_omx_core_get_port (core, port_index);
+
+        if (port)
+        {
+            OMX_SendCommand (core->omx_handle, OMX_CommandPortEnable, port_index, NULL);
+            port_allocate_buffers (port);
+            g_sem_down (core->port_sem);
+
+            port_start_buffers (port);
+            g_omx_port_resume (port);
+        }
+    }
+}
+
+void
+g_omx_core_disable (GOmxCore *core,
+                    int port_index)
+{
+    if (port_index == -1)
+    {
+        core_for_each_port (core, g_omx_port_pause);
+
+        OMX_SendCommand (core->omx_handle, OMX_CommandPortDisable, OMX_ALL, NULL);
+
+        core_for_each_port (core, port_cleanup);
+        core_for_each_port (core, port_free_buffers);
+
+        g_sem_down (core->port_sem);
+        g_sem_down (core->port_sem);
+    }
+    else
+    {
+        GOmxPort *port;
+
+        port = g_omx_core_get_port (core, port_index);
+
+        if (port)
+        {
+            g_omx_port_pause (port);
+
+            OMX_SendCommand (core->omx_handle, OMX_CommandPortDisable, port_index, NULL);
+
+            port_cleanup (port);
+            port_free_buffers (port);
+
+            g_sem_down (core->port_sem);
+        }
+    }
+}
+
 /*
  * Port
  */
@@ -589,6 +660,17 @@ port_start_buffers (GOmxPort *port)
             got_buffer (port->core, port, omx_buffer);
         else
             g_omx_port_release_buffer (port, omx_buffer);
+    }
+}
+
+static void
+port_cleanup (GOmxPort *port)
+{
+    OMX_BUFFERHEADERTYPE *omx_buffer;
+    while ((omx_buffer = async_queue_pop_forced (port->queue)))
+    {
+        omx_buffer->nFilledLen = 0;
+        g_omx_port_release_buffer (port, omx_buffer);
     }
 }
 
