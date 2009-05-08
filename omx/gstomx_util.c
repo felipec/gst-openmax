@@ -71,6 +71,9 @@ FillBufferDone (OMX_HANDLETYPE omx_handle,
                 OMX_BUFFERHEADERTYPE *omx_buffer);
 
 static inline const char *
+omx_state_to_str (OMX_STATETYPE omx_state);
+
+static inline const char *
 omx_error_to_str (OMX_ERRORTYPE omx_error);
 
 static inline GOmxPort *
@@ -735,7 +738,8 @@ wait_for_state (GOmxCore *core,
 
         if (!signaled)
         {
-            GST_ERROR_OBJECT (core->object, "timed out");
+            GST_ERROR_OBJECT (core->object, "timed out switching from '%s' to '%s'",
+                              omx_state_to_str(core->omx_state), omx_state_to_str(state));
         }
     }
 
@@ -921,6 +925,28 @@ FillBufferDone (OMX_HANDLETYPE omx_handle,
     got_buffer (core, port, omx_buffer);
 
     return OMX_ErrorNone;
+}
+
+static inline const char *
+omx_state_to_str (OMX_STATETYPE omx_state)
+{
+    switch (omx_state)
+    {
+        case OMX_StateInvalid:
+            return "invalid";
+        case OMX_StateLoaded:
+            return "loaded";
+        case OMX_StateIdle:
+            return "idle";
+        case OMX_StateExecuting:
+            return "executing";
+        case OMX_StatePause:
+            return "pause";
+        case OMX_StateWaitForResources:
+            return "wait for resources";
+        default:
+            return "unknown";
+    }
 }
 
 static inline const char *
