@@ -513,13 +513,12 @@ static void
 port_allocate_buffers (GOmxPort *port)
 {
     guint i;
+    gsize size;
+
+    size = port->buffer_size;
 
     for (i = 0; i < port->num_buffers; i++)
     {
-        guint size;
-
-        size = port->buffer_size;
-
         if (port->omx_allocate)
         {
             OMX_AllocateBuffer (port->core->omx_handle,
