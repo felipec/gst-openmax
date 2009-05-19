@@ -300,6 +300,10 @@ output_loop (gpointer data)
 
     GST_LOG_OBJECT (self, "begin");
 
+    /* do not bother if we have been setup to bail out */
+    if ((ret = g_atomic_int_get (&self->last_pad_push_return)) != GST_FLOW_OK)
+        goto leave;
+
     if (!self->ready)
     {
         g_error ("not ready");
@@ -823,7 +827,8 @@ activate_push (GstPad *pad,
     if (active)
     {
         GST_DEBUG_OBJECT (self, "activate");
-        self->last_pad_push_return = GST_FLOW_OK;
+        /* task may carry on */
+        g_atomic_int_set (&self->last_pad_push_return, GST_FLOW_OK);
 
         /* we do not start the task yet if the pad is not connected */
         if (gst_pad_is_linked (pad))
@@ -841,6 +846,9 @@ activate_push (GstPad *pad,
     else
     {
         GST_DEBUG_OBJECT (self, "deactivate");
+
+        /* persuade task to bail out */
+        g_atomic_int_set (&self->last_pad_push_return, GST_FLOW_WRONG_STATE);
 
         if (self->ready)
         {
