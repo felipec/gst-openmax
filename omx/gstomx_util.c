@@ -167,10 +167,10 @@ imp_new (const gchar *name)
         }
 
         imp->mutex = g_mutex_new ();
-        imp->sym_table.init = dlsym (handle, "OMX_Init");
-        imp->sym_table.deinit = dlsym (handle, "OMX_Deinit");
-        imp->sym_table.get_handle = dlsym (handle, "OMX_GetHandle");
-        imp->sym_table.free_handle = dlsym (handle, "OMX_FreeHandle");
+        imp->sym_table.init = dlsym (handle, "PV_MasterOMX_Init");
+        imp->sym_table.deinit = dlsym (handle, "PV_MasterOMX_Deinit");
+        imp->sym_table.get_handle = dlsym (handle, "PV_MasterOMX_GetHandle");
+        imp->sym_table.free_handle = dlsym (handle, "PV_MasterOMX_FreeHandle");
     }
 
     return imp;
