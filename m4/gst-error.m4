@@ -7,7 +7,7 @@ dnl Last modification: 2008-02-18
 
 dnl AG_GST_SET_ERROR_CFLAGS([ADD-WERROR])
 dnl AG_GST_SET_ERROR_CXXFLAGS([ADD-WERROR])
-dnl AG_GST_SET_LEVEL_DEFAULT([IS-CVS-VERSION])
+dnl AG_GST_SET_LEVEL_DEFAULT([IS-GIT-VERSION])
 
 
 dnl Sets ERROR_CFLAGS to something the compiler will accept.

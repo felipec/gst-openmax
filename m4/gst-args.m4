@@ -155,7 +155,7 @@ AC_DEFUN([AG_GST_ARG_WITH_PKG_CONFIG_PATH],
 ])
 
 
-dnl This macro requires that GST_CVS is set to yes or no (release)
+dnl This macro requires that GST_GIT or GST_CVS is set to yes or no (release)
 AC_DEFUN([AG_GST_ARG_WITH_PACKAGE_NAME],
 [
   dnl package name in plugins
@@ -177,10 +177,10 @@ AC_DEFUN([AG_GST_ARG_WITH_PACKAGE_NAME],
       fi
 
       dnl default value
-      if test "x$GST_CVS" = "xyes"
+      if test "x$GST_GIT" = "xyes" -o "x$GST_CVS" = "xyes"
       then
         dnl nano >= 1
-        GST_PACKAGE_NAME="$P CVS/prerelease"
+        GST_PACKAGE_NAME="$P git/prerelease"
       else
         GST_PACKAGE_NAME="$P source release"
       fi
