@@ -35,6 +35,15 @@ enum
 
 static GstElementClass *parent_class;
 
+static inline void
+log_buffer (GstOmxBaseFilter *self,
+            OMX_BUFFERHEADERTYPE *omx_buffer)
+{
+    GST_DEBUG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, flags=%lu, offset=%lu, timestamp=%lld",
+                      omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nFlags,
+                      omx_buffer->nOffset, omx_buffer->nTimeStamp);
+}
+
 static void
 setup_ports (GstOmxBaseFilter *self)
 {
@@ -328,9 +337,7 @@ output_loop (gpointer data)
             goto leave;
         }
 
-        GST_DEBUG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, flags=%lu, offset=%lu, timestamp=%lld",
-                          omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nFlags,
-                          omx_buffer->nOffset, omx_buffer->nTimeStamp);
+        log_buffer (self, omx_buffer);
 
         if (G_LIKELY (omx_buffer->nFilledLen > 0))
         {
@@ -620,9 +627,7 @@ pad_chain (GstPad *pad,
 
             if (G_LIKELY (omx_buffer))
             {
-                GST_DEBUG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, flags=%lu, offset=%lu, timestamp=%lld",
-                                  omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nFlags,
-                                  omx_buffer->nOffset, omx_buffer->nTimeStamp);
+                log_buffer (self, omx_buffer);
 
                 if (omx_buffer->nOffset == 0 &&
                     self->share_input_buffer)
