@@ -687,6 +687,7 @@ pad_chain (GstPad *pad,
                                                                         GST_SECOND);
                 }
 
+                omx_buffer->nFlags |= OMX_BUFFERFLAG_ENDOFFRAME;
                 buffer_offset += omx_buffer->nFilledLen;
 
                 GST_LOG_OBJECT (self, "release_buffer");
