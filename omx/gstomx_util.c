@@ -867,10 +867,7 @@ EventHandler (OMX_HANDLETYPE omx_handle,
         case OMX_EventPortSettingsChanged:
             {
                 /** @todo only on the relevant port. */
-                if (core->settings_changed_cb)
-                {
-                    core->settings_changed_cb (core);
-                }
+                core->settings_changed = TRUE;
                 break;
             }
         case OMX_EventError:

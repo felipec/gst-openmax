@@ -614,6 +614,14 @@ pad_chain (GstPad *pad,
             GST_ERROR_OBJECT (self, "Whoa! very wrong");
         }
 
+        if (G_UNLIKELY (gomx->settings_changed))
+        {
+            if (gomx->settings_changed_cb)
+                gomx->settings_changed_cb (gomx);
+
+            gomx->settings_changed = FALSE;
+        }
+
         while (G_LIKELY (buffer_offset < GST_BUFFER_SIZE (buf)))
         {
             OMX_BUFFERHEADERTYPE *omx_buffer;
