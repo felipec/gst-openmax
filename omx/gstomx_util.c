@@ -123,7 +123,7 @@ g_ptr_array_insert (GPtrArray *array,
 
 typedef void (*GOmxPortFunc) (GOmxPort *port);
 
-static void inline
+static inline void
 core_for_each_port (GOmxCore *core,
                     GOmxPortFunc func)
 {
