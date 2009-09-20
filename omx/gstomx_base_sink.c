@@ -434,14 +434,11 @@ static GstPadLinkReturn
 pad_sink_link (GstPad *pad,
                GstPad *peer)
 {
-    GOmxCore *gomx;
     GstOmxBaseSink *self;
 
     self = GST_OMX_BASE_SINK (GST_OBJECT_PARENT (pad));
 
     GST_INFO_OBJECT (self, "link");
-
-    gomx = self->gomx;
 
     if (!self->initialized)
     {
