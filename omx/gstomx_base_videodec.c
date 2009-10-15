@@ -150,6 +150,10 @@ settings_changed_cb (GOmxCore *core)
             gst_structure_set (struc, "framerate", GST_TYPE_FRACTION,
                                self->framerate_num, self->framerate_denom,
                                NULL);
+	else
+            /* FIXME this is a workaround for xvimagesink */
+            gst_structure_set (struc, "framerate", GST_TYPE_FRACTION,
+                               0, 1, NULL);
 
         gst_caps_append_structure (new_caps, struc);
 
