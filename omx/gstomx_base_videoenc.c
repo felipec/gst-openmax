@@ -30,7 +30,7 @@ enum
     ARG_BITRATE,
 };
 
-#define DEFAULT_BITRATE 500000
+#define DEFAULT_BITRATE 0
 
 static GstOmxBaseFilterClass *parent_class;
 
@@ -270,8 +270,8 @@ omx_setup (GstOmxBaseFilter *omx_base)
 
             param.format.video.eCompressionFormat = self->compression_format;
 
-            /** @todo this should be set with a property */
-            param.format.video.nBitrate = self->bitrate;
+            if (self->bitrate != 0)
+                param.format.video.nBitrate = self->bitrate;
 
             OMX_SetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
         }

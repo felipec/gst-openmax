@@ -35,6 +35,20 @@ enum
 
 static GstElementClass *parent_class;
 
+static inline void
+log_buffer (GstOmxBaseFilter *self,
+            OMX_BUFFERHEADERTYPE *omx_buffer)
+{
+    GST_DEBUG_OBJECT (self, "omx_buffer: "
+                      "size=%" G_GUINT32_FORMAT ", "
+                      "len=%" G_GUINT32_FORMAT ", "
+                      "flags=%" G_GUINT32_FORMAT ", "
+                      "offset=%" G_GUINT32_FORMAT ", "
+                      "timestamp=%" G_GUINT64_FORMAT,
+                      omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nFlags,
+                      omx_buffer->nOffset, omx_buffer->nTimeStamp);
+}
+
 static void
 setup_ports (GstOmxBaseFilter *self)
 {
@@ -300,6 +314,10 @@ output_loop (gpointer data)
 
     GST_LOG_OBJECT (self, "begin");
 
+    /* do not bother if we have been setup to bail out */
+    if ((ret = g_atomic_int_get (&self->last_pad_push_return)) != GST_FLOW_OK)
+        goto leave;
+
     if (!self->ready)
     {
         g_error ("not ready");
@@ -324,9 +342,7 @@ output_loop (gpointer data)
             goto leave;
         }
 
-        GST_DEBUG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, flags=%lu, offset=%lu, timestamp=%lld",
-                          omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nFlags,
-                          omx_buffer->nOffset, omx_buffer->nTimeStamp);
+        log_buffer (self, omx_buffer);
 
         if (G_LIKELY (omx_buffer->nFilledLen > 0))
         {
@@ -434,7 +450,7 @@ output_loop (gpointer data)
                 }
                 else
                 {
-                    GST_WARNING_OBJECT (self, "couldn't allocate buffer of size %d",
+                    GST_WARNING_OBJECT (self, "couldn't allocate buffer of size %" G_GUINT32_FORMAT,
                                         omx_buffer->nFilledLen);
                 }
             }
@@ -616,9 +632,7 @@ pad_chain (GstPad *pad,
 
             if (G_LIKELY (omx_buffer))
             {
-                GST_DEBUG_OBJECT (self, "omx_buffer: size=%lu, len=%lu, flags=%lu, offset=%lu, timestamp=%lld",
-                                  omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nFlags,
-                                  omx_buffer->nOffset, omx_buffer->nTimeStamp);
+                log_buffer (self, omx_buffer);
 
                 if (omx_buffer->nOffset == 0 &&
                     self->share_input_buffer)
@@ -823,7 +837,8 @@ activate_push (GstPad *pad,
     if (active)
     {
         GST_DEBUG_OBJECT (self, "activate");
-        self->last_pad_push_return = GST_FLOW_OK;
+        /* task may carry on */
+        g_atomic_int_set (&self->last_pad_push_return, GST_FLOW_OK);
 
         /* we do not start the task yet if the pad is not connected */
         if (gst_pad_is_linked (pad))
@@ -841,6 +856,9 @@ activate_push (GstPad *pad,
     else
     {
         GST_DEBUG_OBJECT (self, "deactivate");
+
+        /* persuade task to bail out */
+        g_atomic_int_set (&self->last_pad_push_return, GST_FLOW_WRONG_STATE);
 
         if (self->ready)
         {
