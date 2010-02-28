@@ -161,7 +161,7 @@ render (GstBaseSink *gst_base,
     gomx = self->gomx;
 
     GST_LOG_OBJECT (self, "begin");
-    GST_LOG_OBJECT (self, "gst_buffer: size=%lu", GST_BUFFER_SIZE (buf));
+    GST_LOG_OBJECT (self, "gst_buffer: size=%u", GST_BUFFER_SIZE (buf));
 
     GST_LOG_OBJECT (self, "state: %d", gomx->omx_state);
 

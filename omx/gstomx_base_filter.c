@@ -40,11 +40,11 @@ log_buffer (GstOmxBaseFilter *self,
             OMX_BUFFERHEADERTYPE *omx_buffer)
 {
     GST_DEBUG_OBJECT (self, "omx_buffer: "
-                      "size=%" G_GUINT32_FORMAT ", "
-                      "len=%" G_GUINT32_FORMAT ", "
-                      "flags=%" G_GUINT32_FORMAT ", "
-                      "offset=%" G_GUINT32_FORMAT ", "
-                      "timestamp=%" G_GUINT64_FORMAT,
+                      "size=%lu, "
+                      "len=%lu, "
+                      "flags=%lu, "
+                      "offset=%lu, "
+                      "timestamp=%lld",
                       omx_buffer->nAllocLen, omx_buffer->nFilledLen, omx_buffer->nFlags,
                       omx_buffer->nOffset, omx_buffer->nTimeStamp);
 }
@@ -450,7 +450,7 @@ output_loop (gpointer data)
                 }
                 else
                 {
-                    GST_WARNING_OBJECT (self, "couldn't allocate buffer of size %" G_GUINT32_FORMAT,
+                    GST_WARNING_OBJECT (self, "couldn't allocate buffer of size %lu",
                                         omx_buffer->nFilledLen);
                 }
             }
