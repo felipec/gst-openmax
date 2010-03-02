@@ -148,7 +148,6 @@ helper (gboolean flush)
 
     {
         GstMessage *message;
-        fail_if ((message = gst_bus_pop (bus)) != NULL);
 
         /* make sure there's no error on the bus */
         message = gst_bus_poll (bus, GST_MESSAGE_ERROR, 0);
