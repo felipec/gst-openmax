@@ -66,7 +66,7 @@ GST_DEBUG_CATEGORY (gstomx_debug);
 static GstStructure *element_table = NULL;
 static GQuark element_name_quark;
 
-const gchar *default_config = NULL;
+extern const gchar *default_config;
 
 static GType (*get_type[]) (void) = {
     gst_omx_dummy_get_type,

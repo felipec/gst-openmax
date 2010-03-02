@@ -18,7 +18,8 @@ libgstomx_la_SOURCES = gstomx.c gstomx.h \
 		       gstomx_vorbisdec.c gstomx_vorbisdec.h \
 		       gstomx_mp3dec.c gstomx_mp3dec.h \
 		       gstomx_base_sink.c gstomx_base_sink.h \
-		       gstomx_audiosink.c gstomx_audiosink.h
+		       gstomx_audiosink.c gstomx_audiosink.h \
+		       gstomx_conf.c
 
 if EXPERIMENTAL
 libgstomx_la_SOURCES += gstomx_amrnbdec.c gstomx_amrnbdec.h \
@@ -47,3 +48,8 @@ libgstomx_la_LIBADD = $(GST_LIBS) $(GST_BASE_LIBS) $(top_builddir)/util/libutil.
 libgstomx_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
 
 EXTRA_DIST = headers
+
+gstomx_conf.c: gstomx.conf
+	echo "const char *default_config =" > $@
+	cat $^ | $(CPP) $(CFLAGS) $(libgstomx_la_CFLAGS) $(DEFAULT_INCLUDES) $(INCLUDES) - | grep -v "^#" | sed 's/^.*/\"&\\\n"/' >> $@
+	echo ";" >> $@
