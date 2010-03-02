@@ -91,6 +91,9 @@ struct GOmxCore
     GOmxImp *imp;
 
     gboolean done;
+
+    gchar *library_name;
+    gchar *component_name;
 };
 
 struct GOmxPort
@@ -116,7 +119,7 @@ void g_omx_deinit (void);
 
 GOmxCore *g_omx_core_new (void);
 void g_omx_core_free (GOmxCore *core);
-void g_omx_core_init (GOmxCore *core, const gchar *library_name, const gchar *component_name);
+void g_omx_core_init (GOmxCore *core);
 void g_omx_core_deinit (GOmxCore *core);
 void g_omx_core_prepare (GOmxCore *core);
 void g_omx_core_start (GOmxCore *core);

@@ -301,17 +301,15 @@ g_omx_core_free (GOmxCore *core)
 }
 
 void
-g_omx_core_init (GOmxCore *core,
-                 const gchar *library_name,
-                 const gchar *component_name)
+g_omx_core_init (GOmxCore *core)
 {
-    core->imp = request_imp (library_name);
+    core->imp = request_imp (core->library_name);
 
     if (!core->imp)
         return;
 
     core->omx_error = core->imp->sym_table.get_handle (&core->omx_handle,
-                                                       (char *) component_name,
+                                                       (char *) core->component_name,
                                                        core,
                                                        &callbacks);
     if (!core->omx_error)
@@ -330,6 +328,9 @@ g_omx_core_deinit (GOmxCore *core)
         if (core->omx_handle)
             core->omx_error = core->imp->sym_table.free_handle (core->omx_handle);
     }
+
+    g_free (core->library_name);
+    g_free (core->component_name);
 
     release_imp (core->imp);
     core->imp = NULL;

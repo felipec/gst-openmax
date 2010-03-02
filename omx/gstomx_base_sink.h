@@ -46,9 +46,6 @@ struct GstOmxBaseSink
     GOmxCore *gomx;
     GOmxPort *in_port;
 
-    char *omx_component;
-    char *omx_library;
-
     gboolean ready;
     GstPadActivateModeFunction base_activatepush;
     gboolean initialized;

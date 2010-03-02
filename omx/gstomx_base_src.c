@@ -67,7 +67,7 @@ start (GstBaseSrc *gst_base)
 
     GST_LOG_OBJECT (self, "begin");
 
-    g_omx_core_init (self->gomx, self->omx_library, self->omx_component);
+    g_omx_core_init (self->gomx);
     if (self->gomx->omx_error)
         return GST_STATE_CHANGE_FAILURE;
 
@@ -105,9 +105,6 @@ finalize (GObject *obj)
     self = GST_OMX_BASE_SRC (obj);
 
     g_omx_core_free (self->gomx);
-
-    g_free (self->omx_component);
-    g_free (self->omx_library);
 
     G_OBJECT_CLASS (parent_class)->finalize (obj);
 }
@@ -363,18 +360,12 @@ set_property (GObject *obj,
     switch (prop_id)
     {
         case ARG_COMPONENT_NAME:
-            if (self->omx_component)
-            {
-                g_free (self->omx_component);
-            }
-            self->omx_component = g_value_dup_string (value);
+            g_free (self->gomx->component_name);
+            self->gomx->component_name = g_value_dup_string (value);
             break;
         case ARG_LIBRARY_NAME:
-            if (self->omx_library)
-            {
-                g_free (self->omx_library);
-            }
-            self->omx_library = g_value_dup_string (value);
+            g_free (self->gomx->library_name);
+            self->gomx->library_name = g_value_dup_string (value);
             break;
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
@@ -395,10 +386,10 @@ get_property (GObject *obj,
     switch (prop_id)
     {
         case ARG_COMPONENT_NAME:
-            g_value_set_string (value, self->omx_component);
+            g_value_set_string (value, self->gomx->component_name);
             break;
         case ARG_LIBRARY_NAME:
-            g_value_set_string (value, self->omx_library);
+            g_value_set_string (value, self->gomx->library_name);
             break;
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
@@ -463,12 +454,11 @@ type_instance_init (GTypeInstance *instance,
         const char *tmp;
         tmp = g_type_get_qdata (G_OBJECT_CLASS_TYPE (g_class),
                                 g_quark_from_static_string ("library-name"));
-        self->omx_library = g_strdup (tmp);
+        self->gomx->library_name = g_strdup (tmp);
         tmp = g_type_get_qdata (G_OBJECT_CLASS_TYPE (g_class),
                                 g_quark_from_static_string ("component-name"));
-        self->omx_component = g_strdup (tmp);
+        self->gomx->component_name = g_strdup (tmp);
     }
-
 
     GST_LOG_OBJECT (self, "end");
 }
