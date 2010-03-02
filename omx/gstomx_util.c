@@ -265,12 +265,13 @@ g_omx_deinit (void)
  */
 
 GOmxCore *
-g_omx_core_new (void)
+g_omx_core_new (void *object)
 {
     GOmxCore *core;
 
     core = g_new0 (GOmxCore, 1);
 
+    core->object = object;
     core->ports = g_ptr_array_new ();
 
     core->omx_state_condition = g_cond_new ();
