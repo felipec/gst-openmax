@@ -284,24 +284,6 @@ handle_event (GstBaseSink *gst_base,
 }
 
 static void
-set_property (GObject *obj,
-              guint prop_id,
-              const GValue *value,
-              GParamSpec *pspec)
-{
-    GstOmxBaseSink *self;
-
-    self = GST_OMX_BASE_SINK (obj);
-
-    switch (prop_id)
-    {
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
-            break;
-    }
-}
-
-static void
 get_property (GObject *obj,
               guint prop_id,
               GValue *value,
@@ -349,7 +331,6 @@ type_class_init (gpointer g_class,
 
     /* Properties stuff */
     {
-        gobject_class->set_property = set_property;
         gobject_class->get_property = get_property;
 
         g_object_class_install_property (gobject_class, ARG_COMPONENT_NAME,
