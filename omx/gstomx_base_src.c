@@ -359,14 +359,6 @@ set_property (GObject *obj,
 
     switch (prop_id)
     {
-        case ARG_COMPONENT_NAME:
-            g_free (self->gomx->component_name);
-            self->gomx->component_name = g_value_dup_string (value);
-            break;
-        case ARG_LIBRARY_NAME:
-            g_free (self->gomx->library_name);
-            self->gomx->library_name = g_value_dup_string (value);
-            break;
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
             break;
@@ -424,12 +416,12 @@ type_class_init (gpointer g_class,
         g_object_class_install_property (gobject_class, ARG_COMPONENT_NAME,
                                          g_param_spec_string ("component-name", "Component name",
                                                               "Name of the OpenMAX IL component to use",
-                                                              NULL, G_PARAM_READWRITE));
+                                                              NULL, G_PARAM_READABLE));
 
         g_object_class_install_property (gobject_class, ARG_LIBRARY_NAME,
                                          g_param_spec_string ("library-name", "Library name",
                                                               "Name of the OpenMAX IL implementation library to use",
-                                                              NULL, G_PARAM_READWRITE));
+                                                              NULL, G_PARAM_READABLE));
     }
 }
 
