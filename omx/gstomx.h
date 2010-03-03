@@ -30,6 +30,9 @@ GST_DEBUG_CATEGORY_EXTERN (gstomx_debug);
 GST_DEBUG_CATEGORY_EXTERN (gstomx_util_debug);
 #define GST_CAT_DEFAULT gstomx_debug
 
+gboolean gstomx_get_component_info (void *core,
+                                    GType type);
+
 G_END_DECLS
 
 #endif /* GSTOMX_H */

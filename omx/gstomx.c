@@ -208,16 +208,12 @@ create_subtype (GType parent_type, const gchar *type_name)
 static gboolean
 plugin_init (GstPlugin *plugin)
 {
-    GQuark library_name_quark;
-    GQuark component_name_quark;
     gint i, cnt;
     GstStructure *element_table;
 
     GST_DEBUG_CATEGORY_INIT (gstomx_debug, "omx", 0, "gst-openmax");
     GST_DEBUG_CATEGORY_INIT (gstomx_util_debug, "omx_util", 0, "gst-openmax utility");
 
-    library_name_quark = g_quark_from_static_string ("library-name");
-    component_name_quark = g_quark_from_static_string ("component-name");
     element_name_quark = g_quark_from_static_string ("element-name");
 
     /*
@@ -281,8 +277,6 @@ plugin_init (GstPlugin *plugin)
             return FALSE;
         }
 
-        g_type_set_qdata (type, library_name_quark, (gpointer) library_name);
-        g_type_set_qdata (type, component_name_quark, (gpointer) component_name);
         g_type_set_qdata (type, element_name_quark, (gpointer) element_name);
 
         if (!gst_structure_get_int (element, "rank", &rank))
@@ -297,6 +291,30 @@ plugin_init (GstPlugin *plugin)
             return FALSE;
         }
     }
+
+    return TRUE;
+}
+
+gboolean
+gstomx_get_component_info (void *core,
+                           GType type)
+{
+    GOmxCore *rcore = core;
+    const gchar *element_name;
+    GstStructure *element;
+    const gchar *str;
+
+    element_name = g_type_get_qdata (type, element_name_quark);
+    element = get_element_entry (element_name);
+
+    if (!element)
+        return FALSE;
+
+    str = gst_structure_get_string (element, "library-name");
+    rcore->library_name = g_strdup (str);
+
+    str = gst_structure_get_string (element, "component-name");
+    rcore->component_name = g_strdup (str);
 
     return TRUE;
 }

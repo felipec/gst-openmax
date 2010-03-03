@@ -898,6 +898,7 @@ type_instance_init (GTypeInstance *instance,
     {
         GOmxCore *gomx;
         self->gomx = gomx = g_omx_core_new (self);
+        gstomx_get_component_info (gomx, G_TYPE_FROM_CLASS (g_class));
     }
 
     self->ready_lock = g_mutex_new ();
@@ -917,16 +918,6 @@ type_instance_init (GTypeInstance *instance,
 
     gst_element_add_pad (GST_ELEMENT (self), self->sinkpad);
     gst_element_add_pad (GST_ELEMENT (self), self->srcpad);
-
-    {
-        const char *tmp;
-        tmp = g_type_get_qdata (G_OBJECT_CLASS_TYPE (g_class),
-                                g_quark_from_static_string ("library-name"));
-        self->gomx->library_name = g_strdup (tmp);
-        tmp = g_type_get_qdata (G_OBJECT_CLASS_TYPE (g_class),
-                                g_quark_from_static_string ("component-name"));
-        self->gomx->component_name = g_strdup (tmp);
-    }
 
     GST_LOG_OBJECT (self, "end");
 }
