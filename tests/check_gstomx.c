@@ -114,8 +114,6 @@ helper (gboolean flush)
     eos_cond = g_cond_new ();
     eos_arrived = FALSE;
 
-    g_object_set (G_OBJECT (filter), "library-name", "libomxil-foo.so", NULL);
-
     /* start */
 
     fail_unless_equals_int (gst_element_set_state (filter, GST_STATE_PLAYING),
