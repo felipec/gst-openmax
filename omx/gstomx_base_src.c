@@ -416,12 +416,8 @@ type_instance_init (GTypeInstance *instance,
 
     GST_LOG_OBJECT (self, "begin");
 
-    /* GOmx */
-    {
-        GOmxCore *gomx;
-        self->gomx = gomx = g_omx_core_new (self);
-        gstomx_get_component_info (gomx, G_TYPE_FROM_CLASS (g_class));
-    }
+    self->gomx = g_omx_core_new (self);
+    gstomx_get_component_info (self->gomx, G_TYPE_FROM_CLASS (g_class));
 
     GST_LOG_OBJECT (self, "end");
 }
