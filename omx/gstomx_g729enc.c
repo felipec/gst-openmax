@@ -170,7 +170,7 @@ type_class_init (gpointer g_class,
         g_object_class_install_property (gobject_class, ARG_DTX,
                                          g_param_spec_boolean ("dtx", "DTX",
                                                                "Enable DTX",
-                                                               DEFAULT_DTX, G_PARAM_READWRITE));
+                                                               DEFAULT_DTX, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
     }
 }
 

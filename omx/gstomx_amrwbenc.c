@@ -165,7 +165,8 @@ type_class_init (gpointer g_class,
         g_object_class_install_property (gobject_class, ARG_BITRATE,
                                          g_param_spec_uint ("bitrate", "Bit-rate",
                                                             "Encoding bit-rate",
-                                                            0, G_MAXUINT, DEFAULT_BITRATE, G_PARAM_READWRITE));
+                                                            0, G_MAXUINT, DEFAULT_BITRATE,
+                                                            G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
     }
 }
 

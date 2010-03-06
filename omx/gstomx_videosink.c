@@ -308,17 +308,17 @@ type_class_init (gpointer g_class,
     g_object_class_install_property (gobject_class, ARG_X_SCALE,
                                      g_param_spec_uint ("x-scale", "X Scale",
                                                         "How much to scale the image in the X axis (100 means nothing)",
-                                                        0, G_MAXUINT, 100, G_PARAM_READWRITE));
+                                                        0, G_MAXUINT, 100, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
     g_object_class_install_property (gobject_class, ARG_Y_SCALE,
                                      g_param_spec_uint ("y-scale", "Y Scale",
                                                         "How much to scale the image in the Y axis (100 means nothing)",
-                                                        0, G_MAXUINT, 100, G_PARAM_READWRITE));
+                                                        0, G_MAXUINT, 100, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
     g_object_class_install_property (gobject_class, ARG_ROTATION,
                                      g_param_spec_uint ("rotation", "Rotation",
                                                         "Rotation angle",
-                                                        0, G_MAXUINT, 360, G_PARAM_READWRITE));
+                                                        0, G_MAXUINT, 360, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 }
 
 static void

@@ -187,7 +187,8 @@ type_class_init (gpointer g_class,
         g_object_class_install_property (gobject_class, ARG_QUALITY,
                                          g_param_spec_uint ("quality", "Quality of image",
                                                             "Set the quality from 0 to 100",
-                                                            0, 100, DEFAULT_QUALITY, G_PARAM_READWRITE));
+                                                            0, 100, DEFAULT_QUALITY,
+                                                            G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
     }
 }
 

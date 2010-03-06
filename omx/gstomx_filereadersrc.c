@@ -181,7 +181,7 @@ type_class_init (gpointer g_class,
         g_object_class_install_property (gobject_class, ARG_FILE_NAME,
                                          g_param_spec_string ("file-name", "File name",
                                                               "The input filename to use",
-                                                              NULL, G_PARAM_READWRITE));
+                                                              NULL, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
     }
 }
 

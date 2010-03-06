@@ -261,20 +261,21 @@ type_class_init (gpointer g_class,
         g_object_class_install_property (gobject_class, ARG_BITRATE,
                                          g_param_spec_uint ("bitrate", "Bit-rate",
                                                             "Encoding bit-rate",
-                                                            0, G_MAXUINT, DEFAULT_BITRATE, G_PARAM_READWRITE));
+                                                            0, G_MAXUINT, DEFAULT_BITRATE,
+                                                            G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
         g_object_class_install_property (gobject_class, ARG_PROFILE,
                                          g_param_spec_enum ("profile", "Enocding profile",
                                                             "OMX_AUDIO_AACPROFILETYPE of output",
                                                             GST_TYPE_OMX_AACENC_PROFILE,
                                                             DEFAULT_PROFILE,
-                                                            G_PARAM_READWRITE));
+                                                            G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
         g_object_class_install_property (gobject_class, ARG_OUTPUT_FORMAT,
                                          g_param_spec_enum ("output-format", "Output format",
                                                             "OMX_AUDIO_AACSTREAMFORMATTYPE of output",
                                                             GST_TYPE_OMX_AACENC_OUTPUT_FORMAT,
                                                             DEFAULT_OUTPUT_FORMAT,
-                                                            G_PARAM_READWRITE));
+                                                            G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
     }
 }
 
