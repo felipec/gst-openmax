@@ -9,7 +9,7 @@ CHECK_REGISTRY = $(top_builddir)/tests/test-registry.reg
 TESTS_ENVIRONMENT = GST_REGISTRY=$(CHECK_REGISTRY) \
 		    LD_LIBRARY_PATH=$(builddir)/standalone \
 		    GST_PLUGIN_PATH=$(top_builddir)/omx \
-		    OMX_CONFIG=gst-openmax.conf
+		    OMX_CONFIG=$(srcdir)/gst-openmax.conf
 
 check_PROGRAMS =
 

@@ -1,14 +1,16 @@
+VPATH = @srcdir@
+
 noinst_LIBRARIES = libomxil-foo.so
 
 libomxil_foo_so_SOURCES = core.c
 libomxil_foo_so_CFLAGS = -I$(top_srcdir)/omx/headers $(GTHREAD_CFLAGS) -I$(top_srcdir)/util
-libomxil_foo_so_LIBADD = $(GTHREAD_LIBS) $(top_srcdir)/util/.libs/libutil.a
+libomxil_foo_so_LIBADD = $(GTHREAD_LIBS) ../../util/.libs/libutil.a
 
 # Manual stuff
 
 CFLAGS = -ggdb
-top_srcdir = ../..
-srcdir = .
+top_srcdir = @srcdir@/../..
+srcdir = @srcdir@
 CC = gcc
 LIBRARIES = $(noinst_LIBRARIES)
 GTHREAD_CFLAGS=`pkg-config --cflags gthread-2.0`
