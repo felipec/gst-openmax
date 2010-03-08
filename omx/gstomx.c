@@ -105,6 +105,22 @@ static GType (*get_type[]) (void) = {
     gst_omx_volume_get_type,
 };
 
+static gchar *
+get_config_path (void)
+{
+    gchar *path;
+    const gchar *const *dirs;
+    int i;
+
+    path = g_strdup (g_getenv ("OMX_CONFIG"));
+
+    if (path)
+        return path;
+
+    return g_build_filename (g_get_user_config_dir (),
+                             "gst-openmax.conf", NULL);
+}
+
 /**
  * @todo find a way to call plugin_init() when the config file changes
  * @todo support a system-wide config file
@@ -123,12 +139,7 @@ get_element_table (void)
         gchar *config, *s;
         GstStructure *element;
 
-        path = g_strdup (g_getenv ("OMX_CONFIG"));
-        if (!path)
-        {
-            path = g_build_filename (g_get_user_config_dir (),
-                    "gst-openmax.conf", NULL);
-        }
+        path = get_config_path ();
 
         if (!g_file_get_contents (path, &config, NULL, NULL))
         {
