@@ -63,7 +63,7 @@
 
 GST_DEBUG_CATEGORY (gstomx_debug);
 
-static GstStructure *element_table = NULL;
+const static GstStructure *element_table;
 static GQuark element_name_quark;
 
 extern const gchar *default_config;
@@ -141,7 +141,7 @@ fetch_element_table (void)
 {
     gchar *path;
     gchar *config, *s;
-    GstStructure *element;
+    GstStructure *tmp, *element;
 
     path = get_config_path ();
 
@@ -155,21 +155,23 @@ fetch_element_table (void)
 
     GST_DEBUG ("parsing config:\n%s", config);
 
-    element_table = gst_structure_empty_new ("element_table");
+    tmp = gst_structure_empty_new ("element_table");
 
     s = config;
 
     while ((element = gst_structure_from_string (s, &s)))
     {
         const gchar *element_name = gst_structure_get_name (element);
-        gst_structure_set (element_table,
+        gst_structure_set (tmp,
                            element_name, GST_TYPE_STRUCTURE, element, NULL);
     }
 
     if (config != default_config)
         g_free (config);
 
-    GST_DEBUG ("element_table=%" GST_PTR_FORMAT, element_table);
+    GST_DEBUG ("element_table=%" GST_PTR_FORMAT, tmp);
+
+    element_table = tmp;
 }
 
 static GstStructure *
@@ -177,7 +179,7 @@ get_element_entry (const gchar *element_name)
 {
     GstStructure *element;
 
-    if (!gst_structure_get (element_table, element_name,
+    if (!gst_structure_get ((GstStructure *) element_table, element_name,
                             GST_TYPE_STRUCTURE, &element, NULL))
     {
         element = NULL;
