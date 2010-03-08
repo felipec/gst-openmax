@@ -136,54 +136,45 @@ get_config_path (void)
 
 /* TODO: we can cache table w/ gst_plugin_{get,set}_cache_data..
  */
-static GstStructure *
-get_element_table (void)
+static void
+fetch_element_table (void)
 {
-    static volatile gsize gonce_data = 0;
-    if (g_once_init_enter (&gonce_data))
+    gchar *path;
+    gchar *config, *s;
+    GstStructure *element;
+
+    path = get_config_path ();
+
+    if (!g_file_get_contents (path, &config, NULL, NULL))
     {
-        gchar *path;
-        gchar *config, *s;
-        GstStructure *element;
-
-        path = get_config_path ();
-
-        if (!g_file_get_contents (path, &config, NULL, NULL))
-        {
-            g_warning ("could not find config file '%s'.. using defaults!", path);
-            config = (gchar *) default_config;
-        }
-
-        g_free (path);
-
-        GST_DEBUG ("parsing config:\n%s", config);
-
-        element_table = gst_structure_empty_new ("element_table");
-
-        s = config;
-
-        while ((element = gst_structure_from_string (s, &s)))
-        {
-            const gchar *element_name = gst_structure_get_name (element);
-            gst_structure_set (element_table,
-                    element_name, GST_TYPE_STRUCTURE, element, NULL);
-        }
-
-        if (config != default_config)
-            g_free (config);
-
-        GST_DEBUG ("element_table=%" GST_PTR_FORMAT, element_table);
-
-        g_once_init_leave (&gonce_data, 1);
+        g_warning ("could not find config file '%s'.. using defaults!", path);
+        config = (gchar *) default_config;
     }
 
-    return element_table;
+    g_free (path);
+
+    GST_DEBUG ("parsing config:\n%s", config);
+
+    element_table = gst_structure_empty_new ("element_table");
+
+    s = config;
+
+    while ((element = gst_structure_from_string (s, &s)))
+    {
+        const gchar *element_name = gst_structure_get_name (element);
+        gst_structure_set (element_table,
+                           element_name, GST_TYPE_STRUCTURE, element, NULL);
+    }
+
+    if (config != default_config)
+        g_free (config);
+
+    GST_DEBUG ("element_table=%" GST_PTR_FORMAT, element_table);
 }
 
 static GstStructure *
 get_element_entry (const gchar *element_name)
 {
-    GstStructure *element_table = get_element_table ();
     GstStructure *element;
 
     if (!gst_structure_get (element_table, element_name,
@@ -227,7 +218,6 @@ static gboolean
 plugin_init (GstPlugin *plugin)
 {
     gint i, cnt;
-    GstStructure *element_table;
 
     GST_DEBUG_CATEGORY_INIT (gstomx_debug, "omx", 0, "gst-openmax");
     GST_DEBUG_CATEGORY_INIT (gstomx_util_debug, "omx_util", 0, "gst-openmax utility");
@@ -241,7 +231,7 @@ plugin_init (GstPlugin *plugin)
     for (i = 0; i < G_N_ELEMENTS (get_type); i++)
         get_type[i] ();
 
-    element_table = get_element_table ();
+    fetch_element_table ();
 
     g_omx_init ();
 
