@@ -132,7 +132,6 @@ get_config_path (void)
 
 /**
  * @todo find a way to call plugin_init() when the config file changes
- * @todo provide a recommended system-wide config file
  */
 
 /* TODO: we can cache table w/ gst_plugin_{get,set}_cache_data..
