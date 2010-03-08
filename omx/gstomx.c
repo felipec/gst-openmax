@@ -130,14 +130,10 @@ get_config_path (void)
                              "gst-openmax.conf", NULL);
 }
 
-/**
- * @todo find a way to call plugin_init() when the config file changes
- */
-
 /* TODO: we can cache table w/ gst_plugin_{get,set}_cache_data..
  */
 static void
-fetch_element_table (void)
+fetch_element_table (GstPlugin *plugin)
 {
     gchar *path;
     gchar *config, *s;
@@ -150,6 +146,9 @@ fetch_element_table (void)
         g_warning ("could not find config file '%s'.. using defaults!", path);
         config = (gchar *) default_config;
     }
+
+    gst_plugin_add_dependency_simple (plugin, "ONX_CONFIG", path, NULL,
+                                      GST_PLUGIN_DEPENDENCY_FLAG_NONE);
 
     g_free (path);
 
@@ -233,7 +232,7 @@ plugin_init (GstPlugin *plugin)
     for (i = 0; i < G_N_ELEMENTS (get_type); i++)
         get_type[i] ();
 
-    fetch_element_table ();
+    fetch_element_table (plugin);
 
     g_omx_init ();
 
