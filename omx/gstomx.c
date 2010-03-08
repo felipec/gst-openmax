@@ -130,14 +130,17 @@ get_config_path (void)
                              "gst-openmax.conf", NULL);
 }
 
-/* TODO: we can cache table w/ gst_plugin_{get,set}_cache_data..
- */
 static void
 fetch_element_table (GstPlugin *plugin)
 {
     gchar *path;
     gchar *config, *s;
     GstStructure *tmp, *element;
+
+    element_table = gst_plugin_get_cache_data (plugin);
+
+    if (element_table)
+        return;
 
     path = get_config_path ();
 
@@ -169,6 +172,8 @@ fetch_element_table (GstPlugin *plugin)
         g_free (config);
 
     GST_DEBUG ("element_table=%" GST_PTR_FORMAT, tmp);
+
+    gst_plugin_set_cache_data (plugin, tmp);
 
     element_table = tmp;
 }
