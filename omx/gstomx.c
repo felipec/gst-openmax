@@ -117,13 +117,21 @@ get_config_path (void)
     if (path)
         return path;
 
+    dirs = g_get_system_config_dirs ();
+    for (i = 0; dirs[i]; i++)
+    {
+        path = g_build_filename (dirs[i], "gstreamer-0.10", "gst-openmax.conf", NULL);
+        if (g_file_test (path, G_FILE_TEST_IS_REGULAR))
+            return path;
+        g_free (path);
+    }
+
     return g_build_filename (g_get_user_config_dir (),
                              "gst-openmax.conf", NULL);
 }
 
 /**
  * @todo find a way to call plugin_init() when the config file changes
- * @todo support a system-wide config file
  * @todo provide a recommended system-wide config file
  */
 
