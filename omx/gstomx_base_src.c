@@ -31,7 +31,7 @@ enum
     ARG_LIBRARY_NAME,
 };
 
-static GstElementClass *parent_class;
+GSTOMX_BOILERPLATE (GstOmxBaseSrc, gst_omx_base_src, GstBaseSrc, GST_TYPE_BASE_SRC);
 
 static void
 setup_ports (GstOmxBaseSrc *self)
@@ -372,6 +372,11 @@ get_property (GObject *obj,
 }
 
 static void
+type_base_init (gpointer g_class)
+{
+}
+
+static void
 type_class_init (gpointer g_class,
                  gpointer class_data)
 {
@@ -380,8 +385,6 @@ type_class_init (gpointer g_class,
 
     gobject_class = G_OBJECT_CLASS (g_class);
     gst_base_src_class = GST_BASE_SRC_CLASS (g_class);
-
-    parent_class = g_type_class_ref (GST_TYPE_ELEMENT);
 
     gobject_class->finalize = finalize;
 
@@ -420,27 +423,4 @@ type_instance_init (GTypeInstance *instance,
     gstomx_get_component_info (self->gomx, G_TYPE_FROM_CLASS (g_class));
 
     GST_LOG_OBJECT (self, "end");
-}
-
-GType
-gst_omx_base_src_get_type (void)
-{
-    static GType type = 0;
-
-    if (G_UNLIKELY (type == 0))
-    {
-        GTypeInfo *type_info;
-
-        type_info = g_new0 (GTypeInfo, 1);
-        type_info->class_size = sizeof (GstOmxBaseSrcClass);
-        type_info->class_init = type_class_init;
-        type_info->instance_size = sizeof (GstOmxBaseSrc);
-        type_info->instance_init = type_instance_init;
-
-        type = g_type_register_static (GST_TYPE_BASE_SRC, "GstOmxBaseSrc", type_info, 0);
-
-        g_free (type_info);
-    }
-
-    return type;
 }

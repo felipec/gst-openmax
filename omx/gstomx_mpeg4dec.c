@@ -22,7 +22,7 @@
 #include "gstomx_mpeg4dec.h"
 #include "gstomx.h"
 
-static GstOmxBaseVideoDecClass *parent_class;
+GSTOMX_BOILERPLATE (GstOmxMpeg4Dec, gst_omx_mpeg4dec, GstOmxBaseVideoDec, GST_OMX_BASE_VIDEODEC_TYPE);
 
 static GstCaps *
 generate_sink_template (void)
@@ -103,7 +103,6 @@ static void
 type_class_init (gpointer g_class,
                  gpointer class_data)
 {
-    parent_class = g_type_class_ref (GST_OMX_BASE_VIDEODEC_TYPE);
 }
 
 static void
@@ -115,28 +114,4 @@ type_instance_init (GTypeInstance *instance,
     omx_base = GST_OMX_BASE_VIDEODEC (instance);
 
     omx_base->compression_format = OMX_VIDEO_CodingMPEG4;
-}
-
-GType
-gst_omx_mpeg4dec_get_type (void)
-{
-    static GType type = 0;
-
-    if (G_UNLIKELY (type == 0))
-    {
-        GTypeInfo *type_info;
-
-        type_info = g_new0 (GTypeInfo, 1);
-        type_info->class_size = sizeof (GstOmxMpeg4DecClass);
-        type_info->base_init = type_base_init;
-        type_info->class_init = type_class_init;
-        type_info->instance_size = sizeof (GstOmxMpeg4Dec);
-        type_info->instance_init = type_instance_init;
-
-        type = g_type_register_static (GST_OMX_BASE_VIDEODEC_TYPE, "GstOmxMpeg4Dec", type_info, 0);
-
-        g_free (type_info);
-    }
-
-    return type;
 }

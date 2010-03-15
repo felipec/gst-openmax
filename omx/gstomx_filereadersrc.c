@@ -29,7 +29,7 @@ enum
     ARG_FILE_NAME,
 };
 
-static GstOmxBaseSrcClass *parent_class;
+GSTOMX_BOILERPLATE (GstOmxFilereaderSrc, gst_omx_filereadersrc, GstOmxBaseSrc, GST_OMX_BASE_SRC_TYPE);
 
 static GstCaps *
 generate_src_template (void)
@@ -167,7 +167,6 @@ type_class_init (gpointer g_class,
     GstBaseSrcClass *gst_base_src_class;
     GObjectClass *gobject_class;
 
-    parent_class = g_type_class_ref (GST_OMX_BASE_SRC_TYPE);
     gst_base_src_class = GST_BASE_SRC_CLASS (g_class);
     gobject_class = G_OBJECT_CLASS (g_class);
 
@@ -200,28 +199,4 @@ type_instance_init (GTypeInstance *instance,
     omx_base->gomx->settings_changed_cb = settings_changed_cb;
 
     GST_DEBUG_OBJECT (omx_base, "end");
-}
-
-GType
-gst_omx_filereadersrc_get_type (void)
-{
-    static GType type = 0;
-
-    if (G_UNLIKELY (type == 0))
-    {
-        GTypeInfo *type_info;
-
-        type_info = g_new0 (GTypeInfo, 1);
-        type_info->class_size = sizeof (GstOmxFilereaderSrcClass);
-        type_info->base_init = type_base_init;
-        type_info->class_init = type_class_init;
-        type_info->instance_size = sizeof (GstOmxFilereaderSrc);
-        type_info->instance_init = type_instance_init;
-
-        type = g_type_register_static (GST_OMX_BASE_SRC_TYPE, "GstOmxFilereaderSrc", type_info, 0);
-
-        g_free (type_info);
-    }
-
-    return type;
 }

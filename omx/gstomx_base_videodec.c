@@ -24,7 +24,7 @@
 
 #include <string.h> /* for memset */
 
-static GstOmxBaseFilterClass *parent_class;
+GSTOMX_BOILERPLATE (GstOmxBaseVideoDec, gst_omx_base_videodec, GstOmxBaseFilter, GST_OMX_BASE_FILTER_TYPE);
 
 static GstCaps *
 generate_src_template (void)
@@ -91,7 +91,6 @@ static void
 type_class_init (gpointer g_class,
                  gpointer class_data)
 {
-    parent_class = g_type_class_ref (GST_OMX_BASE_FILTER_TYPE);
 }
 
 static void
@@ -276,28 +275,4 @@ type_instance_init (GTypeInstance *instance,
     omx_base->gomx->settings_changed_cb = settings_changed_cb;
 
     gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);
-}
-
-GType
-gst_omx_base_videodec_get_type (void)
-{
-    static GType type = 0;
-
-    if (G_UNLIKELY (type == 0))
-    {
-        GTypeInfo *type_info;
-
-        type_info = g_new0 (GTypeInfo, 1);
-        type_info->class_size = sizeof (GstOmxBaseVideoDecClass);
-        type_info->base_init = type_base_init;
-        type_info->class_init = type_class_init;
-        type_info->instance_size = sizeof (GstOmxBaseVideoDec);
-        type_info->instance_init = type_instance_init;
-
-        type = g_type_register_static (GST_OMX_BASE_FILTER_TYPE, "GstOmxBaseVideoDec", type_info, 0);
-
-        g_free (type_info);
-    }
-
-    return type;
 }

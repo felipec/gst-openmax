@@ -39,7 +39,8 @@ enum
     ARG_LIBRARY_NAME,
 };
 
-static GstElementClass *parent_class;
+static void init_interfaces (GType type);
+GSTOMX_BOILERPLATE_FULL (GstOmxBaseSink, gst_omx_base_sink, GstBaseSink, GST_TYPE_BASE_SINK, init_interfaces);
 
 static void
 setup_ports (GstOmxBaseSink *self)
@@ -308,6 +309,11 @@ get_property (GObject *obj,
 }
 
 static void
+type_base_init (gpointer g_class)
+{
+}
+
+static void
 type_class_init (gpointer g_class,
                  gpointer class_data)
 {
@@ -318,8 +324,6 @@ type_class_init (gpointer g_class,
     gobject_class = G_OBJECT_CLASS (g_class);
     gst_base_sink_class = GST_BASE_SINK_CLASS (g_class);
     gstelement_class = GST_ELEMENT_CLASS (g_class);
-
-    parent_class = g_type_class_ref (GST_TYPE_ELEMENT);
 
     gobject_class->finalize = finalize;
 
@@ -462,39 +466,21 @@ interface_init (GstImplementsInterfaceClass *klass)
 {
     klass->supported = interface_supported;
 }
-
-GType
-gst_omx_base_sink_get_type (void)
+static void
+init_interfaces (GType type)
 {
-    static GType type = 0;
+    GInterfaceInfo *iface_info;
+    GInterfaceInfo *omx_info;
 
-    if (G_UNLIKELY (type == 0))
-    {
-        GTypeInfo *type_info;
-        GInterfaceInfo *iface_info;
-        GInterfaceInfo *omx_info;
+    iface_info = g_new0 (GInterfaceInfo, 1);
+    iface_info->interface_init = (GInterfaceInitFunc) interface_init;
 
-        type_info = g_new0 (GTypeInfo, 1);
-        type_info->class_size = sizeof (GstOmxBaseSinkClass);
-        type_info->class_init = type_class_init;
-        type_info->instance_size = sizeof (GstOmxBaseSink);
-        type_info->instance_init = type_instance_init;
+    g_type_add_interface_static (type, GST_TYPE_IMPLEMENTS_INTERFACE, iface_info);
+    g_free (iface_info);
 
-        type = g_type_register_static (GST_TYPE_BASE_SINK, "GstOmxBaseSink", type_info, 0);
-        g_free (type_info);
+    omx_info = g_new0 (GInterfaceInfo, 1);
+    omx_info->interface_init = (GInterfaceInitFunc) omx_interface_init;
 
-        iface_info = g_new0 (GInterfaceInfo, 1);
-        iface_info->interface_init = (GInterfaceInitFunc) interface_init;
-
-        g_type_add_interface_static (type, GST_TYPE_IMPLEMENTS_INTERFACE, iface_info);
-        g_free (iface_info);
-
-        omx_info = g_new0 (GInterfaceInfo, 1);
-        omx_info->interface_init = (GInterfaceInitFunc) omx_interface_init;
-
-        g_type_add_interface_static (type, GST_TYPE_OMX, omx_info);
-        g_free (omx_info);
-    }
-
-    return type;
+    g_type_add_interface_static (type, GST_TYPE_OMX, omx_info);
+    g_free (omx_info);
 }

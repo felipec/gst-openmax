@@ -33,7 +33,7 @@ enum
 
 #define DEFAULT_BITRATE 64000
 
-static GstOmxBaseFilterClass *parent_class;
+GSTOMX_BOILERPLATE (GstOmxAmrNbEnc, gst_omx_amrnbenc, GstOmxBaseFilter, GST_OMX_BASE_FILTER_TYPE);
 
 static GstCaps *
 generate_src_template (void)
@@ -155,8 +155,6 @@ type_class_init (gpointer g_class,
 
     gobject_class = G_OBJECT_CLASS (g_class);
 
-    parent_class = g_type_class_ref (GST_OMX_BASE_FILTER_TYPE);
-
     /* Properties stuff */
     {
         gobject_class->set_property = set_property;
@@ -265,28 +263,4 @@ type_instance_init (GTypeInstance *instance,
     gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);
 
     self->bitrate = DEFAULT_BITRATE;
-}
-
-GType
-gst_omx_amrnbenc_get_type (void)
-{
-    static GType type = 0;
-
-    if (G_UNLIKELY (type == 0))
-    {
-        GTypeInfo *type_info;
-
-        type_info = g_new0 (GTypeInfo, 1);
-        type_info->class_size = sizeof (GstOmxAmrNbEncClass);
-        type_info->base_init = type_base_init;
-        type_info->class_init = type_class_init;
-        type_info->instance_size = sizeof (GstOmxAmrNbEnc);
-        type_info->instance_init = type_instance_init;
-
-        type = g_type_register_static (GST_OMX_BASE_FILTER_TYPE, "GstOmxAmrNbEnc", type_info, 0);
-
-        g_free (type_info);
-    }
-
-    return type;
 }
