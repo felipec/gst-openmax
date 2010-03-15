@@ -169,9 +169,12 @@ static void type_class_init_trampoline (gpointer g_class, gpointer class_data)\
 }                                                                             \
 GType type_as_function ## _get_type (void)                                    \
 {                                                                             \
-    static GType _type = 0;                                                   \
-    if (G_UNLIKELY (_type == 0))                                              \
-    {                                                                         \
+    /* The typedef for GType may be gulong or gsize, depending on the         \
+     * system and whether the compiler is c++ or not. The g_once_init_*       \
+     * functions always take a gsize * though ... */                          \
+    static volatile gsize gonce_data = 0;                                     \
+    if (g_once_init_enter (&gonce_data)) {                                    \
+        GType _type;                                                          \
         GTypeInfo *type_info;                                                 \
         type_info = g_new0 (GTypeInfo, 1);                                    \
         type_info->class_size = sizeof (type ## Class);                       \
@@ -182,9 +185,11 @@ GType type_as_function ## _get_type (void)                                    \
         _type = g_type_register_static (parent_type_macro, #type, type_info, 0);\
         g_free (type_info);                                                   \
         additional_initializations (_type);                                   \
+        g_once_init_leave (&gonce_data, (gsize) _type);                       \
     }                                                                         \
-    return _type;                                                             \
+    return (GType) gonce_data;                                                \
 }
+
 #define GSTOMX_BOILERPLATE(type,type_as_function,parent_type,parent_type_macro)    \
   GSTOMX_BOILERPLATE_FULL (type, type_as_function, parent_type, parent_type_macro, \
       __GST_DO_NOTHING)
