@@ -716,7 +716,7 @@ out_flushing:
 
         if (error_msg)
         {
-            GST_ELEMENT_ERROR (self, STREAM, FAILED, (NULL), (error_msg));
+            GST_ELEMENT_ERROR (self, STREAM, FAILED, (NULL), ("%s", error_msg));
             ret = GST_FLOW_ERROR;
         }
 
