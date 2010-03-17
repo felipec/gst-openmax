@@ -50,7 +50,7 @@ setup_ports (GstOmxBaseSrc *self)
 
     param.nPortIndex = 0;
     OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, &param);
-    self->out_port = g_omx_core_setup_port (core, &param);
+    g_omx_port_setup (self->out_port, &param);
 
     if (self->setup_ports)
     {
@@ -421,6 +421,7 @@ type_instance_init (GTypeInstance *instance,
 
     self->gomx = g_omx_core_new (self);
     gstomx_get_component_info (self->gomx, G_TYPE_FROM_CLASS (g_class));
+    self->out_port = g_omx_core_new_port (self->gomx, 1);
 
     GST_LOG_OBJECT (self, "end");
 }

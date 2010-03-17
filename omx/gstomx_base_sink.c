@@ -59,7 +59,7 @@ setup_ports (GstOmxBaseSink *self)
 
     param.nPortIndex = 0;
     OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, &param);
-    self->in_port = g_omx_core_setup_port (core, &param);
+    g_omx_port_setup (self->in_port, &param);
     gst_pad_set_element_private (self->sinkpad, self->in_port);
 }
 
@@ -436,6 +436,7 @@ type_instance_init (GTypeInstance *instance,
 
     self->gomx = g_omx_core_new (self);
     gstomx_get_component_info (self->gomx, G_TYPE_FROM_CLASS (g_class));
+    self->in_port = g_omx_core_new_port (self->gomx, 0);
 
     {
         GstPad *sinkpad;
