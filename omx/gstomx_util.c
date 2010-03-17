@@ -159,7 +159,12 @@ imp_new (const gchar *name)
     {
         void *handle;
 
+        GST_DEBUG ("loading: %s", name);
+
         imp->dl_handle = handle = dlopen (name, RTLD_LAZY);
+
+        GST_DEBUG ("dlopen(%s) -> %p", name, handle);
+
         if (!handle)
         {
             g_warning ("%s\n", dlerror ());
@@ -307,6 +312,9 @@ g_omx_core_free (GOmxCore *core)
 void
 g_omx_core_init (GOmxCore *core)
 {
+    GST_DEBUG_OBJECT (core->object, "loading: %s (%s)",
+                      core->component_name, core->library_name);
+
     core->imp = request_imp (core->library_name);
 
     if (!core->imp)
@@ -316,6 +324,10 @@ g_omx_core_init (GOmxCore *core)
                                                        (char *) core->component_name,
                                                        core,
                                                        &callbacks);
+
+    GST_DEBUG_OBJECT (core->object, "OMX_GetHandle(&%p) -> %d",
+                      core->omx_handle, core->omx_error);
+
     if (!core->omx_error)
         core->omx_state = OMX_StateLoaded;
 }
@@ -330,7 +342,16 @@ core_deinit (GOmxCore *core)
         core->omx_state == OMX_StateInvalid)
     {
         if (core->omx_handle)
+        {
             core->omx_error = core->imp->sym_table.free_handle (core->omx_handle);
+            GST_DEBUG_OBJECT (core->object, "OMX_FreeHandle(%p) -> %d",
+                              core->omx_handle, core->omx_error);
+        }
+    }
+    else
+    {
+        GST_WARNING_OBJECT (core->object, "Incorrect state: %s",
+                            omx_state_to_str (core->omx_state));
     }
 
     g_free (core->library_name);
@@ -520,6 +541,10 @@ g_omx_port_setup (GOmxPort *port)
     /** @todo should it be nBufferCountMin? */
     port->num_buffers = param.nBufferCountActual;
     port->buffer_size = param.nBufferSize;
+
+    GST_DEBUG_OBJECT (port->core->object,
+                      "type=%d, num_buffers=%d, buffer_size=%ld, port_index=%d",
+                      port->type, port->num_buffers, port->buffer_size, port->port_index);
 
     g_free (port->buffers);
     port->buffers = g_new0 (OMX_BUFFERHEADERTYPE *, port->num_buffers);
@@ -853,6 +878,8 @@ EventHandler (OMX_HANDLETYPE omx_handle,
 
                 cmd = (OMX_COMMANDTYPE) data_1;
 
+                GST_DEBUG_OBJECT (core->object, "OMX_EventCmdComplete: %d", cmd);
+
                 switch (cmd)
                 {
                     case OMX_CommandStateSet:
@@ -871,6 +898,7 @@ EventHandler (OMX_HANDLETYPE omx_handle,
             }
         case OMX_EventBufferFlag:
             {
+                GST_DEBUG_OBJECT (core->object, "OMX_EventBufferFlag");
                 if (data_2 & OMX_BUFFERFLAG_EOS)
                 {
                     g_omx_core_set_done (core);
@@ -879,6 +907,7 @@ EventHandler (OMX_HANDLETYPE omx_handle,
             }
         case OMX_EventPortSettingsChanged:
             {
+                GST_DEBUG_OBJECT (core->object, "OMX_EventPortSettingsChanged");
                 /** @todo only on the relevant port. */
                 if (core->settings_changed_cb)
                 {
