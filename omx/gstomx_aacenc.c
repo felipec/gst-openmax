@@ -23,8 +23,6 @@
 #include "gstomx_base_filter.h"
 #include "gstomx.h"
 
-#include <string.h> /* for memset */
-
 enum
 {
     ARG_0,
@@ -303,10 +301,7 @@ sink_setcaps (GstPad *pad,
     {
         OMX_AUDIO_PARAM_PCMMODETYPE param;
 
-        memset (&param, 0, sizeof (param));
-        param.nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
-        param.nVersion.s.nVersionMajor = 1;
-        param.nVersion.s.nVersionMinor = 1;
+        G_OMX_INIT_PARAM (param);
 
         param.nPortIndex = omx_base->in_port->port_index;
         OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
@@ -349,10 +344,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
     {
         OMX_AUDIO_PARAM_AACPROFILETYPE param;
 
-        memset (&param, 0, sizeof (param));
-        param.nSize = sizeof (OMX_AUDIO_PARAM_AACPROFILETYPE);
-        param.nVersion.s.nVersionMajor = 1;
-        param.nVersion.s.nVersionMinor = 1;
+        G_OMX_INIT_PARAM (param);
 
         /* Output port configuration. */
         {
@@ -378,10 +370,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
     {
         OMX_AUDIO_PARAM_PCMMODETYPE param;
 
-        memset (&param, 0, sizeof (param));
-        param.nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
-        param.nVersion.s.nVersionMajor = 1;
-        param.nVersion.s.nVersionMinor = 1;
+        G_OMX_INIT_PARAM (param);
 
         param.nPortIndex = omx_base->in_port->port_index;
         OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
@@ -393,10 +382,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
     {
         OMX_AUDIO_PARAM_AACPROFILETYPE param;
 
-        memset (&param, 0, sizeof (param));
-        param.nSize = sizeof (OMX_AUDIO_PARAM_AACPROFILETYPE);
-        param.nVersion.s.nVersionMajor = 1;
-        param.nVersion.s.nVersionMinor = 1;
+        G_OMX_INIT_PARAM (param);
 
         param.nPortIndex = omx_base->out_port->port_index;
         OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioAac, &param);

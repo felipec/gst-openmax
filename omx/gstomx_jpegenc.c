@@ -206,10 +206,7 @@ settings_changed_cb (GOmxCore *core)
     {
         OMX_PARAM_PORTDEFINITIONTYPE param;
 
-        memset (&param, 0, sizeof (param));
-        param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-        param.nVersion.s.nVersionMajor = 1;
-        param.nVersion.s.nVersionMinor = 1;
+        G_OMX_INIT_PARAM (param);
 
         param.nPortIndex = omx_base->out_port->port_index;
         OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
@@ -287,10 +284,7 @@ sink_setcaps (GstPad *pad,
     {
         OMX_PARAM_PORTDEFINITIONTYPE param;
 
-        memset (&param, 0, sizeof (param));
-        param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-        param.nVersion.s.nVersionMajor = 1;
-        param.nVersion.s.nVersionMinor = 1;
+        G_OMX_INIT_PARAM (param);
 
         /* Input port configuration. */
         {
@@ -322,10 +316,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
     {
         OMX_PARAM_PORTDEFINITIONTYPE param;
 
-        memset (&param, 0, sizeof (param));
-        param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-        param.nVersion.s.nVersionMajor = 1;
-        param.nVersion.s.nVersionMinor = 1;
+        G_OMX_INIT_PARAM (param);
 
         /* Output port configuration. */
         {
@@ -341,10 +332,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
     {
         OMX_IMAGE_PARAM_QFACTORTYPE param;
 
-        memset (&param, 0, sizeof (param));
-        param.nSize = sizeof (OMX_IMAGE_PARAM_QFACTORTYPE);
-        param.nVersion.s.nVersionMajor = 1;
-        param.nVersion.s.nVersionMinor = 1;
+        G_OMX_INIT_PARAM (param);
 
         param.nQFactor = self->quality;
         param.nPortIndex = omx_base->out_port->port_index;

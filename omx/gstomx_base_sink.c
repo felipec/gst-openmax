@@ -26,7 +26,7 @@
 #include "gstomx.h"
 #include "gstomx_interface.h"
 
-#include <string.h> /* for memset, memcpy */
+#include <string.h> /* for memcpy */
 
 static gboolean share_input_buffer;
 

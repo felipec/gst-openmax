@@ -22,8 +22,6 @@
 #include "gstomx_h264enc.h"
 #include "gstomx.h"
 
-#include <string.h> /* for memset */
-
 GSTOMX_BOILERPLATE (GstOmxH264Enc, gst_omx_h264enc, GstOmxBaseVideoEnc, GST_OMX_BASE_VIDEOENC_TYPE);
 
 static GstCaps *
@@ -91,10 +89,7 @@ settings_changed_cb (GOmxCore *core)
     {
         OMX_PARAM_PORTDEFINITIONTYPE param;
 
-        memset (&param, 0, sizeof (param));
-        param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-        param.nVersion.s.nVersionMajor = 1;
-        param.nVersion.s.nVersionMinor = 1;
+        G_OMX_INIT_PARAM (param);
 
         param.nPortIndex = omx_base_filter->out_port->port_index;
         OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, &param);

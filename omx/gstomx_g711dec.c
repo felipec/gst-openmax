@@ -23,7 +23,7 @@
 #include "gstomx_base_filter.h"
 #include "gstomx.h"
 
-#include <string.h> /* for memset, strcmp */
+#include <string.h> /* for strcmp */
 
 GSTOMX_BOILERPLATE (GstOmxG711Dec, gst_omx_g711dec, GstOmxBaseFilter, GST_OMX_BASE_FILTER_TYPE);
 
@@ -137,10 +137,7 @@ sink_setcaps (GstPad *pad,
     {
         OMX_AUDIO_PARAM_PCMMODETYPE param;
 
-        memset (&param, 0, sizeof (param));
-        param.nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
-        param.nVersion.s.nVersionMajor = 1;
-        param.nVersion.s.nVersionMinor = 1;
+        G_OMX_INIT_PARAM (param);
 
         param.nPortIndex = omx_base->in_port->port_index;
         OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);

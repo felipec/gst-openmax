@@ -193,4 +193,13 @@ GType type_as_function ## _get_type (void)                                    \
   GSTOMX_BOILERPLATE_FULL (type, type_as_function, parent_type, parent_type_macro, \
       __GST_DO_NOTHING)
 
+#include <string.h>  /* for memset */
+#define G_OMX_INIT_PARAM(param) G_STMT_START {                                \
+        memset (&(param), 0, sizeof ((param)));                               \
+        (param).nSize = sizeof (param);                                       \
+        (param).nVersion.s.nVersionMajor = 1;                                 \
+        (param).nVersion.s.nVersionMinor = 1;                                 \
+    } G_STMT_END
+
+
 #endif /* GSTOMX_UTIL_H */

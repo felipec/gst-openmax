@@ -22,7 +22,6 @@
 
 #include "gstomx_util.h"
 #include <dlfcn.h>
-#include <string.h> /* for memset */
 
 #include "gstomx.h"
 
@@ -517,10 +516,7 @@ g_omx_port_setup (GOmxPort *port)
     GOmxPortType type = -1;
     OMX_PARAM_PORTDEFINITIONTYPE param;
 
-    memset (&param, 0, sizeof (param));
-    param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-    param.nVersion.s.nVersionMajor = 1;
-    param.nVersion.s.nVersionMinor = 1;
+    G_OMX_INIT_PARAM (param);
 
     param.nPortIndex = port->port_index;
     OMX_GetParameter (port->core->omx_handle, OMX_IndexParamPortDefinition, &param);

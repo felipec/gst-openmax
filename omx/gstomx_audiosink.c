@@ -22,8 +22,6 @@
 #include "gstomx_audiosink.h"
 #include "gstomx.h"
 
-#include <string.h> /* for memset */
-
 GSTOMX_BOILERPLATE (GstOmxAudioSink, gst_omx_audiosink, GstOmxBaseSink, GST_OMX_BASE_SINK_TYPE);
 
 static GstCaps *
@@ -109,10 +107,7 @@ setcaps (GstBaseSink *gst_sink,
         {
             OMX_AUDIO_PARAM_PCMMODETYPE param;
 
-            memset (&param, 0, sizeof (param));
-            param.nSize = sizeof (OMX_AUDIO_PARAM_PCMMODETYPE);
-            param.nVersion.s.nVersionMajor = 1;
-            param.nVersion.s.nVersionMinor = 1;
+            G_OMX_INIT_PARAM (param);
 
             param.nPortIndex = self->in_port->port_index;
             OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);

@@ -23,7 +23,7 @@
 #include "gstomx_base_sink.h"
 #include "gstomx.h"
 
-#include <string.h> /* for memset, strcmp */
+#include <string.h> /* for strcmp */
 
 GSTOMX_BOILERPLATE (GstOmxVideoSink, gst_omx_videosink, GstOmxBaseSink, GST_OMX_BASE_SINK_TYPE);
 
@@ -161,10 +161,7 @@ setcaps (GstBaseSink *gst_sink,
         {
             OMX_PARAM_PORTDEFINITIONTYPE param;
 
-            memset (&param, 0, sizeof (param));
-            param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-            param.nVersion.s.nVersionMajor = 1;
-            param.nVersion.s.nVersionMinor = 1;
+            G_OMX_INIT_PARAM (param);
 
             param.nPortIndex = omx_base->in_port->port_index;
             OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
@@ -200,10 +197,7 @@ setcaps (GstBaseSink *gst_sink,
         {
             OMX_CONFIG_ROTATIONTYPE config;
 
-            memset (&config, 0, sizeof (config));
-            config.nSize = sizeof (OMX_CONFIG_ROTATIONTYPE);
-            config.nVersion.s.nVersionMajor = 1;
-            config.nVersion.s.nVersionMinor = 1;
+            G_OMX_INIT_PARAM (config);
 
             config.nPortIndex = omx_base->in_port->port_index;
             OMX_GetConfig (gomx->omx_handle, OMX_IndexConfigCommonScale, &config);
@@ -216,10 +210,7 @@ setcaps (GstBaseSink *gst_sink,
         {
             OMX_CONFIG_SCALEFACTORTYPE config;
 
-            memset (&config, 0, sizeof (config));
-            config.nSize = sizeof (OMX_CONFIG_SCALEFACTORTYPE);
-            config.nVersion.s.nVersionMajor = 1;
-            config.nVersion.s.nVersionMinor = 1;
+            G_OMX_INIT_PARAM (config);
 
             config.nPortIndex = omx_base->in_port->port_index;
             OMX_GetConfig (gomx->omx_handle, OMX_IndexConfigCommonScale, &config);

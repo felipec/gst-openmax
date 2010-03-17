@@ -22,7 +22,7 @@
 #include "gstomx_base_videoenc.h"
 #include "gstomx.h"
 
-#include <string.h> /* for memset, strcmp */
+#include <string.h> /* for strcmp */
 
 enum
 {
@@ -215,10 +215,8 @@ sink_setcaps (GstPad *pad,
 
     {
         OMX_PARAM_PORTDEFINITIONTYPE param;
-        memset (&param, 0, sizeof (param));
-        param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-        param.nVersion.s.nVersionMajor = 1;
-        param.nVersion.s.nVersionMinor = 1;
+
+        G_OMX_INIT_PARAM (param);
 
         /* Input port configuration. */
         {
@@ -257,10 +255,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
     {
         OMX_PARAM_PORTDEFINITIONTYPE param;
 
-        memset (&param, 0, sizeof (param));
-        param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-        param.nVersion.s.nVersionMajor = 1;
-        param.nVersion.s.nVersionMinor = 1;
+        G_OMX_INIT_PARAM (param);
 
         /* Output port configuration. */
         {

@@ -22,7 +22,7 @@
 #include "gstomx_base_src.h"
 #include "gstomx.h"
 
-#include <string.h> /* for memset, memcpy */
+#include <string.h> /* for memcpy */
 
 enum
 {
