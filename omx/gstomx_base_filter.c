@@ -63,6 +63,7 @@ setup_ports (GstOmxBaseFilter *self)
     /* @todo: read from config file: */
     if (g_getenv ("OMX_ALLOCATE_ON"))
     {
+        GST_DEBUG_OBJECT (self, "OMX_ALLOCATE_ON");
         self->in_port->omx_allocate = TRUE;
         self->out_port->omx_allocate = TRUE;
         self->share_input_buffer = FALSE;
@@ -70,14 +71,25 @@ setup_ports (GstOmxBaseFilter *self)
     }
     else if (g_getenv ("OMX_SHARE_HACK_ON"))
     {
+        GST_DEBUG_OBJECT (self, "OMX_SHARE_HACK_ON");
         self->share_input_buffer = TRUE;
         self->share_output_buffer = TRUE;
     }
     else if (g_getenv ("OMX_SHARE_HACK_OFF"))
     {
+        GST_DEBUG_OBJECT (self, "OMX_SHARE_HACK_OFF");
         self->share_input_buffer = FALSE;
         self->share_output_buffer = FALSE;
     }
+    else
+    {
+        GST_DEBUG_OBJECT (self, "default sharing and allocation");
+    }
+
+    GST_DEBUG_OBJECT (self, "omx_allocate: in: %d, out: %d",
+            self->in_port->omx_allocate, self->out_port->omx_allocate);
+    GST_DEBUG_OBJECT (self, "share_buffer: in: %d, out: %d",
+            self->share_input_buffer, self->share_output_buffer);
 }
 
 static GstStateChangeReturn

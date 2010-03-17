@@ -577,6 +577,7 @@ port_allocate_buffers (GOmxPort *port)
     {
         if (port->omx_allocate)
         {
+            GST_DEBUG_OBJECT (port->core->object, "%d: OMX_AllocateBuffer(), size=%"G_GSIZE_FORMAT, i, size);
             OMX_AllocateBuffer (port->core->omx_handle,
                                 &port->buffers[i],
                                 port->port_index,
@@ -587,6 +588,7 @@ port_allocate_buffers (GOmxPort *port)
         {
             gpointer buffer_data;
             buffer_data = g_malloc (size);
+            GST_DEBUG_OBJECT (port->core->object, "%d: OMX_UseBuffer(), size=%"G_GSIZE_FORMAT, i, size);
             OMX_UseBuffer (port->core->omx_handle,
                            &port->buffers[i],
                            port->port_index,
