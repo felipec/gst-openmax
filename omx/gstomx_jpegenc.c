@@ -211,7 +211,7 @@ settings_changed_cb (GOmxCore *core)
         param.nVersion.s.nVersionMajor = 1;
         param.nVersion.s.nVersionMinor = 1;
 
-        param.nPortIndex = 1;
+        param.nPortIndex = omx_base->out_port->port_index;
         OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
 
         width = param.format.image.nFrameWidth;
@@ -294,7 +294,7 @@ sink_setcaps (GstPad *pad,
 
         /* Input port configuration. */
         {
-            param.nPortIndex = 0;
+            param.nPortIndex = omx_base->in_port->port_index;
             OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
 
             param.format.image.nFrameWidth = width;
@@ -329,7 +329,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
 
         /* Output port configuration. */
         {
-            param.nPortIndex = 1;
+            param.nPortIndex = omx_base->out_port->port_index;
             OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
 
             param.format.image.eCompressionFormat = OMX_IMAGE_CodingJPEG;
@@ -347,7 +347,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
         param.nVersion.s.nVersionMinor = 1;
 
         param.nQFactor = self->quality;
-        param.nPortIndex = 1;
+        param.nPortIndex = omx_base->out_port->port_index;
 
         OMX_SetParameter (gomx->omx_handle, OMX_IndexParamQFactor, &param);
     }

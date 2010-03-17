@@ -166,7 +166,7 @@ setcaps (GstBaseSink *gst_sink,
             param.nVersion.s.nVersionMajor = 1;
             param.nVersion.s.nVersionMinor = 1;
 
-            param.nPortIndex = 0;
+            param.nPortIndex = omx_base->in_port->port_index;
             OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
 
             switch (color_format)
@@ -205,7 +205,7 @@ setcaps (GstBaseSink *gst_sink,
             config.nVersion.s.nVersionMajor = 1;
             config.nVersion.s.nVersionMinor = 1;
 
-            config.nPortIndex = 0;
+            config.nPortIndex = omx_base->in_port->port_index;
             OMX_GetConfig (gomx->omx_handle, OMX_IndexConfigCommonScale, &config);
 
             config.nRotation = self->rotation;
@@ -221,7 +221,7 @@ setcaps (GstBaseSink *gst_sink,
             config.nVersion.s.nVersionMajor = 1;
             config.nVersion.s.nVersionMinor = 1;
 
-            config.nPortIndex = 0;
+            config.nPortIndex = omx_base->in_port->port_index;
             OMX_GetConfig (gomx->omx_handle, OMX_IndexConfigCommonScale, &config);
 
             config.xWidth = self->x_scale;

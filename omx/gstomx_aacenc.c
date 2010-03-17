@@ -308,7 +308,7 @@ sink_setcaps (GstPad *pad,
         param.nVersion.s.nVersionMajor = 1;
         param.nVersion.s.nVersionMinor = 1;
 
-        param.nPortIndex = 0;
+        param.nPortIndex = omx_base->in_port->port_index;
         OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
 
         param.nSamplingRate = rate;
@@ -356,7 +356,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
 
         /* Output port configuration. */
         {
-            param.nPortIndex = 1;
+            param.nPortIndex = omx_base->out_port->port_index;
             OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioAac, &param);
 
             GST_DEBUG_OBJECT (omx_base, "setting bitrate: %i", self->bitrate);
@@ -383,7 +383,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
         param.nVersion.s.nVersionMajor = 1;
         param.nVersion.s.nVersionMinor = 1;
 
-        param.nPortIndex = 0;
+        param.nPortIndex = omx_base->in_port->port_index;
         OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
 
         rate = param.nSamplingRate;
@@ -398,7 +398,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
         param.nVersion.s.nVersionMajor = 1;
         param.nVersion.s.nVersionMinor = 1;
 
-        param.nPortIndex = 1;
+        param.nPortIndex = omx_base->out_port->port_index;
         OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioAac, &param);
 
         param.nSampleRate = rate;

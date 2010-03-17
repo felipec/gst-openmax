@@ -114,7 +114,7 @@ setcaps (GstBaseSink *gst_sink,
             param.nVersion.s.nVersionMajor = 1;
             param.nVersion.s.nVersionMinor = 1;
 
-            param.nPortIndex = 0;
+            param.nPortIndex = self->in_port->port_index;
             OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
 
             param.nChannels = channels;

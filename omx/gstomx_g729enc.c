@@ -230,7 +230,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
         param.nVersion.s.nVersionMajor = 1;
         param.nVersion.s.nVersionMinor = 1;
 
-        param.nPortIndex = 1;
+        param.nPortIndex = omx_base->out_port->port_index;
         OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioG729, &param);
 
         param.bDTX = self->dtx;

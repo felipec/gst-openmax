@@ -124,7 +124,7 @@ settings_changed_cb (GOmxCore *core)
         param.nVersion.s.nVersionMajor = 1;
         param.nVersion.s.nVersionMinor = 1;
 
-        param.nPortIndex = 1;
+        param.nPortIndex = omx_base->out_port->port_index;
         OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
 
         rate = param.nSamplingRate;

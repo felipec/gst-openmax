@@ -222,7 +222,7 @@ sink_setcaps (GstPad *pad,
 
         /* Input port configuration. */
         {
-            param.nPortIndex = 0;
+            param.nPortIndex = omx_base->in_port->port_index;
             OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
 
             param.format.video.nFrameWidth = width;
@@ -264,7 +264,7 @@ omx_setup (GstOmxBaseFilter *omx_base)
 
         /* Output port configuration. */
         {
-            param.nPortIndex = 1;
+            param.nPortIndex = omx_base->out_port->port_index;
             OMX_GetParameter (gomx->omx_handle, OMX_IndexParamPortDefinition, &param);
 
             param.format.video.eCompressionFormat = self->compression_format;

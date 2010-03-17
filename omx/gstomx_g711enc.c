@@ -152,7 +152,7 @@ sink_setcaps (GstPad *pad,
         param.nVersion.s.nVersionMajor = 1;
         param.nVersion.s.nVersionMinor = 1;
 
-        param.nPortIndex = 1;
+        param.nPortIndex = omx_base->out_port->port_index;
         OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
 
         if (strcmp (mode, "audio/x-alaw") == 0)

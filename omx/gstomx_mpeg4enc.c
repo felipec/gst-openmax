@@ -98,7 +98,7 @@ settings_changed_cb (GOmxCore *core)
         param.nVersion.s.nVersionMajor = 1;
         param.nVersion.s.nVersionMinor = 1;
 
-        param.nPortIndex = 1;
+        param.nPortIndex = omx_base_filter->out_port->port_index;
         OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, &param);
 
         width = param.format.video.nFrameWidth;
