@@ -53,28 +53,12 @@ log_buffer (GstOmxBaseFilter *self,
 static void
 setup_ports (GstOmxBaseFilter *self)
 {
-    GOmxCore *core;
-    OMX_PARAM_PORTDEFINITIONTYPE param;
-
-    core = self->gomx;
-
-    memset (&param, 0, sizeof (param));
-    param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-    param.nVersion.s.nVersionMajor = 1;
-    param.nVersion.s.nVersionMinor = 1;
-
     /* Input port configuration. */
-
-    param.nPortIndex = 0;
-    OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, &param);
-    g_omx_port_setup (self->in_port, &param);
+    g_omx_port_setup (self->in_port);
     gst_pad_set_element_private (self->sinkpad, self->in_port);
 
     /* Output port configuration. */
-
-    param.nPortIndex = 1;
-    OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, &param);
-    g_omx_port_setup (self->out_port, &param);
+    g_omx_port_setup (self->out_port);
     gst_pad_set_element_private (self->srcpad, self->out_port);
 
     /* @todo: read from config file: */

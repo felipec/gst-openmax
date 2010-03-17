@@ -36,21 +36,8 @@ GSTOMX_BOILERPLATE (GstOmxBaseSrc, gst_omx_base_src, GstBaseSrc, GST_TYPE_BASE_S
 static void
 setup_ports (GstOmxBaseSrc *self)
 {
-    GOmxCore *core;
-    OMX_PARAM_PORTDEFINITIONTYPE param;
-
-    core = self->gomx;
-
-    memset (&param, 0, sizeof (param));
-    param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-    param.nVersion.s.nVersionMajor = 1;
-    param.nVersion.s.nVersionMinor = 1;
-
     /* Input port configuration. */
-
-    param.nPortIndex = 0;
-    OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, &param);
-    g_omx_port_setup (self->out_port, &param);
+    g_omx_port_setup (self->out_port);
 
     if (self->setup_ports)
     {

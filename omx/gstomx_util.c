@@ -22,6 +22,7 @@
 
 #include "gstomx_util.h"
 #include <dlfcn.h>
+#include <string.h> /* for memset */
 
 #include "gstomx.h"
 
@@ -486,14 +487,20 @@ g_omx_port_free (GOmxPort *port)
 }
 
 void
-g_omx_port_setup (GOmxPort *port,
-                  OMX_PARAM_PORTDEFINITIONTYPE *omx_port)
+g_omx_port_setup (GOmxPort *port)
 {
     GOmxPortType type = -1;
+    OMX_PARAM_PORTDEFINITIONTYPE param;
 
-    g_assert (port->port_index == omx_port->nPortIndex);
+    memset (&param, 0, sizeof (param));
+    param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
+    param.nVersion.s.nVersionMajor = 1;
+    param.nVersion.s.nVersionMinor = 1;
 
-    switch (omx_port->eDir)
+    param.nPortIndex = port->port_index;
+    OMX_GetParameter (port->core->omx_handle, OMX_IndexParamPortDefinition, &param);
+
+    switch (param.eDir)
     {
         case OMX_DirInput:
             type = GOMX_PORT_INPUT;
@@ -507,8 +514,8 @@ g_omx_port_setup (GOmxPort *port,
 
     port->type = type;
     /** @todo should it be nBufferCountMin? */
-    port->num_buffers = omx_port->nBufferCountActual;
-    port->buffer_size = omx_port->nBufferSize;
+    port->num_buffers = param.nBufferCountActual;
+    port->buffer_size = param.nBufferSize;
 
     g_free (port->buffers);
     port->buffers = g_new0 (OMX_BUFFERHEADERTYPE *, port->num_buffers);

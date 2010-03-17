@@ -45,21 +45,8 @@ GSTOMX_BOILERPLATE_FULL (GstOmxBaseSink, gst_omx_base_sink, GstBaseSink, GST_TYP
 static void
 setup_ports (GstOmxBaseSink *self)
 {
-    GOmxCore *core;
-    OMX_PARAM_PORTDEFINITIONTYPE param;
-
-    core = self->gomx;
-
-    memset (&param, 0, sizeof (param));
-    param.nSize = sizeof (OMX_PARAM_PORTDEFINITIONTYPE);
-    param.nVersion.s.nVersionMajor = 1;
-    param.nVersion.s.nVersionMinor = 1;
-
     /* Input port configuration. */
-
-    param.nPortIndex = 0;
-    OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, &param);
-    g_omx_port_setup (self->in_port, &param);
+    g_omx_port_setup (self->in_port);
     gst_pad_set_element_private (self->sinkpad, self->in_port);
 }
 
