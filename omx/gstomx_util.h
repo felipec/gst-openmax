@@ -120,7 +120,6 @@ void g_omx_deinit (void);
 GOmxCore *g_omx_core_new (void *object);
 void g_omx_core_free (GOmxCore *core);
 void g_omx_core_init (GOmxCore *core);
-void g_omx_core_deinit (GOmxCore *core);
 void g_omx_core_prepare (GOmxCore *core);
 void g_omx_core_start (GOmxCore *core);
 void g_omx_core_pause (GOmxCore *core);

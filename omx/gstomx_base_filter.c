@@ -101,7 +101,6 @@ change_state (GstElement *element,
     switch (transition)
     {
         case GST_STATE_CHANGE_NULL_TO_READY:
-            g_omx_core_init (core);
             if (core->omx_state != OMX_StateLoaded)
             {
                 ret = GST_STATE_CHANGE_FAILURE;
@@ -139,10 +138,6 @@ change_state (GstElement *element,
                 ret = GST_STATE_CHANGE_FAILURE;
                 goto leave;
             }
-            break;
-
-        case GST_STATE_CHANGE_READY_TO_NULL:
-            g_omx_core_deinit (core);
             break;
 
         default:
@@ -875,8 +870,7 @@ type_instance_init (GTypeInstance *instance,
 
     self->use_timestamps = TRUE;
 
-    self->gomx = g_omx_core_new (self);
-    gstomx_get_component_info (self->gomx, G_TYPE_FROM_CLASS (g_class));
+    self->gomx = gstomx_core_new (self, G_TYPE_FROM_CLASS (g_class));
     self->in_port = g_omx_core_new_port (self->gomx, 0);
     self->out_port = g_omx_core_new_port (self->gomx, 1);
 

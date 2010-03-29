@@ -54,7 +54,6 @@ start (GstBaseSrc *gst_base)
 
     GST_LOG_OBJECT (self, "begin");
 
-    g_omx_core_init (self->gomx);
     if (self->gomx->omx_error)
         return GST_STATE_CHANGE_FAILURE;
 
@@ -74,7 +73,6 @@ stop (GstBaseSrc *gst_base)
 
     g_omx_core_stop (self->gomx);
     g_omx_core_unload (self->gomx);
-    g_omx_core_deinit (self->gomx);
 
     if (self->gomx->omx_error)
         return GST_STATE_CHANGE_FAILURE;
@@ -406,8 +404,7 @@ type_instance_init (GTypeInstance *instance,
 
     GST_LOG_OBJECT (self, "begin");
 
-    self->gomx = g_omx_core_new (self);
-    gstomx_get_component_info (self->gomx, G_TYPE_FROM_CLASS (g_class));
+    self->gomx = gstomx_core_new (self, G_TYPE_FROM_CLASS (g_class));
     self->out_port = g_omx_core_new_port (self->gomx, 1);
 
     GST_LOG_OBJECT (self, "end");

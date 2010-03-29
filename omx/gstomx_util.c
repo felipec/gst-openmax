@@ -79,6 +79,8 @@ omx_error_to_str (OMX_ERRORTYPE omx_error);
 
 static inline GOmxPort * get_port (GOmxCore *core, guint index);
 
+static void core_deinit (GOmxCore *core);
+
 static inline void
 port_free_buffers (GOmxPort *port);
 
@@ -288,6 +290,8 @@ g_omx_core_new (void *object)
 void
 g_omx_core_free (GOmxCore *core)
 {
+    core_deinit (core);
+
     g_sem_free (core->port_sem);
     g_sem_free (core->flush_sem);
     g_sem_free (core->done_sem);
@@ -316,8 +320,8 @@ g_omx_core_init (GOmxCore *core)
         core->omx_state = OMX_StateLoaded;
 }
 
-void
-g_omx_core_deinit (GOmxCore *core)
+static void
+core_deinit (GOmxCore *core)
 {
     if (!core->imp)
         return;

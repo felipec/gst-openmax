@@ -33,6 +33,8 @@ GST_DEBUG_CATEGORY_EXTERN (gstomx_util_debug);
 gboolean gstomx_get_component_info (void *core,
                                     GType type);
 
+void *gstomx_core_new (void *object, GType type);
+
 G_END_DECLS
 
 #endif /* GSTOMX_H */

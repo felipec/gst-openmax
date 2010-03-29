@@ -333,6 +333,15 @@ gstomx_get_component_info (void *core,
     return TRUE;
 }
 
+void *
+gstomx_core_new (void *object, GType type)
+{
+    GOmxCore *core = g_omx_core_new (object);
+    gstomx_get_component_info (core, type);
+    g_omx_core_init (core);
+    return core;
+}
+
 GST_PLUGIN_DEFINE (GST_VERSION_MAJOR,
                    GST_VERSION_MINOR,
                    "omx",

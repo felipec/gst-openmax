@@ -381,8 +381,6 @@ activate_push (GstPad *pad,
 static inline gboolean
 omx_init (GstOmxBaseSink *self)
 {
-    g_omx_core_init (self->gomx);
-
     if (self->gomx->omx_error)
         return FALSE;
 
@@ -421,8 +419,7 @@ type_instance_init (GTypeInstance *instance,
 
     GST_LOG_OBJECT (self, "begin");
 
-    self->gomx = g_omx_core_new (self);
-    gstomx_get_component_info (self->gomx, G_TYPE_FROM_CLASS (g_class));
+    self->gomx = gstomx_core_new (self, G_TYPE_FROM_CLASS (g_class));
     self->in_port = g_omx_core_new_port (self->gomx, 0);
 
     {
