@@ -28,6 +28,11 @@
 
 #include <string.h> /* for memcpy */
 
+enum
+{
+    ARG_NUM_INPUT_BUFFERS = GSTOMX_NUM_COMMON_PROP,
+};
+
 static gboolean share_input_buffer;
 
 static inline gboolean omx_init (GstOmxBaseSink *self);
@@ -265,6 +270,55 @@ handle_event (GstBaseSink *gst_base,
 }
 
 static void
+set_property (GObject *obj,
+              guint prop_id,
+              const GValue *value,
+              GParamSpec *pspec)
+{
+    GstOmxBaseSink *self;
+
+    self = GST_OMX_BASE_SINK (obj);
+
+    switch (prop_id)
+    {
+        case ARG_NUM_INPUT_BUFFERS:
+            {
+                OMX_PARAM_PORTDEFINITIONTYPE param;
+                OMX_HANDLETYPE omx_handle = self->gomx->omx_handle;
+                OMX_U32 nBufferCountActual;
+
+                if (G_UNLIKELY (!omx_handle))
+                {
+                    GST_WARNING_OBJECT (self, "no component");
+                    break;
+                }
+
+                nBufferCountActual = g_value_get_uint (value);
+
+                G_OMX_INIT_PARAM (param);
+
+                param.nPortIndex = self->in_port->port_index;
+                OMX_GetParameter (omx_handle, OMX_IndexParamPortDefinition, &param);
+
+                if (nBufferCountActual < param.nBufferCountMin)
+                {
+                    GST_ERROR_OBJECT (self, "buffer count %lu is less than minimum %lu",
+                            nBufferCountActual, param.nBufferCountMin);
+                    return;
+                }
+
+                param.nBufferCountActual = nBufferCountActual;
+
+                OMX_SetParameter (omx_handle, OMX_IndexParamPortDefinition, &param);
+            }
+            break;
+        default:
+            G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
+            break;
+    }
+}
+
+static void
 get_property (GObject *obj,
               guint prop_id,
               GValue *value,
@@ -279,6 +333,26 @@ get_property (GObject *obj,
 
     switch (prop_id)
     {
+        case ARG_NUM_INPUT_BUFFERS:
+            {
+                OMX_PARAM_PORTDEFINITIONTYPE param;
+                OMX_HANDLETYPE omx_handle = self->gomx->omx_handle;
+
+                if (G_UNLIKELY (!omx_handle))
+                {
+                    GST_WARNING_OBJECT (self, "no component");
+                    g_value_set_uint (value, 0);
+                    break;
+                }
+
+                G_OMX_INIT_PARAM (param);
+
+                param.nPortIndex = self->in_port->port_index;
+                OMX_GetParameter (omx_handle, OMX_IndexParamPortDefinition, &param);
+
+                g_value_set_uint (value, param.nBufferCountActual);
+            }
+            break;
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
             break;
@@ -312,9 +386,15 @@ type_class_init (gpointer g_class,
 
     /* Properties stuff */
     {
+        gobject_class->set_property = set_property;
         gobject_class->get_property = get_property;
 
         gstomx_install_property_helper (gobject_class);
+
+        g_object_class_install_property (gobject_class, ARG_NUM_INPUT_BUFFERS,
+                                         g_param_spec_uint ("input-buffers", "Input buffers",
+                                                            "The number of OMX input buffers",
+                                                            1, 10, 4, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
     }
 }
 
