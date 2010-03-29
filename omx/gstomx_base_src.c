@@ -24,13 +24,6 @@
 
 #include <string.h> /* for memcpy */
 
-enum
-{
-    ARG_0,
-    ARG_COMPONENT_NAME,
-    ARG_LIBRARY_NAME,
-};
-
 GSTOMX_BOILERPLATE (GstOmxBaseSrc, gst_omx_base_src, GstBaseSrc, GST_TYPE_BASE_SRC);
 
 static void
@@ -342,14 +335,11 @@ get_property (GObject *obj,
 
     self = GST_OMX_BASE_SRC (obj);
 
+    if (gstomx_get_property_helper (self->gomx, prop_id, value))
+        return;
+
     switch (prop_id)
     {
-        case ARG_COMPONENT_NAME:
-            g_value_set_string (value, self->gomx->component_name);
-            break;
-        case ARG_LIBRARY_NAME:
-            g_value_set_string (value, self->gomx->library_name);
-            break;
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
             break;
@@ -382,15 +372,7 @@ type_class_init (gpointer g_class,
     {
         gobject_class->get_property = get_property;
 
-        g_object_class_install_property (gobject_class, ARG_COMPONENT_NAME,
-                                         g_param_spec_string ("component-name", "Component name",
-                                                              "Name of the OpenMAX IL component to use",
-                                                              NULL, G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
-
-        g_object_class_install_property (gobject_class, ARG_LIBRARY_NAME,
-                                         g_param_spec_string ("library-name", "Library name",
-                                                              "Name of the OpenMAX IL implementation library to use",
-                                                              NULL, G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
+        gstomx_install_property_helper (gobject_class);
     }
 }
 

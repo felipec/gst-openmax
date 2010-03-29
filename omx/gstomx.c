@@ -342,6 +342,38 @@ gstomx_core_new (void *object, GType type)
     return core;
 }
 
+void
+gstomx_install_property_helper (GObjectClass *gobject_class)
+{
+
+    g_object_class_install_property (gobject_class, ARG_COMPONENT_NAME,
+                                     g_param_spec_string ("component-name", "Component name",
+                                                          "Name of the OpenMAX IL component to use",
+                                                          NULL, G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
+
+    g_object_class_install_property (gobject_class, ARG_LIBRARY_NAME,
+                                     g_param_spec_string ("library-name", "Library name",
+                                                          "Name of the OpenMAX IL implementation library to use",
+                                                          NULL, G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
+}
+
+gboolean
+gstomx_get_property_helper (void *core, guint prop_id, GValue *value)
+{
+    GOmxCore *gomx = core;
+    switch (prop_id)
+    {
+        case ARG_COMPONENT_NAME:
+            g_value_set_string (value, gomx->component_name);
+            return TRUE;
+        case ARG_LIBRARY_NAME:
+            g_value_set_string (value, gomx->library_name);
+            return TRUE;
+        default:
+            return FALSE;
+    }
+}
+
 GST_PLUGIN_DEFINE (GST_VERSION_MAJOR,
                    GST_VERSION_MINOR,
                    "omx",

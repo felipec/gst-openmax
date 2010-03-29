@@ -27,10 +27,7 @@
 
 enum
 {
-    ARG_0,
-    ARG_COMPONENT_NAME,
-    ARG_LIBRARY_NAME,
-    ARG_USE_TIMESTAMPS,
+    ARG_USE_TIMESTAMPS = GSTOMX_NUM_COMMON_PROP,
 };
 
 static void init_interfaces (GType type);
@@ -201,14 +198,11 @@ get_property (GObject *obj,
 
     self = GST_OMX_BASE_FILTER (obj);
 
+    if (gstomx_get_property_helper (self->gomx, prop_id, value))
+        return;
+
     switch (prop_id)
     {
-        case ARG_COMPONENT_NAME:
-            g_value_set_string (value, self->gomx->component_name);
-            break;
-        case ARG_LIBRARY_NAME:
-            g_value_set_string (value, self->gomx->library_name);
-            break;
         case ARG_USE_TIMESTAMPS:
             g_value_set_boolean (value, self->use_timestamps);
             break;
@@ -241,15 +235,7 @@ type_class_init (gpointer g_class,
         gobject_class->set_property = set_property;
         gobject_class->get_property = get_property;
 
-        g_object_class_install_property (gobject_class, ARG_COMPONENT_NAME,
-                                         g_param_spec_string ("component-name", "Component name",
-                                                              "Name of the OpenMAX IL component to use",
-                                                              NULL, G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
-
-        g_object_class_install_property (gobject_class, ARG_LIBRARY_NAME,
-                                         g_param_spec_string ("library-name", "Library name",
-                                                              "Name of the OpenMAX IL implementation library to use",
-                                                              NULL, G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
+        gstomx_install_property_helper (gobject_class);
 
         g_object_class_install_property (gobject_class, ARG_USE_TIMESTAMPS,
                                          g_param_spec_boolean ("use-timestamps", "Use timestamps",

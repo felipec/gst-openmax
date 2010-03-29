@@ -30,10 +30,20 @@ GST_DEBUG_CATEGORY_EXTERN (gstomx_debug);
 GST_DEBUG_CATEGORY_EXTERN (gstomx_util_debug);
 #define GST_CAT_DEFAULT gstomx_debug
 
+enum
+{
+    GSTOMX_ARG_0,
+    ARG_COMPONENT_NAME,
+    ARG_LIBRARY_NAME,
+    GSTOMX_NUM_COMMON_PROP
+};
+
 gboolean gstomx_get_component_info (void *core,
                                     GType type);
 
 void *gstomx_core_new (void *object, GType type);
+void gstomx_install_property_helper (GObjectClass *gobject_class);
+gboolean gstomx_get_property_helper (void *core, guint prop_id, GValue *value);
 
 G_END_DECLS
 
