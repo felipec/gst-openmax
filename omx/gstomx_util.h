@@ -94,6 +94,7 @@ struct GOmxCore
 
     gchar *library_name;
     gchar *component_name;
+    gchar *component_role;
 };
 
 struct GOmxPort

@@ -247,7 +247,7 @@ plugin_init (GstPlugin *plugin)
         const gchar *element_name = gst_structure_nth_field_name (element_table, i);
         GstStructure *element = get_element_entry (element_name);
         const gchar *type_name, *parent_type_name;
-        const gchar *component_name, *library_name;
+        const gchar *component_name, *component_role, *library_name;
         GType type;
         gint rank;
 
@@ -256,6 +256,7 @@ plugin_init (GstPlugin *plugin)
         parent_type_name = gst_structure_get_string (element, "parent-type");
         type_name = gst_structure_get_string (element, "type");
         component_name = gst_structure_get_string (element, "component-name");
+        component_role = gst_structure_get_string (element, "component-role");
         library_name = gst_structure_get_string (element, "library-name");
 
         if (!type_name || !component_name || !library_name)
@@ -330,6 +331,9 @@ gstomx_get_component_info (void *core,
     str = gst_structure_get_string (element, "component-name");
     rcore->component_name = g_strdup (str);
 
+    str = gst_structure_get_string (element, "component-role");
+    rcore->component_role = g_strdup (str);
+
     return TRUE;
 }
 
@@ -351,6 +355,11 @@ gstomx_install_property_helper (GObjectClass *gobject_class)
                                                           "Name of the OpenMAX IL component to use",
                                                           NULL, G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
+    g_object_class_install_property (gobject_class, ARG_COMPONENT_ROLE,
+                                     g_param_spec_string ("component-role", "Component role",
+                                                          "Role of the OpenMAX IL component",
+                                                          NULL, G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
+
     g_object_class_install_property (gobject_class, ARG_LIBRARY_NAME,
                                      g_param_spec_string ("library-name", "Library name",
                                                           "Name of the OpenMAX IL implementation library to use",
@@ -365,6 +374,9 @@ gstomx_get_property_helper (void *core, guint prop_id, GValue *value)
     {
         case ARG_COMPONENT_NAME:
             g_value_set_string (value, gomx->component_name);
+            return TRUE;
+        case ARG_COMPONENT_ROLE:
+            g_value_set_string (value, gomx->component_role);
             return TRUE;
         case ARG_LIBRARY_NAME:
             g_value_set_string (value, gomx->library_name);

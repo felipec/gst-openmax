@@ -311,8 +311,10 @@ g_omx_core_free (GOmxCore *core)
 void
 g_omx_core_init (GOmxCore *core)
 {
-    GST_DEBUG_OBJECT (core->object, "loading: %s (%s)",
-                      core->component_name, core->library_name);
+    GST_DEBUG_OBJECT (core->object, "loading: %s %s (%s)",
+                      core->component_name,
+                      core->component_role ? core->component_role : "",
+                      core->library_name);
 
     core->imp = request_imp (core->library_name);
 
@@ -328,7 +330,23 @@ g_omx_core_init (GOmxCore *core)
                       core->omx_handle, core->omx_error);
 
     if (!core->omx_error)
+    {
         core->omx_state = OMX_StateLoaded;
+
+        if (core->component_role)
+        {
+            OMX_PARAM_COMPONENTROLETYPE param;
+
+            GST_DEBUG_OBJECT (core->object, "setting component role: %s",
+                              core->component_role);
+
+            G_OMX_INIT_PARAM (param);
+
+            strncpy ((char *) param.cRole, core->component_role, OMX_MAX_STRINGNAME_SIZE);
+
+            OMX_SetParameter (core->omx_handle, OMX_IndexParamStandardComponentRole, &param);
+        }
+    }
 }
 
 static void
@@ -355,6 +373,7 @@ core_deinit (GOmxCore *core)
 
     g_free (core->library_name);
     g_free (core->component_name);
+    g_free (core->component_role);
 
     release_imp (core->imp);
     core->imp = NULL;
