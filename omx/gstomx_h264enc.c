@@ -45,16 +45,11 @@ type_base_init (gpointer g_class)
 
     element_class = GST_ELEMENT_CLASS (g_class);
 
-    {
-        GstElementDetails details;
-
-        details.longname = "OpenMAX IL H.264/AVC video encoder";
-        details.klass = "Codec/Encoder/Video";
-        details.description = "Encodes video in H.264/AVC format with OpenMAX IL";
-        details.author = "Felipe Contreras";
-
-        gst_element_class_set_details (element_class, &details);
-    }
+    gst_element_class_set_details_simple (element_class,
+            "OpenMAX IL H.264/AVC video encoder",
+            "Codec/Encoder/Video",
+            "Encodes video in H.264/AVC format with OpenMAX IL",
+            "Felipe Contreras");
 
     {
         GstPadTemplate *template;

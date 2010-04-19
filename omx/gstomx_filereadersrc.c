@@ -48,16 +48,11 @@ type_base_init (gpointer g_class)
 
     element_class = GST_ELEMENT_CLASS (g_class);
 
-    {
-        GstElementDetails details;
-
-        details.longname = "OpenMAX IL filereader src element";
-        details.klass = "None";
-        details.description = "Does nothing";
-        details.author = "Felipe Contreras";
-
-        gst_element_class_set_details (element_class, &details);
-    }
+    gst_element_class_set_details_simple (element_class,
+            "OpenMAX IL filereader src element",
+            "None",
+            "Does nothing",
+            "Felipe Contreras");
 
     {
         GstPadTemplate *template;

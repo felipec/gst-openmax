@@ -75,16 +75,11 @@ type_base_init (gpointer g_class)
 
     element_class = GST_ELEMENT_CLASS (g_class);
 
-    {
-        GstElementDetails details;
-
-        details.longname = "OpenMAX IL G.729 audio encoder";
-        details.klass = "Codec/Encoder/Audio";
-        details.description = "Encodes audio in G.729 format with OpenMAX IL";
-        details.author = "Felipe Contreras";
-
-        gst_element_class_set_details (element_class, &details);
-    }
+    gst_element_class_set_details_simple (element_class,
+            "OpenMAX IL G.729 audio encoder",
+            "Codec/Encoder/Audio",
+            "Encodes audio in G.729 format with OpenMAX IL",
+            "Felipe Contreras");
 
     {
         GstPadTemplate *template;

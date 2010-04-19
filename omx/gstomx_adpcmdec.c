@@ -64,16 +64,11 @@ type_base_init (gpointer g_class)
 
     element_class = GST_ELEMENT_CLASS (g_class);
 
-    {
-        GstElementDetails details;
-
-        details.longname = "OpenMAX IL ADPCM audio decoder";
-        details.klass = "Codec/Decoder/Audio";
-        details.description = "Decodes audio in ADPCM format with OpenMAX IL";
-        details.author = "Felipe Contreras";
-
-        gst_element_class_set_details (element_class, &details);
-    }
+    gst_element_class_set_details_simple (element_class,
+            "OpenMAX IL ADPCM audio decoder",
+            "Codec/Decoder/Audio",
+            "Decodes audio in ADPCM format with OpenMAX IL",
+            "Felipe Contreras");
 
     {
         GstPadTemplate *template;
