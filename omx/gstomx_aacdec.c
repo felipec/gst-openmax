@@ -20,10 +20,9 @@
  */
 
 #include "gstomx_aacdec.h"
-#include "gstomx_base_filter.h"
 #include "gstomx.h"
 
-GSTOMX_BOILERPLATE (GstOmxAacDec, gst_omx_aacdec, GstOmxBaseFilter, GST_OMX_BASE_FILTER_TYPE);
+GSTOMX_BOILERPLATE (GstOmxAacDec, gst_omx_aacdec, GstOmxBaseAudioDec, GST_OMX_BASE_AUDIODEC_TYPE);
 
 static GstCaps *
 generate_src_template (void)
@@ -127,46 +126,6 @@ type_class_init (gpointer g_class,
 {
 }
 
-static void
-settings_changed_cb (GOmxCore *core)
-{
-    GstOmxBaseFilter *omx_base;
-    guint rate;
-    guint channels;
-
-    omx_base = core->object;
-
-    GST_DEBUG_OBJECT (omx_base, "settings changed");
-
-    {
-        OMX_AUDIO_PARAM_PCMMODETYPE param;
-
-        G_OMX_INIT_PARAM (param);
-
-        param.nPortIndex = omx_base->out_port->port_index;
-        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
-
-        rate = param.nSamplingRate;
-        channels = param.nChannels;
-    }
-
-    {
-        GstCaps *new_caps;
-
-        new_caps = gst_caps_new_simple ("audio/x-raw-int",
-                                        "width", G_TYPE_INT, 16,
-                                        "depth", G_TYPE_INT, 16,
-                                        "rate", G_TYPE_INT, rate,
-                                        "signed", G_TYPE_BOOLEAN, TRUE,
-                                        "endianness", G_TYPE_INT, G_BYTE_ORDER,
-                                        "channels", G_TYPE_INT, channels,
-                                        NULL);
-
-        GST_INFO_OBJECT (omx_base, "caps are: %" GST_PTR_FORMAT, new_caps);
-        gst_pad_set_caps (omx_base->srcpad, new_caps);
-    }
-}
-
 static gboolean
 sink_setcaps (GstPad *pad,
               GstCaps *caps)
@@ -203,8 +162,6 @@ type_instance_init (GTypeInstance *instance,
     GstOmxBaseFilter *omx_base;
 
     omx_base = GST_OMX_BASE_FILTER (instance);
-
-    omx_base->gomx->settings_changed_cb = settings_changed_cb;
 
     gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);
 }

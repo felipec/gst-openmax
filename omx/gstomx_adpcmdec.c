@@ -23,6 +23,7 @@
 #include "gstomx_base_filter.h"
 #include "gstomx.h"
 
+/* should this class extend GstOmxBaseAudioDec? */
 GSTOMX_BOILERPLATE (GstOmxAdpcmDec, gst_omx_adpcmdec, GstOmxBaseFilter, GST_OMX_BASE_FILTER_TYPE);
 
 static GstCaps *

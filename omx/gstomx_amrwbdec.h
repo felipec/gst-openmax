@@ -32,16 +32,16 @@ G_BEGIN_DECLS
 typedef struct GstOmxAmrWbDec GstOmxAmrWbDec;
 typedef struct GstOmxAmrWbDecClass GstOmxAmrWbDecClass;
 
-#include "gstomx_base_filter.h"
+#include "gstomx_base_audiodec.h"
 
 struct GstOmxAmrWbDec
 {
-    GstOmxBaseFilter omx_base;
+    GstOmxBaseAudioDec omx_base;
 };
 
 struct GstOmxAmrWbDecClass
 {
-    GstOmxBaseFilterClass parent_class;
+    GstOmxBaseAudioDecClass parent_class;
 };
 
 GType gst_omx_amrwbdec_get_type (void);

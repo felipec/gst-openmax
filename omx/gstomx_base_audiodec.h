@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2007-2009 Nokia Corporation.
+ * Copyright (C) 2009 Texas Instruments, Inc.
  *
- * Author: Felipe Contreras <felipe.contreras@nokia.com>
+ * Author: Rob Clark <rob@ti.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,33 +19,33 @@
  *
  */
 
-#ifndef GSTOMX_AACDEC_H
-#define GSTOMX_AACDEC_H
+#ifndef GSTOMX_BASE_AUDIODEC_H
+#define GSTOMX_BASE_AUDIODEC_H
 
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
 
-#define GST_OMX_AACDEC(obj) (GstOmxAacDec *) (obj)
-#define GST_OMX_AACDEC_TYPE (gst_omx_aacdec_get_type ())
+#define GST_OMX_BASE_AUDIODEC(obj) (GstOmxBaseAudioDec *) (obj)
+#define GST_OMX_BASE_AUDIODEC_TYPE (gst_omx_base_audiodec_get_type ())
 
-typedef struct GstOmxAacDec GstOmxAacDec;
-typedef struct GstOmxAacDecClass GstOmxAacDecClass;
+typedef struct GstOmxBaseAudioDec GstOmxBaseAudioDec;
+typedef struct GstOmxBaseAudioDecClass GstOmxBaseAudioDecClass;
 
-#include "gstomx_base_audiodec.h"
+#include "gstomx_base_filter.h"
 
-struct GstOmxAacDec
+struct GstOmxBaseAudioDec
 {
-    GstOmxBaseAudioDec omx_base;
+    GstOmxBaseFilter omx_base;
 };
 
-struct GstOmxAacDecClass
+struct GstOmxBaseAudioDecClass
 {
-    GstOmxBaseAudioDecClass parent_class;
+    GstOmxBaseFilterClass parent_class;
 };
 
-GType gst_omx_aacdec_get_type (void);
+GType gst_omx_base_audiodec_get_type (void);
 
 G_END_DECLS
 
-#endif /* GSTOMX_AACDEC_H */
+#endif /* GSTOMX_BASE_AUDIODEC_H */

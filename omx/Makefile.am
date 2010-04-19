@@ -6,6 +6,7 @@ libgstomx_la_SOURCES = gstomx.c gstomx.h \
 		       gstomx_base_filter.c gstomx_base_filter.h \
 		       gstomx_base_videodec.c gstomx_base_videodec.h \
 		       gstomx_base_videoenc.c gstomx_base_videoenc.h \
+		       gstomx_base_audiodec.c gstomx_base_audiodec.h \
 		       gstomx_dummy.c gstomx_dummy.h \
 		       gstomx_volume.c gstomx_volume.h \
 		       gstomx_mpeg4dec.c gstomx_mpeg4dec.h \

@@ -20,10 +20,9 @@
  */
 
 #include "gstomx_g729dec.h"
-#include "gstomx_base_filter.h"
 #include "gstomx.h"
 
-GSTOMX_BOILERPLATE (GstOmxG729Dec, gst_omx_g729dec, GstOmxBaseFilter, GST_OMX_BASE_FILTER_TYPE);
+GSTOMX_BOILERPLATE (GstOmxG729Dec, gst_omx_g729dec, GstOmxBaseAudioDec, GST_OMX_BASE_AUDIODEC_TYPE);
 
 static GstCaps *
 generate_src_template (void)
@@ -105,6 +104,7 @@ type_class_init (gpointer g_class,
 {
 }
 
+/* should we be overriding the settings_changed_cb from parent class like this?? */
 static void
 settings_changed_cb (GOmxCore *core)
 {
