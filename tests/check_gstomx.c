@@ -25,36 +25,6 @@
 #define BUFFER_COUNT 0x100
 #define FLUSH_AT 0x10
 
-static gboolean
-bus_cb (GstBus *bus,
-        GstMessage *msg,
-        gpointer data)
-{
-    switch (GST_MESSAGE_TYPE (msg))
-    {
-        case GST_MESSAGE_EOS:
-            /* g_debug ("end-of-stream"); */
-            break;
-        case GST_MESSAGE_ERROR:
-            {
-                gchar *debug;
-                GError *err;
-
-                gst_message_parse_error (msg, &err, &debug);
-                g_free (debug);
-
-                g_warning ("Error: %s", err->message);
-                g_error_free (err);
-                break;
-            }
-        default:
-            /* g_debug ("message-type: %s", GST_MESSAGE_TYPE_NAME (msg)); */
-            break;
-    }
-
-    return TRUE;
-}
-
 static GstStaticPadTemplate sinktemplate =
 GST_STATIC_PAD_TEMPLATE ("sink",
                          GST_PAD_SINK,
@@ -72,7 +42,7 @@ static GMutex *eos_mutex;
 static GCond *eos_cond;
 static gboolean eos_arrived;
 
-gboolean
+static gboolean
 test_sink_event (GstPad * pad, GstEvent * event)
 {
 

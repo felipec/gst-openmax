@@ -176,13 +176,13 @@ comp_SendCommand (OMX_HANDLETYPE handle,
                 {
                     OMX_BUFFERHEADERTYPE *buffer;
 
-                    while (buffer = async_queue_pop_forced (private->ports[0].queue))
+                    while ((buffer = async_queue_pop_forced (private->ports[0].queue)))
                     {
                         private->callbacks->EmptyBufferDone (comp,
                                                              private->app_data, buffer);
                     }
 
-                    while (buffer = async_queue_pop_forced (private->ports[1].queue))
+                    while ((buffer = async_queue_pop_forced (private->ports[1].queue)))
                     {
                         private->callbacks->FillBufferDone (comp,
                                                             private->app_data, buffer);

@@ -216,7 +216,7 @@ pop_stress (gpointer data)
 {
     CustomData *custom_data;
     AsyncQueue *queue;
-    guint i, j;
+    guint i;
 
     custom_data = data;
     queue = custom_data->queue;
@@ -364,7 +364,6 @@ START_TEST (test_async_queue_stress)
 {
     GThread *push_thread;
     GThread *pop_thread;
-    guint count;
     CustomData *custom_data;
 
     custom_data = custom_data_new ();
@@ -379,7 +378,7 @@ START_TEST (test_async_queue_stress)
 }
 END_TEST
 
-Suite *
+static Suite *
 util_suite (void)
 {
     Suite *s = suite_create ("util");

@@ -419,7 +419,7 @@ output_loop (gpointer data)
             {
                 GstCaps *caps = NULL;
                 GstStructure *structure;
-                GValue value = { 0 };
+                GValue value = {0, {{0}}};
 
                 caps = gst_pad_get_negotiated_caps (self->srcpad);
                 caps = gst_caps_make_writable (caps);

@@ -63,7 +63,7 @@
 
 GST_DEBUG_CATEGORY (gstomx_debug);
 
-const static GstStructure *element_table;
+static const GstStructure *element_table;
 static GQuark element_name_quark;
 
 extern const gchar *default_config;
@@ -207,7 +207,7 @@ static GType
 create_subtype (GType parent_type, const gchar *type_name)
 {
     GTypeQuery q;
-    GTypeInfo i = {0};
+    GTypeInfo i = {0,0,0,0,0,0,0,0,0,0};
 
     if (!type_name)
         return 0;
@@ -223,7 +223,7 @@ create_subtype (GType parent_type, const gchar *type_name)
 static gboolean
 plugin_init (GstPlugin *plugin)
 {
-    gint i, cnt;
+    guint i, cnt;
 
     GST_DEBUG_CATEGORY_INIT (gstomx_debug, "omx", 0, "gst-openmax");
     GST_DEBUG_CATEGORY_INIT (gstomx_util_debug, "omx_util", 0, "gst-openmax utility");
