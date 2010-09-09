@@ -499,14 +499,6 @@ output_loop (gpointer data)
             GST_WARNING_OBJECT (self, "empty buffer");
         }
 
-        if (G_UNLIKELY (omx_buffer->nFlags & OMX_BUFFERFLAG_EOS))
-        {
-            GST_DEBUG_OBJECT (self, "got eos");
-            gst_pad_push_event (self->srcpad, gst_event_new_eos ());
-            ret = GST_FLOW_UNEXPECTED;
-            goto leave;
-        }
-
         if (self->share_output_buffer &&
             !omx_buffer->pBuffer &&
             omx_buffer->nOffset == 0)
@@ -540,6 +532,14 @@ output_loop (gpointer data)
             !omx_buffer->pBuffer)
         {
             GST_ERROR_OBJECT (self, "no input buffer to share");
+        }
+
+        if (G_UNLIKELY (omx_buffer->nFlags & OMX_BUFFERFLAG_EOS))
+        {
+            GST_DEBUG_OBJECT (self, "got eos");
+            gst_pad_push_event (self->srcpad, gst_event_new_eos ());
+            omx_buffer->nFlags &= ~OMX_BUFFERFLAG_EOS;
+            ret = GST_FLOW_UNEXPECTED;
         }
 
         omx_buffer->nFilledLen = 0;
