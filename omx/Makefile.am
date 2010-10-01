@@ -48,7 +48,7 @@ libgstomx_la_CFLAGS = -I$(srcdir)/headers $(GST_CFLAGS) $(GST_BASE_CFLAGS) -I$(t
 libgstomx_la_LIBADD = $(GST_LIBS) $(GST_BASE_LIBS) $(top_builddir)/util/libutil.la
 libgstomx_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
 
-EXTRA_DIST = headers
+EXTRA_DIST = headers gstomx.conf
 
 gstomx_conf.c: gstomx.conf
 	echo "const char *default_config =" > $@
