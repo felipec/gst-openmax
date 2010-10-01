@@ -1,0 +1,3963 @@
+2010-10-01 03:57:05 +0300  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.c:
+	* omx/gstomx.h:
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacdec.h:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_aacenc.h:
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_adpcmdec.h:
+	* omx/gstomx_adpcmenc.c:
+	* omx/gstomx_adpcmenc.h:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbdec.h:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrnbenc.h:
+	* omx/gstomx_amrwbdec.c:
+	* omx/gstomx_amrwbdec.h:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_amrwbenc.h:
+	* omx/gstomx_audiosink.c:
+	* omx/gstomx_audiosink.h:
+	* omx/gstomx_base_audiodec.c:
+	* omx/gstomx_base_audiodec.h:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_filter.h:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_sink.h:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_base_src.h:
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videodec.h:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_base_videoenc.h:
+	* omx/gstomx_dummy.c:
+	* omx/gstomx_dummy.h:
+	* omx/gstomx_filereadersrc.c:
+	* omx/gstomx_filereadersrc.h:
+	* omx/gstomx_g711dec.c:
+	* omx/gstomx_g711dec.h:
+	* omx/gstomx_g711enc.c:
+	* omx/gstomx_g711enc.h:
+	* omx/gstomx_g729dec.c:
+	* omx/gstomx_g729dec.h:
+	* omx/gstomx_g729enc.c:
+	* omx/gstomx_g729enc.h:
+	* omx/gstomx_h263dec.c:
+	* omx/gstomx_h263dec.h:
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_h263enc.h:
+	* omx/gstomx_h264dec.c:
+	* omx/gstomx_h264dec.h:
+	* omx/gstomx_h264enc.c:
+	* omx/gstomx_h264enc.h:
+	* omx/gstomx_ilbcdec.c:
+	* omx/gstomx_ilbcdec.h:
+	* omx/gstomx_ilbcenc.c:
+	* omx/gstomx_ilbcenc.h:
+	* omx/gstomx_interface.c:
+	* omx/gstomx_interface.h:
+	* omx/gstomx_jpegenc.c:
+	* omx/gstomx_jpegenc.h:
+	* omx/gstomx_mp2dec.c:
+	* omx/gstomx_mp2dec.h:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mp3dec.h:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_mpeg4dec.h:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_mpeg4enc.h:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_videosink.h:
+	* omx/gstomx_volume.c:
+	* omx/gstomx_volume.h:
+	* omx/gstomx_vorbisdec.c:
+	* omx/gstomx_vorbisdec.h:
+	* omx/gstomx_wmvdec.c:
+	* omx/gstomx_wmvdec.h:
+	* tests/check_async_queue.c:
+	* tests/check_gstomx.c:
+	* tests/check_libomxil.c:
+	* tests/standalone/core.c:
+	* util/async_queue.c:
+	* util/async_queue.h:
+	* util/sem.c:
+	* util/sem.h:
+	  Change to gst coding-style
+	  Ew.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-06-07 21:56:35 +0300  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.c:
+	* omx/gstomx_base_filter.c:
+	* tests/check_async_queue.c:
+	* tests/check_gstomx.c:
+	* tests/standalone/core.c:
+	  Fix compilation warnings
+	  Awful c89.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-09-10 02:06:03 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_filter.c:
+	  base-filter: improve EOS handling
+	  Tested-by: Mickey Kim <jihun.kim@samsung.com>
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2010-04-18 23:32:58 -0500  Rob Clark <rob@ti.com>
+
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_adpcmenc.c:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrwbdec.c:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_audiosink.c:
+	* omx/gstomx_dummy.c:
+	* omx/gstomx_filereadersrc.c:
+	* omx/gstomx_g711dec.c:
+	* omx/gstomx_g711enc.c:
+	* omx/gstomx_g729dec.c:
+	* omx/gstomx_g729enc.c:
+	* omx/gstomx_h263dec.c:
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_h264dec.c:
+	* omx/gstomx_h264enc.c:
+	* omx/gstomx_ilbcdec.c:
+	* omx/gstomx_ilbcenc.c:
+	* omx/gstomx_jpegenc.c:
+	* omx/gstomx_mp2dec.c:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_volume.c:
+	* omx/gstomx_vorbisdec.c:
+	* omx/gstomx_wmvdec.c:
+	  replace deprecated API
+	  gst_element_class_set_details() is now deprecated.  Replace with gst_element_class_set_details_simple() instead.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-04-18 23:32:09 -0500  Rob Clark <rob@ti.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacdec.h:
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbdec.h:
+	* omx/gstomx_amrwbdec.c:
+	* omx/gstomx_amrwbdec.h:
+	* omx/gstomx_base_audiodec.c:
+	* omx/gstomx_base_audiodec.h:
+	* omx/gstomx_g711dec.c:
+	* omx/gstomx_g729dec.c:
+	* omx/gstomx_g729dec.h:
+	* omx/gstomx_ilbcdec.c:
+	* omx/gstomx_mp2dec.c:
+	* omx/gstomx_mp2dec.h:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mp3dec.h:
+	* omx/gstomx_vorbisdec.c:
+	* omx/gstomx_vorbisdec.h:
+	  Add GstOmxBaseAudioDec base class
+	  Refactor some common functionality, in particular the settings_changed_cb,
+	  into an abstract base class.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-17 18:59:00 -0500  Rob Clark <rob@ti.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_util.c:
+	  Add some debug traces
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-29 08:09:26 -0500  Rob Clark <rob@ti.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	  base: add input-buffers/output-buffers properties
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-29 11:00:16 -0500  Rob Clark <rob@ti.com>
+
+	* omx/gstomx.c:
+	* omx/gstomx.h:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Add component-role support
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-29 08:07:24 -0500  Rob Clark <rob@ti.com>
+
+	* omx/gstomx.c:
+	* omx/gstomx.h:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	  Add property helpers
+	  This removes some common code from all base classes, and makes it easier
+	  to add new common properties.
+	  For now (and the foreseeable future)  all common properties are
+	  read-only, but a gstomx_set_property_helper() could be added later if
+	  needed.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-17 18:58:56 -0500  Rob Clark <rob@ti.com>
+
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_adpcmenc.c:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrwbdec.c:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_audiosink.c:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_g711dec.c:
+	* omx/gstomx_g711enc.c:
+	* omx/gstomx_g729enc.c:
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_h264enc.c:
+	* omx/gstomx_jpegenc.c:
+	* omx/gstomx_mp2dec.c:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_volume.c:
+	* omx/gstomx_vorbisdec.c:
+	  Add G_OMX_INIT_PARAM utility macro
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-17 18:58:55 -0500  Rob Clark <rob@ti.com>
+
+	* omx/gstomx_util.c:
+	  util: add some debug traces
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-29 08:05:39 -0500  Rob Clark <rob@ti.com>
+
+	* omx/gstomx.c:
+	* omx/gstomx.h:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  core: call OMX_GetHandle in g_omx_core_new
+	  This way omx_handle is always valid, and can be used in get/set_property
+	  methods.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-17 17:50:31 -0500  Rob Clark <rob@ti.com>
+
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_adpcmenc.c:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrwbdec.c:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_audiosink.c:
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_g711dec.c:
+	* omx/gstomx_g711enc.c:
+	* omx/gstomx_g729enc.c:
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_h264enc.c:
+	* omx/gstomx_jpegenc.c:
+	* omx/gstomx_mp2dec.c:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_volume.c:
+	* omx/gstomx_vorbisdec.c:
+	  Don't hard-code port indexes
+	  This improves readability by keeping knowledge of numeric port-index
+	  value in only one place (in the element constructor), and makes it
+	  easier to later add derived classes with different port indexes (for
+	  example GstOmxCamera subclassing GstOmxBaseSrc, but having GstOmxBaseSrc
+	  handling a port whose index != 0 while derived class handles port index
+	  0 and others).
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-17 17:50:30 -0500  Rob Clark <rob@ti.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Simplify g_omx_port_setup()
+	  Do OMX_GetParameter(PortDefinition) inside g_omx_port_setup(), rather
+	  than duplicating same code in each caller.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-17 17:50:29 -0500  Rob Clark <rob@ti.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Construct GOmxPort objects in element constructor
+	  The port objects are constructed up in element constructor (so they are
+	  valid at any point in the element's lifecycle), and bound to a
+	  port_index at construction time, rather than getting constructed in
+	  setup_ports.
+	  This will be useful later to enable properties that directly set port
+	  params.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-15 17:29:36 -0500  Rob Clark <rob@ti.com>
+
+	* omx/gstomx_util.h:
+	  util: thread safety for _get_type() functions
+	  Reading and writing an int is not sufficient synchronization without
+	  barrier instructions.  Using g_once_init_enter() (which uses
+	  g_atomic_pointer_get()) provides SMP safety.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-15 17:29:35 -0500  Rob Clark <rob@ti.com>
+
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_adpcmenc.c:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrwbdec.c:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_audiosink.c:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_dummy.c:
+	* omx/gstomx_filereadersrc.c:
+	* omx/gstomx_g711dec.c:
+	* omx/gstomx_g711enc.c:
+	* omx/gstomx_g729dec.c:
+	* omx/gstomx_g729enc.c:
+	* omx/gstomx_h263dec.c:
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_h264dec.c:
+	* omx/gstomx_h264enc.c:
+	* omx/gstomx_ilbcdec.c:
+	* omx/gstomx_ilbcenc.c:
+	* omx/gstomx_jpegenc.c:
+	* omx/gstomx_mp2dec.c:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_util.h:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_volume.c:
+	* omx/gstomx_vorbisdec.c:
+	* omx/gstomx_wmvdec.c:
+	  Add GSTOMX_BOILERPLATE macros
+	  These work like the GST_BOILERPLATE macros, but following the naming
+	  conventions for init functions used in the gst-openmax code, to remove a
+	  lot of gobject related boilerplate code.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-15 17:29:34 -0500  Rob Clark <rob@ti.com>
+
+	* omx/gstomx_base_filter.c:
+	  basefilter: small fix for compile error
+	  omx/gstomx_base_filter.c:763: warning: format not a string literal and no format arguments
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-09 00:56:59 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.c:
+	  plugin: store element_table in plugin cache
+	  Probably more efficient.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-09 01:17:51 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.c:
+	  plugin: add support dependencies
+	  So that the cache is reloaded when needed.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-09 00:52:07 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.c:
+	  plugin: make element_table const
+	  Will be useful in next patches, but it's good in itself. Also, no need
+	  to inialize to zero global variables.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-09 00:33:49 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.c:
+	  plugin: reorganize element_table init
+	  plugin_init() is *always* called, so we can assume element_table will
+	  always be initialize once.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-08 22:00:49 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* example.conf:
+	* omx/gstomx.c:
+	  Add example configuration
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-08 21:54:33 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.c:
+	  plugin: add support for system-wide config
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-08 21:53:18 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.c:
+	  plugin: reorganize code into get_config_path()
+	  Will be useful in next commits to extend to more config options.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-06 15:03:57 -0600  Rob Clark <rob@ti.com>
+
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_filereadersrc.c:
+	* omx/gstomx_g729enc.c:
+	* omx/gstomx_jpegenc.c:
+	* omx/gstomx_videosink.c:
+	  Use G_PARAM_STATIC_STRINGS
+	  As suggested by Stefan Kost.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-05 17:28:04 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	  base: remove extra code
+	  As suggested by Rob Clark.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-04 00:30:10 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	  base: remove unused set_property()
+	  No more writeable properties.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-04 00:25:02 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	  Make {component,library}-name read-only
+	  As suggested by Rob Clark.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-04 00:14:09 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.c:
+	* omx/gstomx.h:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	  Reorganize {library,component}-name assigns
+	  Based on a patch by Rob Clark.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-03 01:12:55 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Reorganize core_new()
+	  So that it receives the 'object' which is kind of mandatory.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-02 23:47:17 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_filter.h:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_sink.h:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_base_src.h:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Move component and library name fields to 'util'
+	  No need to duplicate these, and also will be helpful for upcoming
+	  commits.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-06 19:20:47 +0100  Rob Clark <rob@ti.com>
+
+	* configure.ac:
+	* tests/Makefile.am:
+	* tests/standalone/Makefile:
+	* tests/standalone/Makefile.in:
+	  build: fixes for out-of-tree
+	  Normally with autotools, you should be able to create a directory
+	  outside of the srctree, and then run something like:
+	  ../path/to/gst-openmax/configure ....
+	  make check install
+	  but a couple small tweaks were needed to make check work properly.
+	  Mainly replacing Makefile with a Makefile.in, and avoiding relative
+	  paths to files in the src tree.
+
+2010-03-03 07:57:07 -0600  Rob Clark <rob@ti.com>
+
+	* tests/Makefile.am:
+	* tests/check_gstomx.c:
+	* tests/gst-openmax.conf:
+	  tests: update to use config file
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-02 23:59:32 +0200  Rob Clark <rob@ti.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx.conf:
+	  Add default configuration
+	  A little bit hacky, but works just fine.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-02 23:57:13 +0200  Rob Clark <rob@ti.com>
+
+	* omx/gstomx.c:
+	  Initial support for configuration file
+	  Configurable mapping between gst-openmax elements and OMX library-name
+	  and component-name via config file. The config file may even create
+	  multiple different elements with unique names using the same gst-openmax
+	  class but different OMX library-name and/or component-name.
+	  In the simple case, of one OMX component per gst-openmax class, specify
+	  the gst-openmax class as the 'type', and the 'library-name' and
+	  'compnent-name' of the OMX component, and optionally the 'rank'
+	  (defaults to 0 or GST_RANK_NONE):
+	  ----
+	  omx_h264dec,
+	  type=GstOmxH264Dec,
+	  library-name=libomxil-bellagio.so.0,
+	  component-name=OMX.st.video_decoder.avc,
+	  rank=256;
+	  ----
+	  Or in the advanced case of multiple OMX components per gst-openmax
+	  class, specify the gst-openmax class as the 'parent-type' and a
+	  dynamically created sub-class for the 'type':
+	  ----
+	  omx_mp3dec_ti,
+	  parent-type=GstOmxMp3Dec,
+	  type=GstOmxMp3DecTi
+	  library-name=libOMX_Core.so.0,
+	  component-name=OMX.TI.AUDIO.DECODE,
+	  component-role=audio_decode.dsp.mp3,
+	  rank=256;
+	  omx_mp3dec_nokia,
+	  parent-type=GstOmxMp3Dec,
+	  type=GstOmxMp3DecNokia
+	  library-name=libomxil_bellagio.so.0,
+	  component-name=OMX.nokia.audio_decode.mp3,
+	  rank=128;
+	  ----
+	  By default, the config file is stored in $HOME/.config/gst-openmax.conf,
+	  although if none is found a default config will be created.
+	  Modified by Felipe Contreras to keep using the library and component
+	  names through qdata. Plus a bunch of cleanups and reorganization.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+	  Signed-off-by: Rob Clark <rob@ti.com>
+
+2010-02-28 17:45:24 +0100  Rob Clark <rob@ti.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	  Fixes for building for 64bit host
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2010-03-02 23:21:55 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* tests/check_gstomx.c:
+	  tests: trivial fix
+	  It looks like some extra messages are no the bus now.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-10-15 19:57:56 +0300  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_videodec.c:
+	  videodec: fallback framerate to 0/1
+	  Stupid xvimagesink.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-09-20 04:04:47 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_sink.c:
+	  base_sink: remove dead assignment
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-09-20 00:22:26 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_filter.c:
+	  base_filter: more proper printf formatting
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-09-20 00:21:46 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_filter.c:
+	  base_filter: trivial cleanup
+	  In preparation for more cleanups.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-09-19 23:44:18 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_util.c:
+	  util: fix compilation warning
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-09-19 19:23:23 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* m4/gst-args.m4:
+	* m4/gst-error.m4:
+	  build: update 'common' stuff
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-20 15:40:10 +0200  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_videodec.c:
+	  videodec: handle empty framerate
+	  Apparently sometimes we don't get it.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-05-19 16:26:00 +0200  Mark Nauwelaerts <mark.nauwelaerts@collabora.co.uk>
+
+	* omx/gstomx_base_filter.c:
+	  base_filter: fix race condition when shutting down
+	  .. between starting streaming thread and mainloop.
+	  Signed-off-by: Mark Nauwelaerts <mark.nauwelaerts@collabora.co.uk>
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-05-19 18:57:33 +0300  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_videoenc.c:
+	  base_videoenc: use 0 as automatic bitrate
+	  So that the omx component can automatically calculate it.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-05-09 01:13:20 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_util.c:
+	  util: increase timeout value
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-05-19 15:22:27 +0300  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  util: cleanup ports when going to loaded
+	  The ports will be setup again next time we go to Idle.
+	  This fixes a regression when re-using omx wrappers.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-05-09 01:12:56 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_util.c:
+	  util: improve timeout messages
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-05-11 18:26:21 +0300  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  util: trivial cleanup
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-25 18:06:37 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_jpegenc.c:
+	* omx/gstomx_videosink.c:
+	  Update I420 to PackedPlanar
+	  Which is what we really meant by 'I420'.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-04-27 01:20:46 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* README:
+	  Update README
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-27 01:20:18 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* Makefile.am:
+	  Add 'patches' directory to the dist
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-27 00:11:46 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* autogen.sh:
+	  autogen.sh: fix build and cleanups
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-26 23:57:03 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* ChangeLog:
+	  Remove ChangeLog
+	  It should be generated automatically.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-26 23:44:45 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* configure.ac:
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	  build: add enable-experimental option
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-26 22:50:28 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx.c:
+	  plugin: decrease priority of vorbisdec
+	  Fixes bug #576114.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2008-08-05 11:47:32 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Remove core_finish, use core_unload
+	  Not much difference, but it will help for tunneling.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-26 20:58:07 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_util.c:
+	  util: trivial rearrange
+	  In preparation for following patches.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2008-08-05 11:26:13 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Add core_stop function to split core_finish
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-26 20:28:16 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_filter.c:
+	  basefilter: cleanup
+	  So that logging doesn't get screwed.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-26 19:29:35 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* build-aux/git-version-gen:
+	* build-aux/release.mak:
+	  build: improve version generation
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-26 19:26:14 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* build-aux/update-common:
+	  Add 'update-common' script
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-26 18:47:36 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx.c:
+	  plugin: trivial cleanup
+	  static > non-static
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-26 18:44:18 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx.c:
+	  plugin: trivial cleanup
+	  No need for a silly DEFAULT_RANK define.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-26 18:36:26 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_util.c:
+	  util: improve logging
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-26 18:27:57 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_adpcmenc.c:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrwbdec.c:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_filereadersrc.c:
+	* omx/gstomx_g729dec.c:
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_h264enc.c:
+	* omx/gstomx_jpegenc.c:
+	* omx/gstomx_mp2dec.c:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_util.h:
+	* omx/gstomx_volume.c:
+	* omx/gstomx_vorbisdec.c:
+	  Trivial cleanup; rename client_data field
+	  util (aka GOmx) needs to be further integrated.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-21 00:32:53 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_util.c:
+	  util: nicer error messages
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-09 04:37:13 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_filter.c:
+	  base_filter: cleanup PAUSED_TO_READY
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-09 03:01:07 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_util.c:
+	  util: handle all errors
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-09 03:00:09 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_util.c:
+	  util: don't set artificial omx errors
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-09 00:01:04 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_util.c:
+	  Always check the omx state
+	  Hopefully this will catch more omx issues.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2008-08-05 13:28:33 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_sink.c:
+	  basesink: initalize omx when changing to READY
+	  Sometimes pad_link is called after switching the state; we need to have omx
+	  initialized always.
+	  Based on the tunneling patch series by Frederik Vermelen (NXP), whom
+	  also gave feedback to this patch.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2008-07-31 18:02:37 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_sink.c:
+	  basesink: align gst and omx states in base_sink
+	  Based on the tunneling patch series by Frederik Vermelen (NXP), whom
+	  also gave feedback to this patch.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2008-07-31 17:50:44 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_sink.c:
+	  basesink: add empty change_state function
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2008-07-31 17:39:51 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_sink.h:
+	  basesink: move omx initalization to pad link
+	  Based on the tunneling patch series by Frederik Vermelen (NXP), whom
+	  also gave feedback to this patch.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2008-08-05 15:15:00 +0300  Frederik Vernelen <frederik.vernelen@nxp.com>
+
+	* omx/gstomx_base_sink.c:
+	  basesink: add NXP copyright
+	  For contributions in the implementation of state alignment and
+	  tunneling.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-26 17:36:56 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_sink.c:
+	  basesink: don't hang on downward state change
+	  A null buffer means somebody wants to flush.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-09 02:41:18 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* build-aux/git-version-gen:
+	  git-version-gen: fix for old versions of git
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-20 01:28:44 +0300  René Stadler <mail@renestadler.de>
+
+	* omx/gstomx_jpegenc.c:
+	  jpegenc: fix classification
+	  Signed-off-by: René Stadler <mail@renestadler.de>
+
+2009-04-09 02:11:29 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* Makefile.am:
+	  Fix distribution
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-09 01:57:58 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* .gitignore:
+	  .gitignore: cleanup
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-09 01:52:48 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* configure.ac:
+	  configure.ac: cleanup
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-09 01:43:20 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* Makefile.am:
+	* autogen.sh:
+	* build-aux/gst-autogen.sh:
+	* build-aux/release.mak:
+	* common/Makefile.am:
+	* common/gst-autogen.sh:
+	* common/release.mak:
+	* configure.ac:
+	  Move common stuff to build-aux
+	  It's a more proper location.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-09 00:37:46 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* Makefile.am:
+	* build-aux/git-version-gen:
+	* common/release.mak:
+	* configure.ac:
+	  Use 'git describe' for automatic version
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-09 01:21:17 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* configure.ac:
+	* m4/shave.m4:
+	* shave-libtool.in:
+	* shave.in:
+	  Add shave build option
+	  Disabled by default.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-09 00:02:16 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_util.c:
+	  Cleanups
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-05 20:03:48 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  util: remove g_omx_sem and use shared g_sem
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-05 19:59:12 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* tests/standalone/core.c:
+	* util/sem.h:
+	  test: fix gcc warnings
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-05 20:23:05 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_g711enc.c:
+	* omx/gstomx_ilbcenc.c:
+	  Trivial cleanups
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-05 19:45:29 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_adpcmenc.c:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_audiosink.c:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_dummy.c:
+	* omx/gstomx_filereadersrc.c:
+	* omx/gstomx_g711dec.c:
+	* omx/gstomx_g711enc.c:
+	* omx/gstomx_g729dec.c:
+	* omx/gstomx_g729enc.c:
+	* omx/gstomx_h263dec.c:
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_h264dec.c:
+	* omx/gstomx_h264enc.c:
+	* omx/gstomx_ilbcdec.c:
+	* omx/gstomx_ilbcenc.c:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_volume.c:
+	* omx/gstomx_vorbisdec.c:
+	* omx/gstomx_wmvdec.c:
+	  Remove unused variables
+	  From clang static analyzer.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-03 17:09:05 +0300  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  util: display error message sooner
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-04-01 20:03:14 +0300  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.h:
+	  basefilter: trivial cleanup
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-24 20:21:39 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  util: cleanup timeout stuff
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-24 19:51:58 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  util: add timeout to wait_for_state
+	  So we don't wait forever for the DSP.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-24 18:35:22 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_util.c:
+	  Improve error handling
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-04-01 17:16:50 +0300  Mark Nauwelaerts <mark.nauwelaerts@collabora.co.uk>
+
+	* omx/gstomx_base_filter.c:
+	  basefilter: don't start task when omx is not ready
+	  Signed-off-by: Mark Nauwelaerts <mark.nauwelaerts@collabora.co.uk>
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-24 17:34:10 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Revert "Do not hang in state change when flushing."
+	  This reverts commit 3c7ef1468ffcacca82817e325b08f3b81f8dd4b7.
+	  We *must* wait for OpenMAX or error out, not silently exit.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-04-02 15:51:53 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_filter.c:
+	  basefilter: appropriately return wrong state
+	  This gets rid for some extra loops (sometimes too many) when switching
+	  to READY.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-17 12:26:35 +0100  Mark Nauwelaerts <mark.nauwelaerts@collabora.co.uk>
+
+	* omx/gstomx_g729enc.c:
+	  g729enc: set caps on srcpad
+	  e.g. in sink set_caps function.
+	  Signed-off-by: Mark Nauwelaerts <mark.nauwelaerts@collabora.co.uk>
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-20 15:41:05 +0200  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_g729enc.c:
+	  g729enc: trivial cleanup for default DTX
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-04-01 16:19:47 +0300  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.c:
+	  plugin: trivial whitespace fix
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-20 19:44:58 +0200  Marco Ballesio <marco.ballesio@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Properly calculate timestamps when input buffers are split
+	  Signed-off-by: Marco Ballesio <marco.ballesio@nokia.com>
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-04-01 15:56:12 +0300  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* tests/.gitignore:
+	  Add ignore files for 'tests' dir
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-31 20:50:33 +0300  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_sink.h:
+	  basesink: chain up activatepush
+	  Makes it work again.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-31 20:49:38 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx.h:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	  basesink,basesrc: fix library and component name
+	  It wasn't really being setup due to a previous commit.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-31 20:11:43 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	  Replace dispose with finalize
+	  This is more proper as per GObject guidelines. Suggested by Mark
+	  Nauwelaerts.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-31 01:38:05 +0300  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx.c:
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_adpcmenc.c:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrwbdec.c:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_audiosink.c:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_dummy.c:
+	* omx/gstomx_filereadersrc.c:
+	* omx/gstomx_g711dec.c:
+	* omx/gstomx_g711enc.c:
+	* omx/gstomx_g729dec.c:
+	* omx/gstomx_g729enc.c:
+	* omx/gstomx_h263dec.c:
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_h264dec.c:
+	* omx/gstomx_h264enc.c:
+	* omx/gstomx_ilbcdec.c:
+	* omx/gstomx_ilbcenc.c:
+	* omx/gstomx_jpegenc.c:
+	* omx/gstomx_mp2dec.c:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_volume.c:
+	* omx/gstomx_vorbisdec.c:
+	* omx/gstomx_wmvdec.c:
+	  plugin: refactor
+	  This is in preparation to support multiple configurations; bellagio,
+	  omap, maemo, android, etc.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-30 20:21:11 +0300  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_jpegenc.c:
+	  jpegenc: fix quality setting
+	  OMX_SetConfig should be used after Executing state, OMX_SetParameter is
+	  what we want.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-30 17:25:09 +0300  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  util: avoid double-free
+	  There should be a better way to find out how to free that buffer.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-27 02:14:20 +0200  René Stadler <mail@renestadler.de>
+
+	* omx/gstomx_base_filter.c:
+	  basefilter: release ready_lock when core_prepare fails
+	  Signed-off-by: René Stadler <mail@renestadler.de>
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-26 17:33:13 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Add environment variables for testing
+	  OMX_ALLOCATE_ON, OMX_SHARE_HACK_ON, and OMX_SHARE_HACK_OFF.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-26 21:09:32 +0200  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_filter.c:
+	  basefilter: plug a leak
+	  The leak would happen very rarely; twice per run. But still, let's avoid
+	  it.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-26 16:37:35 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  util: make OMX_AllocateBuffer configurable
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-26 15:43:38 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  util: fix break statements in event_handler
+	  I've never noticed any issue with this code, but it definitely could do
+	  very bad stuff.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-26 16:53:55 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  basefilter: trivial cleanup
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-25 19:11:01 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_util.c:
+	  Trivial cleanups
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-25 18:49:26 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  util: handle more errors from omx
+	  TI uses these.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-25 16:54:05 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_adpcmenc.c:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrwbdec.c:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_audiosink.c:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_g711dec.c:
+	* omx/gstomx_g711enc.c:
+	* omx/gstomx_g729enc.c:
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_h264enc.c:
+	* omx/gstomx_jpegenc.c:
+	* omx/gstomx_mp2dec.c:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_volume.c:
+	* omx/gstomx_vorbisdec.c:
+	  Use memset instead of calloc
+	  This is more efficient.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-25 16:53:00 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.c:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_filereadersrc.c:
+	* omx/gstomx_jpegenc.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_volume.c:
+	  Remove stdbool.h
+	  I like 'true' and 'false' but let's go for standard GLib ones.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-23 14:25:23 +0200  René Stadler <rene.stadler@nokia.com>
+
+	* omx/gstomx_jpegenc.c:
+	* omx/gstomx_jpegenc.h:
+	  jpegenc: Forward upstream framerate in caps.
+
+2009-03-19 20:02:42 +0200  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_videosink.c:
+	  videoenc: fix Q.16 framerate calculation
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-25 15:30:09 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_h263dec.c:
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_h264dec.c:
+	* omx/gstomx_h264enc.c:
+	* omx/gstomx_jpegenc.c:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_wmvdec.c:
+	  Even more framerate improvements
+	  As suggested by Stefan Kost.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-25 00:57:26 +0200  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* .gitignore:
+	  Cleanup .gitignore
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-24 21:18:52 +0000  Tim-Philipp Müller <tim.muller@collabora.co.uk>
+
+	* .gitignore:
+	  .gitignore: ignore more
+
+2009-03-24 22:18:28 +0200  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_filter.h:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_sink.h:
+	  Rename 'initialized' to 'ready'
+	  It describes better what the flag is supposed to mean and would make the
+	  merge of the 'tunneling' branch easier.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-24 17:19:25 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* common/gst-autogen.sh:
+	* m4/gst-args.m4:
+	* m4/gst-check.m4:
+	* m4/gst-error.m4:
+	  Some cleanups to the 'common' stuff
+	  These should go to gst-common too.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-24 15:55:56 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* .gitmodules:
+	* Makefile.am:
+	* autogen.sh:
+	* common:
+	* common/Makefile.am:
+	* common/gst-autogen.sh:
+	* common/release.mak:
+	* configure.ac:
+	* m4/Makefile.am:
+	* m4/as-ac-expand.m4:
+	* m4/as-compiler-flag.m4:
+	* m4/gst-args.m4:
+	* m4/gst-check.m4:
+	* m4/gst-error.m4:
+	* m4/gst-plugindir.m4:
+	* m4/gst.m4:
+	  Remove common submodule
+	  Copy only what we need.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-24 16:00:28 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* autogen.sh:
+	  Remove automatic pre-commit hook
+	  Clean commits should be enfored in a different way.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-23 22:52:18 +0200  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_filereadersrc.c:
+	* omx/gstomx_g729enc.c:
+	* omx/gstomx_jpegenc.c:
+	* omx/gstomx_videosink.c:
+	  Cleanup enums
+	  Adding a comma at the end is better for maintainance.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-23 20:21:56 +0200  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_util.c:
+	  Trivial code-style cleanups
+	  Before switching to GStreamer code-style lets stay consistent.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-23 20:20:47 +0200  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_adpcmenc.c:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrwbdec.c:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_audiosink.c:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_dummy.c:
+	* omx/gstomx_filereadersrc.c:
+	* omx/gstomx_g711dec.c:
+	* omx/gstomx_g711enc.c:
+	* omx/gstomx_g729dec.c:
+	* omx/gstomx_g729enc.c:
+	* omx/gstomx_h263dec.c:
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_h264dec.c:
+	* omx/gstomx_h264enc.c:
+	* omx/gstomx_ilbcdec.c:
+	* omx/gstomx_ilbcenc.c:
+	* omx/gstomx_jpegenc.c:
+	* omx/gstomx_mp2dec.c:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_volume.c:
+	* omx/gstomx_vorbisdec.c:
+	* omx/gstomx_wmvdec.c:
+	  Cleanup global scope
+	  No need to initialize to 0 static variables.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-16 20:51:14 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_filter.h:
+	  basefilter: fix init race condition
+	  This fixes an issue when changing the state to READY too fast. The
+	  problem comes when there's a state change from PAUSED to READY while
+	  pad_chain is in the middle of initializing OpenMAX; the two threads
+	  compete to initialize and de-initialize OpenMAX at the same time.
+	  This is a simplified version of a patch developed by Mark Nauwelaerts.
+	  Ideally the initialization should move out of pad_chain to avoid these
+	  issues.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-16 16:35:29 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_base_videoenc.h:
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_h264enc.c:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_videosink.c:
+	  General update to framerate handling
+	  OpenMAX needs the framerate to be in Q.16 format, so store it that way.
+	  Unfortunately that doesn't have good precision, so store the numerator
+	  and denominator in base videoenc and use that value for the caps.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-16 16:32:41 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_h264enc.c:
+	* omx/gstomx_mpeg4enc.c:
+	  video encoders: trivial cleanups
+	  In preparation for the next patches.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-16 16:02:36 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_h264enc.c:
+	* omx/gstomx_jpegenc.c:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_wmvdec.c:
+	  Set more proper framerate in the caps templates
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-14 00:33:17 +0200  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_util.c:
+	  util: cleanup request_imp
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-14 00:32:31 +0200  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_util.c:
+	  util: fix crash when OMX_Init errors
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-13 22:48:10 +0200  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* tests/check_gstomx.c:
+	  check_gstomx: cleanup codes-tyle
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-12 14:59:55 +0100  Mark Nauwelaerts <mark.nauwelaerts@collabora.co.uk>
+
+	* tests/check_gstomx.c:
+	  Fix race in test.
+	  omx_base_filter is a thread boundary, so it cannot be relied
+	  upon that whatever is pushed in (e.g. EOS) has made it all
+	  the way through by the end of the call.
+	  Signed-off-by: Mark Nauwelaerts <mark.nauwelaerts@collabora.co.uk>
+
+2009-03-12 14:57:58 +0100  Mark Nauwelaerts <mark.nauwelaerts@collabora.co.uk>
+
+	* omx/gstomx_base_filter.c:
+	  Fix format specifier in debug statement.
+	  Signed-off-by: Mark Nauwelaerts <mark.nauwelaerts@collabora.co.uk>
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-13 19:55:50 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  util: detect more unrecoverable errors
+	  Also, increase the level to GST_ERROR.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-13 19:47:20 +0200  Jan Schmidt <thaytan@noraisin.net>
+
+	* configure.ac:
+	  configure.ac: trivial cleanup
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-12 03:06:30 +0200  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* configure.ac:
+	  Fix libcheck' check
+	  It was always true, so AG_GST_CHECK_GST_CHECK was executed.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-12 01:55:09 +0200  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx.c:
+	* omx/gstomx.h:
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacdec.h:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_aacenc.h:
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_adpcmdec.h:
+	* omx/gstomx_adpcmenc.c:
+	* omx/gstomx_adpcmenc.h:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbdec.h:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrnbenc.h:
+	* omx/gstomx_amrwbdec.c:
+	* omx/gstomx_amrwbdec.h:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_amrwbenc.h:
+	* omx/gstomx_audiosink.c:
+	* omx/gstomx_audiosink.h:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_filter.h:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_sink.h:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_base_src.h:
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videodec.h:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_base_videoenc.h:
+	* omx/gstomx_dummy.c:
+	* omx/gstomx_dummy.h:
+	* omx/gstomx_filereadersrc.c:
+	* omx/gstomx_filereadersrc.h:
+	* omx/gstomx_g711dec.c:
+	* omx/gstomx_g711dec.h:
+	* omx/gstomx_g711enc.c:
+	* omx/gstomx_g711enc.h:
+	* omx/gstomx_g729dec.c:
+	* omx/gstomx_g729dec.h:
+	* omx/gstomx_g729enc.c:
+	* omx/gstomx_g729enc.h:
+	* omx/gstomx_h263dec.c:
+	* omx/gstomx_h263dec.h:
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_h263enc.h:
+	* omx/gstomx_h264dec.c:
+	* omx/gstomx_h264dec.h:
+	* omx/gstomx_h264enc.c:
+	* omx/gstomx_h264enc.h:
+	* omx/gstomx_ilbcdec.c:
+	* omx/gstomx_ilbcdec.h:
+	* omx/gstomx_ilbcenc.c:
+	* omx/gstomx_ilbcenc.h:
+	* omx/gstomx_interface.c:
+	* omx/gstomx_interface.h:
+	* omx/gstomx_jpegenc.c:
+	* omx/gstomx_jpegenc.h:
+	* omx/gstomx_mp2dec.c:
+	* omx/gstomx_mp2dec.h:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mp3dec.h:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_mpeg4dec.h:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_mpeg4enc.h:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_videosink.h:
+	* omx/gstomx_volume.c:
+	* omx/gstomx_volume.h:
+	* omx/gstomx_vorbisdec.c:
+	* omx/gstomx_vorbisdec.h:
+	* omx/gstomx_wmvdec.c:
+	* omx/gstomx_wmvdec.h:
+	* tests/check_async_queue.c:
+	* tests/check_gstomx.c:
+	* tests/check_libomxil.c:
+	* tests/standalone/core.c:
+	* util/async_queue.c:
+	* util/async_queue.h:
+	* util/sem.c:
+	* util/sem.h:
+	  Update copyright notice for 2009.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-11 23:10:25 +0200  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* configure.ac:
+	  Make libcheck optional
+	  Specially welcome while cross-compiling.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-03-11 21:06:07 +0200  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* .gitignore:
+	  Create .gitignore file
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-02-26 15:58:14 +0200  René Stadler <rene.stadler@nokia.com>
+
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_aacenc.h:
+	  aacenc: Implement profile property.
+
+2009-02-24 18:52:14 +0200  René Stadler <rene.stadler@nokia.com>
+
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_aacenc.h:
+	  aacenc: Add output-format property, setting eAACStreamFormat.
+
+2009-02-11 16:21:19 +0200  René Stadler <rene.stadler@nokia.com>
+
+	* omx/gstomx_aacenc.c:
+	  aacenc: Propagate bitrate property value to component.
+
+2009-03-09 15:46:41 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  basefilter: handle codec-data from omx
+	  This will help H.264 and AAC encoding.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-02-20 10:54:54 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  util: Make omx errors more verbose.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-02-19 10:58:06 +0100  Mark Nauwelaerts <mark.nauwelaerts@collabora.co.uk>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_util.c:
+	  Handle unrecoverable errors.
+	  Signed-off-by: Mark Nauwelaerts <mark.nauwelaerts@collabora.co.uk>
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-02-13 19:23:38 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  util: More debug logging.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-03-09 23:13:54 +0000  Jan Schmidt <thaytan@noraisin.net>
+
+	* common:
+	  Automatic update of common submodule
+	  From 7032163 to f8b3d91
+
+2009-03-08 12:06:24 +0100  Sebastian Dröge <sebastian.droege@collabora.co.uk>
+
+	* common:
+	  Automatic update of common submodule
+	  From ffa738d to 7032163
+
+2009-03-08 11:22:01 +0100  Sebastian Dröge <sebastian.droege@collabora.co.uk>
+
+	* common:
+	  Automatic update of common submodule
+	  From 3f13e4e to ffa738d
+
+2009-03-07 11:47:33 +0100  Sebastian Dröge <sebastian.droege@collabora.co.uk>
+
+	* common:
+	  Automatic update of common submodule
+	  From 3c7456b to 3f13e4e
+
+2009-03-07 10:47:41 +0100  Sebastian Dröge <sebastian.droege@collabora.co.uk>
+
+	* common:
+	  Automatic update of common submodule
+	  From a6ce5c6 to 3c7456b
+
+2009-02-25 11:33:01 +0000  Jan Schmidt <thaytan@noraisin.net>
+
+	* common:
+	  Automatic update of common submodule
+	  From 9cf8c9b to a6ce5c6
+
+2009-02-23 00:57:44 +0200  René Stadler <mail@renestadler.de>
+
+	* omx/gstomx_util.c:
+	  util: Fix crash when dlopen() fails.
+	  imp_free() calls g_mutex_free() on imp->mutex, which is still NULL.
+	  Signed-off-by: René Stadler <mail@renestadler.de>
+
+2009-02-22 16:01:06 +0000  Jan Schmidt <thaytan@noraisin.net>
+
+	* common:
+	  Automatic update of common submodule
+	  From 5d7c9cc to 9cf8c9b
+
+2009-02-21 11:14:06 -0800  David Schleef <ds@schleef.org>
+
+	* common:
+	  Automatic update of common submodule
+	  From 137543b to 5d7c9cc
+
+2009-02-11 15:40:20 +0200  René Stadler <rene.stadler@nokia.com>
+
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_jpegenc.c:
+	  Fix unused variables breaking the build.
+	  Signed-off-by: René Stadler <rene.stadler@nokia.com>
+
+2009-01-27 13:32:43 +0100  Mark Nauwelaerts <mark.nauwelaerts@collabora.co.uk>
+
+	* omx/gstomx_base_filter.c:
+	  Serialize EOS sending.
+	  Sending EOS event from incoming pad_event thread may have this event arrive
+	  downstream before outgoing output_loop has sent last buffer(s).
+	  Instead, send EOS event in output_loop when it detects EOS (bufferflag).
+	  Signed-off-by: Mark Nauwelaerts <mark.nauwelaerts@collabora.co.uk>
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-02-07 18:44:34 +0200  Mark Nauwelaerts <mark.nauwelaerts@collabora.co.uk>
+
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Fix mt issue when loading/unloading omxil.
+	  This avoids an issue when loading two gst-openmax elements that use the
+	  same implemenation; OMX_Init should be called only once per
+	  implementation.
+	  Signed-off-by: Mark Nauwelaerts <mark.nauwelaerts@collabora.co.uk>
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-02-03 17:06:35 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Fix crash on certain race condition.
+	  Thanks to Mark Nauwelaerts for the investigation.
+	  Signed-off-by: René Stadler <rene.stadler@nokia.com>
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-01-28 14:43:48 +0200  René Stadler <rene.stadler@nokia.com>
+
+	* omx/gstomx_aacenc.c:
+	  aacenc: Fix src caps by not relying on settings_changed callback.
+	  Signed-off-by: René Stadler <rene.stadler@nokia.com>
+
+2009-01-14 14:40:30 +0200  René Stadler <rene.stadler@nokia.com>
+
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videodec.h:
+	  Pass on correct sink framerate fraction.
+	  Signed-off-by: René Stadler <rene.stadler@nokia.com>
+
+2009-01-14 14:29:32 +0200  René Stadler <rene.stadler@nokia.com>
+
+	* omx/gstomx_base_videodec.c:
+	  Don't limit framerate to 30fps for video decoder pad templates.
+	  Signed-off-by: René Stadler <rene.stadler@nokia.com>
+
+2009-01-27 13:32:14 +0100  Mark Nauwelaerts <mark.nauwelaerts@collabora.co.uk>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Do not hang in state change when flushing.
+	  The state change might fail.
+	  Signed-off-by: Mark Nauwelaerts <mark.nauwelaerts@collabora.co.uk>
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2008-12-15 21:11:12 +0200  René Stadler <rene.stadler@nokia.com>
+
+	* omx/gstomx_aacdec.c:
+	  aacdec: Don't set the profile.
+	  The decoder needs to figure out the format by itself.
+	  Signed-off-by: René Stadler <rene.stadler@nokia.com>
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-02-03 15:19:33 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_jpegenc.c:
+	  Remove TI-specific stuff.
+	  This should go to the omap branch instead.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2008-12-15 19:29:48 +0200  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_aacdec.c:
+	  aacdec: Store codec-data.
+	  So that it's sent to the decoder.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2008-12-15 18:35:57 +0200  Olivier Crête <olivier.crete@collabora.co.uk>
+
+	* omx/gstomx_g711enc.c:
+	  g711enc: Only try to fetch structure from caps if it exists.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2008-12-11 22:00:50 +0200  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* omx/gstomx_audiosink.c:
+	* omx/gstomx_videosink.c:
+	  sink: Cleanup element details.
+
+2008-12-11 21:58:10 +0200  Sriram Murthy <sriram482@gmail.com>
+
+	* omx/gstomx_audiosink.c:
+	  audio_sink: Set correct class.
+
+2008-09-01 19:53:25 +0300  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Send initial codec_data buffer.
+	  OpenMAX IL 1.1.1 doesn't have OMX_BUFFERFLAG_CODECCONFIG; it was
+	  introduced in 1.1.2, so set it manually for now.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2008-12-10 18:58:03 +0200  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  util: Fix for allocate buffer.
+	  The buffer shall be freed only when allocated by us as opposed to some
+	  other element.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2009-01-30 20:42:32 +0200  Felipe Contreras <felipe.contreras@gmail.com>
+
+	* ChangeLog:
+	* omx/gstomx_aacdec.c:
+	  Missing cleanups from old git repo.
+	  Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+
+2009-01-23 00:19:33 +0200  René Stadler <mail@renestadler.de>
+
+	* configure.ac:
+	  Fix configure failing because of missing m4 directory.
+	  This was broken by the conversion to git, since it cannot store empty
+	  directories.
+
+2009-01-22 06:23:44 +0100  Edward Hervey <bilboed@bilboed.com>
+
+	* autogen.sh:
+	* common:
+	  Install and use pre-commit indentation hook from common
+
+2009-01-21 04:36:50 +0100  Edward Hervey <bilboed@bilboed.com>
+
+	* autogen.sh:
+	  autogen.sh : Use git submodule
+
+2008-12-08 21:10:57 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_g711enc.c:
+	* omx/gstomx_ilbcenc.c:
+	  Random cleanups.
+
+2008-12-08 21:10:21 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_adpcmenc.c:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrwbdec.c:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_g711dec.c:
+	* omx/gstomx_g711enc.c:
+	* omx/gstomx_g729dec.c:
+	* omx/gstomx_g729enc.c:
+	* omx/gstomx_ilbcdec.c:
+	* omx/gstomx_ilbcenc.c:
+	* omx/gstomx_mp2dec.c:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_volume.c:
+	* omx/gstomx_vorbisdec.c:
+	  More specific caps for all audio elements.
+
+2008-12-08 21:09:38 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_adpcmenc.c:
+	  adpcm: Fix capabilities negotation.
+
+2008-12-08 21:08:41 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_filter.h:
+	  Allow child classes to override the share_input_buffer workaround.
+	  Some components require specific buffer sizes.
+
+2008-12-08 21:08:04 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_jpegenc.c:
+	* omx/gstomx_jpegenc.h:
+	  jpegenc: Add quality property.
+
+2008-11-21 17:15:12 +0200  René Stadler <rene.stadler@nokia.com>
+
+	* omx/gstomx_amrwbenc.c:
+	  amrwbenc: Add rate=16000 field to amr caps
+
+2008-11-21 17:13:30 +0200  René Stadler <rene.stadler@nokia.com>
+
+	* common:
+	* omx/gstomx_amrnbenc.c:
+	  amrnbenc: Add rate=8000 field to amr caps
+
+2008-11-20 17:16:28 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Fix seeking when using zero-copy.
+	  When doing seeking, and other times, a pad push returns an error and if
+	  zero-copy is enabled the omx buffer doesn't have any allocated buffer.
+	  So allocate the buffer so omx doesn't crash.
+
+2008-11-20 17:15:19 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_ilbcdec.c:
+	* omx/gstomx_ilbcenc.c:
+	  Fix iLBC caps negotiation.
+
+2008-11-20 17:13:42 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_avcenc.c:
+	* omx/gstomx_avcenc.h:
+	* omx/gstomx_h264dec.c:
+	* omx/gstomx_h264enc.c:
+	* omx/gstomx_h264enc.h:
+	  Rename avcenc to h264enc.
+	  No need to follow OpenMAX IL's AVC nomenclature.
+
+2008-11-20 17:12:13 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_g711dec.c:
+	  Fix G711 decoder caps.
+
+2008-11-20 17:08:57 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_g711enc.c:
+	  Improve G711 caps negotiation.
+
+2008-11-20 17:07:57 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Fix EOS handling when omx hasn't been initialized.
+
+2008-11-20 17:02:52 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.c:
+	* omx/gstomx.h:
+	* omx/gstomx_util.c:
+	  Improve debug logging for gstomx util.
+
+2008-11-20 17:01:45 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* tests/Makefile.am:
+	* tests/check_libomxil.c:
+	  Improve internal libomxil unit tests.
+	  Do switch to Idle, still needs buffer handling.
+
+2008-11-20 17:01:12 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	* tests/check_async_queue.c:
+	  Random cleanups.
+
+2008-11-20 17:00:34 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* tests/check_async_queue.c:
+	  Add stress unit tests for async_queue.
+
+2008-11-20 16:59:56 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* util/Makefile.am:
+	* util/sem.c:
+	* util/sem.h:
+	  Add new semaphore utility.
+
+2008-11-20 16:59:11 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Properly deinitialize when going to READY.
+	  Otherwise going back to PLAY crashes.
+
+2008-11-20 16:58:37 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Cleanup flushing mechanism for seeking.
+	  Flushes for seeking works differently in input and output ports.
+	  In input ports a real omx flush command is issued, then wait for
+	  completion.
+	  In output ports the internal queue is flushed, but no flush command is
+	  sent to omx. There's still the possibility that the output buffers
+	  coming from omx are wrong (before the flush) so they need to be tainted
+	  somehow.
+
+2008-11-20 16:53:20 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Release output buffer when there's flushing.
+	  Otherwise omx might never receive the output buffer. Also cleanup a bit
+	  the output loop function.
+
+2008-11-10 20:38:49 +0200  René Stadler <rene.stadler@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Forward pad event properly.
+	  Otherwise the pad_pause_task might hang.
+	  Signed-off-by: René Stadler <rene.stadler@nokia.com>
+	  Signed-off-by: Felipe Contreras <felipe.contreras@nokia.com>
+
+2008-11-20 16:51:10 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  Fix initialization of buffers for processing.
+	  This fixes a longstanding issue with seeking.
+	  Only input buffers should be saved in the port queue, output buffers
+	  should be sent directly to omx.
+	  Before, the output buffers where saved in the port queue, so the output
+	  thread was trying to process them. This is not a big issue for the
+	  initial buffers because they are empty, but in the middle of a flush
+	  they are not, so the buffers before the flush where pushed to the sink.
+
+2008-11-20 16:49:35 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Use more efficient int scaler.
+	  Not sure, but probably gst_util_uint64_scale_int is more efficient than
+	  gst_util_uint64_scale.
+
+2008-11-20 16:48:42 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_g729dec.c:
+	* omx/gstomx_g729enc.c:
+	  Update G729 media-type.
+
+2008-11-20 16:47:33 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_adpcmenc.c:
+	  Add adpcm layout.
+
+2008-11-20 16:42:08 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.h:
+	* omx/gstomx_util.c:
+	  Random cleanups.
+
+2008-11-20 16:39:50 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_adpcmenc.c:
+	  Update ADPCM sample rate.
+	  As Stefan Kost pointed out; other GStreamer ADPCM elements have 8000,
+	  96000.
+
+2008-11-20 16:33:15 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_jpegenc.c:
+	  Improve buffer sizes in jpegenc.
+	  TI-specific stuff.
+
+2008-11-20 16:32:22 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_jpegenc.c:
+	  Fix warnings in jpegenc.
+
+2008-11-20 16:29:29 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrwbdec.c:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_g711enc.c:
+	  Fix speech codecs samplerates.
+	  Is ADPCM correct?
+
+2008-11-20 16:28:43 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_amrwbenc.c:
+	  Set right caps for amrwbenc.
+
+2008-11-20 16:27:18 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Properly set the true return reason.
+
+2008-11-20 16:26:25 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Improve error message when pusing output buffers.
+	  Use the real return value.
+
+2008-11-20 16:22:42 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Improve message when the shared output buffer workaround is misbehaving.
+
+2008-11-20 16:19:25 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_filter.h:
+	  Allow child classes to override the share_output_buffer workaround.
+	  Some components modify nOffset, which messes up everything.
+
+2008-11-20 16:16:55 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_jpegenc.c:
+	* omx/gstomx_jpegenc.h:
+	  Add new jpegenc component wrapper.
+
+2008-11-20 16:13:48 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Free codec_data
+
+2008-11-20 16:11:18 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_mp2dec.c:
+	* omx/gstomx_mp2dec.h:
+	* omx/gstomx_mp3dec.c:
+	  Add separate mp2dec element.
+
+2008-11-20 16:09:49 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  More general improvements in flushing.
+
+2008-11-20 16:07:47 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Improve flushing in base_filter.
+
+2008-11-20 16:01:20 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Add flushing functions in util.
+
+2008-11-20 16:00:26 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* common:
+	* omx/gstomx_util.c:
+	  Add core_for_each_port helper in util.
+
+2008-08-15 15:14:05 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Make omx state changes more strict.
+
+2008-08-15 15:11:57 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	  Save omx ports as element data of the gst pads.
+
+2008-08-15 15:10:09 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_sink.h:
+	  Add activate_push in base_sink.
+
+2008-08-15 15:08:37 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Add omx interface to base_filter.
+
+2008-08-15 15:07:57 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_sink.c:
+	  Add omx interface to base_sink.
+
+2008-08-15 15:07:04 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx_interface.c:
+	* omx/gstomx_interface.h:
+	  New omx interface.
+
+2008-08-15 15:00:50 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  Make port_enable more extensible.
+
+2008-08-15 15:00:01 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  Flush the queue when disabling the port.
+
+2008-08-15 14:58:58 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Add port enable/disable functions.
+
+2008-08-15 14:58:05 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Add port semaphore.
+
+2008-08-15 14:56:39 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  Allow multiple setup_ports calls.
+
+2008-08-15 14:55:48 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Store the port_index.
+
+2008-08-15 14:54:54 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* util/async_queue.c:
+	* util/async_queue.h:
+	  Add option to flush the async_queue.
+
+2008-08-15 14:53:28 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  Add port allocate/free/start buffer functions.
+
+2008-08-15 14:52:48 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Rename port enable/disable to resume/pause.
+
+2008-08-15 14:51:57 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_sink.c:
+	  Cleanup pad_event in base_sink.
+
+2008-08-15 14:51:21 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Cleanup pad_event in base_filter.
+
+2008-08-15 14:50:47 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  Finish processing when receiving omx eos event.
+
+2008-08-15 14:49:21 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_adpcmenc.c:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrwbdec.c:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_audiosink.c:
+	* omx/gstomx_avcenc.c:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_dummy.c:
+	* omx/gstomx_filereadersrc.c:
+	* omx/gstomx_g711dec.c:
+	* omx/gstomx_g711enc.c:
+	* omx/gstomx_g729dec.c:
+	* omx/gstomx_g729enc.c:
+	* omx/gstomx_h263dec.c:
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_h264dec.c:
+	* omx/gstomx_ilbcdec.c:
+	* omx/gstomx_ilbcenc.c:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_vorbisdec.c:
+	* omx/gstomx_wmvdec.c:
+	  Use G_UNLIKELY when finding the GType.
+
+2008-08-15 14:48:15 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	  Random cleanups.
+
+2008-08-15 14:47:44 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  Allow AllocateBuffer.
+	  Disabled by default.
+
+2008-08-15 14:46:49 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  Use BufferCountActual instead of BufferCountMin.
+
+2008-08-15 14:46:01 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Temporary disable buffer flushs.
+
+2008-08-15 14:44:45 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Check for NULL buffers when sending eos.
+
+2008-08-15 14:43:17 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_adpcmenc.c:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrwbdec.c:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_audiosink.c:
+	* omx/gstomx_avcenc.c:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_g711enc.c:
+	* omx/gstomx_g729enc.c:
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_volume.c:
+	* omx/gstomx_vorbisdec.c:
+	* tests/standalone/core.c:
+	  Fix warnings.
+	  Add stdlib.h includes.
+
+2008-08-15 14:42:27 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.h:
+	  Update library name to new bellagio library.
+
+2008-08-15 14:37:23 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_volume.c:
+	* omx/gstomx_volume.h:
+	  Cleanup the new volume element.
+
+2008-06-12 13:28:29 +0100  Frederik Vermelen <frederik.vernelen@nxp.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_volume.c:
+	* omx/gstomx_volume.h:
+	  Add new volume element.
+
+2008-06-27 15:56:45 +0300  Frederik Vermelen <frederik.vernelen@nxp.com>
+
+	* omx/gstomx_util.c:
+	  Allow null buffers.
+	  This helps tunneling.
+
+2008-08-15 14:34:30 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* common:
+	* configure.ac:
+	  Go back to development.
+
+2008-06-23 15:24:09 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* ChangeLog:
+	  Tag 0.10.0.4.
+
+2008-06-23 14:41:16 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* Makefile.am:
+	* configure.ac:
+	* tests/standalone/Makefile:
+	  Build system updates.
+
+2008-06-23 12:42:41 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* check/run.sh:
+	  Remove unused files.
+
+2008-06-23 12:38:58 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacdec.h:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_aacenc.h:
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_adpcmdec.h:
+	* omx/gstomx_adpcmenc.c:
+	* omx/gstomx_adpcmenc.h:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbdec.h:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrnbenc.h:
+	* omx/gstomx_amrwbdec.c:
+	* omx/gstomx_amrwbdec.h:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_amrwbenc.h:
+	* omx/gstomx_audiosink.h:
+	* omx/gstomx_avcenc.h:
+	* omx/gstomx_base_filter.h:
+	* omx/gstomx_base_sink.h:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_base_src.h:
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videodec.h:
+	* omx/gstomx_base_videoenc.h:
+	* omx/gstomx_dummy.c:
+	* omx/gstomx_dummy.h:
+	* omx/gstomx_filereadersrc.c:
+	* omx/gstomx_filereadersrc.h:
+	* omx/gstomx_g711dec.c:
+	* omx/gstomx_g711dec.h:
+	* omx/gstomx_g711enc.c:
+	* omx/gstomx_g711enc.h:
+	* omx/gstomx_g729dec.c:
+	* omx/gstomx_g729dec.h:
+	* omx/gstomx_g729enc.c:
+	* omx/gstomx_g729enc.h:
+	* omx/gstomx_h263dec.c:
+	* omx/gstomx_h263dec.h:
+	* omx/gstomx_h263enc.h:
+	* omx/gstomx_h264dec.c:
+	* omx/gstomx_h264dec.h:
+	* omx/gstomx_ilbcdec.c:
+	* omx/gstomx_ilbcdec.h:
+	* omx/gstomx_ilbcenc.c:
+	* omx/gstomx_ilbcenc.h:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mp3dec.h:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_mpeg4dec.h:
+	* omx/gstomx_mpeg4enc.h:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_videosink.h:
+	* omx/gstomx_vorbisdec.c:
+	* omx/gstomx_vorbisdec.h:
+	* omx/gstomx_wmvdec.c:
+	* omx/gstomx_wmvdec.h:
+	  Remove unused header inclusions.
+
+2008-06-23 12:29:12 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.c:
+	* omx/gstomx.h:
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacdec.h:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_aacenc.h:
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_adpcmdec.h:
+	* omx/gstomx_adpcmenc.c:
+	* omx/gstomx_adpcmenc.h:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbdec.h:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrnbenc.h:
+	* omx/gstomx_amrwbdec.c:
+	* omx/gstomx_amrwbdec.h:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_amrwbenc.h:
+	* omx/gstomx_audiosink.c:
+	* omx/gstomx_audiosink.h:
+	* omx/gstomx_avcenc.c:
+	* omx/gstomx_avcenc.h:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_filter.h:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_sink.h:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_base_src.h:
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videodec.h:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_base_videoenc.h:
+	* omx/gstomx_dummy.c:
+	* omx/gstomx_dummy.h:
+	* omx/gstomx_filereadersrc.c:
+	* omx/gstomx_filereadersrc.h:
+	* omx/gstomx_g711dec.c:
+	* omx/gstomx_g711dec.h:
+	* omx/gstomx_g711enc.c:
+	* omx/gstomx_g711enc.h:
+	* omx/gstomx_g729dec.c:
+	* omx/gstomx_g729dec.h:
+	* omx/gstomx_g729enc.c:
+	* omx/gstomx_g729enc.h:
+	* omx/gstomx_h263dec.c:
+	* omx/gstomx_h263dec.h:
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_h263enc.h:
+	* omx/gstomx_h264dec.c:
+	* omx/gstomx_h264dec.h:
+	* omx/gstomx_ilbcdec.c:
+	* omx/gstomx_ilbcdec.h:
+	* omx/gstomx_ilbcenc.c:
+	* omx/gstomx_ilbcenc.h:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mp3dec.h:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_mpeg4dec.h:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_mpeg4enc.h:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_videosink.h:
+	* omx/gstomx_vorbisdec.c:
+	* omx/gstomx_vorbisdec.h:
+	* omx/gstomx_wmvdec.c:
+	* omx/gstomx_wmvdec.h:
+	* tests/check_async_queue.c:
+	* tests/check_gstomx.c:
+	* tests/check_libomxil.c:
+	* tests/standalone/core.c:
+	* util/async_queue.c:
+	* util/async_queue.h:
+	  Update FSF address.
+
+2008-06-23 12:21:17 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* tests/check_async_queue.c:
+	* tests/check_libomxil.c:
+	* tests/standalone/core.c:
+	* util/async_queue.c:
+	* util/async_queue.h:
+	  Update copyright.
+
+2008-06-23 12:19:43 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.c:
+	* omx/gstomx.h:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_videoenc.c:
+	  Reorganize header requirements.
+
+2008-06-23 12:12:12 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  Cleanup gstomx_util.
+
+2008-06-23 12:01:51 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	* omx/gstomx_videosink.c:
+	  Fix more warnings.
+
+2008-06-23 11:59:47 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* common:
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	* omx/gstomx_videosink.c:
+	  Fix warnings.
+
+2008-06-09 20:14:53 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_ilbcdec.c:
+	* omx/gstomx_ilbcdec.h:
+	* omx/gstomx_ilbcenc.c:
+	* omx/gstomx_ilbcenc.h:
+	  Add iLBC encoder/decoder.
+
+2008-06-05 17:06:43 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* tests/standalone/Makefile:
+	  Add install target in manual Makefile.
+
+2008-06-05 16:27:00 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_base_src.c:
+	  Update base src for async changes.
+
+2008-06-05 16:25:40 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_base_sink.c:
+	  Update base sink for async changes.
+
+2008-06-05 16:23:35 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	* tests/standalone/core.c:
+	  Use flush command completed event.
+
+2008-06-05 16:22:42 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Fix flushing.
+
+2008-06-05 16:21:57 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  More warnings and cleanups.
+
+2008-06-05 16:21:03 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* util/async_queue.c:
+	  Skip the normal checks when flushing the queues.
+	  Otherwise the queues aren't really flushed.
+
+2008-06-05 16:20:06 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* tests/check_gstomx.c:
+	  Add flush unit test.
+	  Also make the tests more GStreamish.
+
+2008-06-05 16:18:43 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	* tests/standalone/core.c:
+	* util/async_queue.c:
+	* util/async_queue.h:
+	  Add flush commands.
+	  This is a step forward to have proper seeking.
+
+2008-06-05 16:17:36 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_filter.h:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Initial async_queue changes.
+
+2008-06-05 16:13:16 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Output omx_buffer from the chain function.
+	  Helps debugging.
+
+2008-06-05 16:12:32 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* Makefile.am:
+	* common:
+	  Build util first.
+
+2008-06-05 16:11:22 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* tests/standalone/core.c:
+	  Cleanups in dummy libomxil.
+
+2008-06-05 16:10:37 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* tests/check_gstomx.c:
+	  Increase timeout for gstomx tests.
+
+2008-06-05 16:10:00 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* check/Makefile.am:
+	* check/basic.c:
+	* configure.ac:
+	* tests/Makefile.am:
+	* tests/check_gstomx.c:
+	  Add simple gstomx unit test.
+
+2008-06-05 16:08:15 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* tests/Makefile.am:
+	* tests/check_libomxil.c:
+	  Cleanup tests.
+	  Add proper environment variables.
+
+2008-06-05 16:07:16 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* check/Makefile.am:
+	* check/standalone/Makefile.am:
+	* check/standalone/core.c:
+	* tests/Makefile.am:
+	* tests/check_libomxil.c:
+	* tests/standalone/Makefile:
+	* tests/standalone/core.c:
+	  Add unit tests for dummy libomxil.
+
+2008-06-05 16:04:35 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* Makefile.am:
+	* configure.ac:
+	* tests/Makefile.am:
+	* tests/check_async_queue.c:
+	* util/async_queue.c:
+	  Add simple unit tests.
+	  Right now only for the async_queue.
+
+2008-06-05 16:03:03 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* Makefile.am:
+	* check/standalone/Makefile.am:
+	* check/standalone/async_queue.c:
+	* check/standalone/async_queue.h:
+	* configure.ac:
+	* util/Makefile.am:
+	* util/async_queue.c:
+	* util/async_queue.h:
+	  Move async_queue to new util library.
+
+2008-06-05 15:59:09 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* check/standalone/Makefile.am:
+	* configure.ac:
+	  GThread is more proper since we are using mutexes and conditions.
+
+2008-06-05 15:58:02 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* check/standalone/async_queue.c:
+	  Cleanup async_queue.
+
+2008-06-05 15:57:09 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.h:
+	* omx/gstomx_base_videodec.c:
+	  Save codec data information from the container.
+
+2008-06-05 15:55:33 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* common:
+	* omx/gstomx_g711dec.c:
+	  Fix g711dec caps.
+
+2008-05-21 17:47:40 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* common:
+	* omx/gstomx.c:
+	  Fix wrong G729 commit.
+
+2008-05-19 20:51:57 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_g729dec.c:
+	* omx/gstomx_g729enc.c:
+	  Proper description.
+
+2008-05-19 20:51:19 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_g729dec.c:
+	* omx/gstomx_g729dec.h:
+	* omx/gstomx_g729enc.c:
+	* omx/gstomx_g729enc.h:
+	  Add new G.729 encoder and decoder.
+
+2008-05-19 20:49:17 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_g711dec.c:
+	* omx/gstomx_g711enc.c:
+	  Proper description.
+
+2008-05-19 20:48:24 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_g711dec.c:
+	* omx/gstomx_g711dec.h:
+	* omx/gstomx_g711enc.c:
+	* omx/gstomx_g711enc.h:
+	  Add G.711 encoder and decoder.
+
+2008-05-19 20:21:17 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* configure.ac:
+	  Remove duplicated commit.
+
+2008-05-19 20:17:00 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacenc.c:
+	  Add mpegversion 2 in AAC elements.
+	  Fixes bug #527125.
+
+2008-05-19 20:15:37 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_adpcmenc.c:
+	  Use fixed number of channels for ADPCM.
+
+2008-05-19 20:14:22 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* configure.ac:
+	  Build cvs versions with -Werror.
+
+2008-05-19 20:13:22 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_audiosink.c:
+	* omx/gstomx_avcenc.c:
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_dummy.c:
+	* omx/gstomx_filereadersrc.c:
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_videosink.c:
+	  Misc cleanups.
+
+2008-05-19 20:12:40 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Fix racing condition.
+
+2008-05-19 20:11:58 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_videoenc.c:
+	  Add comment regarding non-standard usage.
+
+2008-05-19 20:11:20 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_wmvdec.c:
+	  Upate max framerate for wmvdec.
+	  The container might have the wrong framerate. Other formats might need this too.
+
+2008-05-19 20:10:31 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  Use minimun buffer count.
+
+2008-05-19 20:09:56 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* Makefile.am:
+	* check/Makefile.am:
+	* check/basic.c:
+	* check/run.sh:
+	* check/standalone/Makefile.am:
+	* check/standalone/async_queue.c:
+	* check/standalone/async_queue.h:
+	* check/standalone/core.c:
+	* configure.ac:
+	  Add initial unit tests.
+
+2008-05-19 20:07:21 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* common:
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_adpcmdec.c:
+	* omx/gstomx_adpcmdec.h:
+	* omx/gstomx_adpcmenc.c:
+	* omx/gstomx_adpcmenc.h:
+	  New ADPCM encoder/decoder.
+
+2008-05-12 14:44:04 +0000  Stefan Kost <ensonic@users.sourceforge.net>
+
+	* ChangeLog:
+	* common:
+	* configure.ac:
+	* omx/gstomx.h:
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_filereadersrc.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	* omx/gstomx_videosink.c:
+	  Build cvs versions with -Werror.
+	  Fix the warnings gcc complains about.
+
+2008-04-03 12:51:30 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* common:
+	* omx/gstomx.c:
+	* omx/gstomx.h:
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacdec.h:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_aacenc.h:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbdec.h:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrnbenc.h:
+	* omx/gstomx_amrwbdec.c:
+	* omx/gstomx_amrwbdec.h:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_amrwbenc.h:
+	* omx/gstomx_audiosink.c:
+	* omx/gstomx_audiosink.h:
+	* omx/gstomx_avcenc.c:
+	* omx/gstomx_avcenc.h:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_filter.h:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_sink.h:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_base_src.h:
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videodec.h:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_base_videoenc.h:
+	* omx/gstomx_dummy.c:
+	* omx/gstomx_dummy.h:
+	* omx/gstomx_filereadersrc.c:
+	* omx/gstomx_filereadersrc.h:
+	* omx/gstomx_h263dec.c:
+	* omx/gstomx_h263dec.h:
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_h263enc.h:
+	* omx/gstomx_h264dec.c:
+	* omx/gstomx_h264dec.h:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mp3dec.h:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_mpeg4dec.h:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_mpeg4enc.h:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_videosink.h:
+	* omx/gstomx_vorbisdec.c:
+	* omx/gstomx_vorbisdec.h:
+	* omx/gstomx_wmvdec.c:
+	* omx/gstomx_wmvdec.h:
+	  Fix copyright notice.
+	  As pointed by Edward Hervey.
+
+2008-04-02 14:00:08 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrwbenc.c:
+	  Cleanup the AMR encoders.
+
+2008-04-02 13:59:27 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_aacenc.h:
+	  Add bitrate property to aacenc.
+	  Also some cleanups.
+
+2008-04-02 13:58:22 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_amrwbenc.c:
+	* omx/gstomx_amrwbenc.h:
+	  Add new amrwbenc wrapper.
+
+2008-04-02 13:56:58 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrnbenc.h:
+	  Add bitrate parameter for amrnbenc.
+
+2008-04-02 13:55:56 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrwbdec.c:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_vorbisdec.c:
+	  Cleanup audio elements.
+
+2008-04-02 13:54:41 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_amrnbenc.c:
+	* omx/gstomx_amrnbenc.h:
+	  New amrnbenc wrapper.
+	  Basic functionality.
+
+2008-04-02 13:53:18 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_aacenc.c:
+	  Random cleanup and fixes for AAC encoder.
+	  Probable caps/parameters fix.
+
+2008-04-02 13:52:29 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* common:
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_aacenc.c:
+	* omx/gstomx_aacenc.h:
+	  New AAC encoder wrapper.
+	  Barebones.
+
+2008-02-28 17:30:41 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  New pause util function that properly waits for the state change.
+	  Otherwise we might send a state change in the wrong state.
+
+2008-02-28 17:29:46 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_base_videoenc.h:
+	  Add bitrate property to base videoenc.
+
+2008-02-28 17:28:40 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_sink.c:
+	  Properly pause/resume the omx component in basesink when flushing.
+
+2008-02-28 17:27:57 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_videodec.c:
+	  Remember to fetch colorformat properly.
+
+2008-02-28 17:27:04 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* common:
+	* omx/gstomx_h263dec.c:
+	* omx/gstomx_h264dec.c:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_wmvdec.c:
+	  Cleanup videodecoders.
+
+2008-02-22 18:06:47 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Random fixes and cleanups.
+
+2008-02-22 18:06:01 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Fix seeking.
+	  Always send events downstream.
+	  Always return OpenMAX IL buffers.
+
+2008-02-22 13:40:40 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_filter.h:
+	  Propagate gst_pad_push return value.
+	  So we can stop properly.
+
+2008-02-22 13:40:00 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* common:
+	* omx/gstomx_util.c:
+	  Fix stupid segmentation fault when doing play->stop->play.
+	  The ports array must be cleared, but not totally destroyed.
+
+2008-02-21 12:36:39 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_avcenc.c:
+	* omx/gstomx_avcenc.h:
+	  New H.264/AVC encoder wrapper.
+
+2008-02-21 12:27:03 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videoenc.c:
+	  Random cleanups for base video stuff.
+
+2008-02-21 12:25:50 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_videoenc.c:
+	  Properly set the coloformat in the base videoenc.
+
+2008-02-21 12:24:11 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  Destroy ports when finishing decoding.
+	  This partially fixes bug #517185.
+
+2008-02-21 12:23:05 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_wmvdec.c:
+	* omx/gstomx_wmvdec.h:
+	  New WMV decoder wrapper.
+
+2008-02-21 12:19:47 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_h263enc.c:
+	* omx/gstomx_h263enc.h:
+	  New H.263 encoder.
+	  Just the skeleton.
+
+2008-02-21 12:18:19 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_base_videoenc.h:
+	* omx/gstomx_mpeg4enc.c:
+	  Handle video encoder's real codec.
+	  MPEG4 was being used all the time.
+
+2008-02-21 12:17:07 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* common:
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_amrwbdec.c:
+	* omx/gstomx_amrwbdec.h:
+	  Add new AMR-WB decoder element.
+
+2008-02-04 16:35:27 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_amrnbdec.c:
+	  Use right caps for amrnbdec (not contained).
+
+2008-02-04 16:34:49 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* configure.ac:
+	  Bump version number, we are in development again.
+
+2008-02-04 13:47:08 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* ChangeLog:
+	  Fix screwed up ChangeLog.
+
+2008-02-04 13:27:35 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* ChangeLog:
+	  Update ChangeLog.
+
+2008-02-04 13:24:57 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	  Add Khronos headers to the distribution.
+
+2008-02-04 13:24:10 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* README:
+	* common:
+	  Update README.
+
+2008-02-01 17:54:17 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* ChangeLog:
+	  Update ChangeLog.
+
+2008-02-01 17:53:19 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_amrnbdec.c:
+	  Fix amrnbdec default component name.
+
+2008-01-30 16:33:21 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_audiosink.c:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	  Update audiosink and other cleanups.
+
+2008-01-30 16:26:34 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Allow fake settings changed notification for now.
+	  Most Bellagio audio components require this.
+
+2008-01-30 16:25:48 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  Properly allocate memory that would eventually be freed.
+	  This possibly caused sefaults at plugin deinitialization.
+
+2008-01-30 16:24:17 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  Free pBuffer data.
+	  This is OK now since zero-copy is diabled.
+
+2008-01-25 16:33:34 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx_base_videoenc.c:
+	* omx/gstomx_base_videoenc.h:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_mpeg4enc.h:
+	  New base videoenc class.
+
+2008-01-25 16:31:04 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_mpeg4enc.c:
+	  Set OpenMAX parameters more properly for video elements.
+	  Specially fix the MPEG-4 encoder.
+
+2008-01-25 16:30:24 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videodec.h:
+	* omx/gstomx_h264dec.h:
+	* omx/gstomx_mpeg4dec.h:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_videosink.c:
+	  Whitespace fixes.
+	  Remove tabs.
+
+2008-01-24 19:54:13 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.h:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	  Use "libomx.so.0" by default.
+	  Fixes bug #511303.
+
+2008-01-24 19:35:13 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Improve timestamp handling on base filter.
+
+2008-01-24 18:57:43 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* common:
+	* omx/gstomx_vorbisdec.c:
+	  Fix vorbisdec.
+	  Now it should work with playbin.
+
+2008-01-23 16:23:35 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_util.c:
+	  Use proper inline keywords.
+
+2008-01-23 15:11:57 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Remove unneeded stuff on util, and use inline.
+
+2008-01-23 15:11:03 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Enforce OpenMAX components to call the settings changed event.
+
+2008-01-23 13:53:42 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_filter.h:
+	  Add GLib misc macros for base filter.
+	  Does this actually helps?
+
+2008-01-23 13:21:07 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  More zero-copy flexibility and fixes on base filter.
+
+2008-01-23 13:20:24 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_videodec.c:
+	  Don't try to set wrong color format on base videodec.
+	  Dumb bugfix.
+
+2008-01-22 17:17:41 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.c:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videodec.h:
+	  Dumb fixes.
+
+2008-01-22 15:18:04 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_alsasink.c:
+	* omx/gstomx_alsasink.h:
+	* omx/gstomx_audiosink.c:
+	* omx/gstomx_audiosink.h:
+	  Rename alsasink to audiosink.
+
+2008-01-22 15:16:44 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.h:
+	* omx/gstomx_aacdec.h:
+	* omx/gstomx_alsasink.h:
+	* omx/gstomx_amrnbdec.h:
+	* omx/gstomx_base_filter.h:
+	* omx/gstomx_base_sink.h:
+	* omx/gstomx_base_src.h:
+	* omx/gstomx_dummy.h:
+	* omx/gstomx_filereadersrc.h:
+	* omx/gstomx_h263dec.h:
+	* omx/gstomx_h264dec.h:
+	* omx/gstomx_mp3dec.h:
+	* omx/gstomx_mpeg4dec.h:
+	* omx/gstomx_mpeg4enc.h:
+	* omx/gstomx_util.h:
+	* omx/gstomx_videosink.h:
+	* omx/gstomx_vorbisdec.h:
+	  Don't use reserved prefix on header definitions.
+
+2008-01-22 15:15:23 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.c:
+	* omx/gstomx.h:
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacdec.h:
+	* omx/gstomx_alsasink.c:
+	* omx/gstomx_alsasink.h:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbdec.h:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_filter.h:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_sink.h:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_base_src.h:
+	* omx/gstomx_dummy.c:
+	* omx/gstomx_dummy.h:
+	* omx/gstomx_filereadersrc.c:
+	* omx/gstomx_filereadersrc.h:
+	* omx/gstomx_h263dec.c:
+	* omx/gstomx_h263dec.h:
+	* omx/gstomx_h264dec.c:
+	* omx/gstomx_h264dec.h:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mp3dec.h:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_mpeg4dec.h:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_mpeg4enc.h:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_videosink.h:
+	* omx/gstomx_vorbisdec.c:
+	* omx/gstomx_vorbisdec.h:
+	  Update copyright.
+	  Also add me as author.
+
+2008-01-22 15:14:14 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_videodec.c:
+	* omx/gstomx_base_videodec.h:
+	  Add missing files from last commit.
+	  Ooops.
+
+2008-01-22 14:18:46 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx_h263dec.c:
+	* omx/gstomx_h263dec.h:
+	* omx/gstomx_h264dec.c:
+	* omx/gstomx_h264dec.h:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_mpeg4dec.h:
+	  New videodec base element.
+	  Update H.263, H.264 and MPEG4 decoders accordingly.
+
+2008-01-22 14:17:03 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_h263dec.c:
+	  Reorganize parameters's setup for H.263 decoder.
+
+2008-01-22 11:49:58 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* ChangeLog:
+	  Update ChangeLog.
+
+2008-01-22 11:27:12 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_h264dec.c:
+	* omx/gstomx_h264dec.h:
+	* omx/gstomx_mpeg4dec.h:
+	  Whitespace fixes for video decoders.
+
+2008-01-22 11:26:22 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  More verbose debugging.
+
+2008-01-22 11:25:42 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_h264dec.c:
+	  Reorganize parameters' setup.
+
+2008-01-22 11:25:00 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_mpeg4dec.c:
+	  Copy H.264 decoder changes to MPEG-4.
+
+2008-01-22 11:24:19 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_mpeg4enc.c:
+	  Fix MPEG-4 video encoder, and cleanups.
+
+2008-01-22 11:23:07 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_videosink.h:
+	  Add videosink rotation.
+
+2008-01-22 11:19:50 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* common:
+	* omx/gstomx.c:
+	  Fix wrong H.264 decoder and MPEG-4 encoder element initialization.
+
+2007-12-12 17:59:47 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* ChangeLog:
+	  Generate ChangeLog.
+
+2007-12-12 17:16:41 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Fixes for non-zero-copy behavior.
+
+2007-12-12 17:16:02 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.c:
+	  Upgrade the rank of AAC and AMR-NB decoders.
+
+2007-12-12 17:15:24 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_mp3dec.c:
+	  Modify the MP3 decoder to use parsed input stream.
+
+2007-12-12 17:11:20 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_util.c:
+	  Don't crash if the GStreamer input buffer are owned by the previous element.
+	  This still needs to be properly fixed.
+
+2007-12-12 17:09:12 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_aacdec.c:
+	  Modify AAC decoder temporarily to allow decoding without a parser.
+
+2007-12-12 17:08:34 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_filter.h:
+	  Add omx_setup to set some component configurations early.
+
+2007-12-07 13:07:41 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_aacdec.c:
+	  Small cleanups for AAC decoder.
+
+2007-12-07 13:05:19 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Add compilation time flag for zero-copy.
+
+2007-12-07 13:03:32 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_amrnbdec.c:
+	* omx/gstomx_amrnbdec.h:
+	  Add AMR-NB decoder wrapper.
+
+2007-12-07 12:57:11 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_aacdec.c:
+	* omx/gstomx_aacdec.h:
+	* omx/gstomx_base_src.c:
+	* omx/gstomx_base_src.h:
+	* omx/gstomx_filereadersrc.c:
+	* omx/gstomx_filereadersrc.h:
+	* omx/gstomx_h263dec.c:
+	* omx/gstomx_h264dec.c:
+	* omx/gstomx_h264dec.h:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_mpeg4enc.c:
+	* omx/gstomx_mpeg4enc.h:
+	  Add multiple new component wrappers.
+	  * Base source
+	  * AAC decoder
+	  * H.264 decoder
+	  * Filereader source
+	  * MPEG-4 video encoder
+
+2007-12-07 12:55:18 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_mpeg4dec.c:
+	  Add comment about wring to a read-only parameter.
+
+2007-12-07 12:54:38 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* common:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	  Make logging level 4(DEBUG) more verbose.
+	  So we can see buffers in and out.
+
+2007-10-31 10:10:17 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* Makefile.am:
+	  Add more missing files.
+	  Now autogen.sh should work on the dist tarball for real.
+
+2007-10-31 09:14:57 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* configure.ac:
+	  Bump version.
+	  Should have done that before.
+
+2007-10-31 09:13:30 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* configure.ac:
+	  Add more missing files.
+
+2007-10-30 21:09:11 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* Makefile.am:
+	  Add missing files to the tarball.
+
+2007-10-29 12:26:24 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* configure.ac:
+	  Update to first pre-release version.
+
+2007-10-29 12:25:30 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* Makefile.am:
+	  Include common release make commands.
+
+2007-10-29 12:24:39 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* README:
+	  Update the README.
+
+2007-10-29 12:24:01 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx.c:
+	  Make some elements primary by default.
+
+2007-10-29 12:23:05 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* README:
+	  Update README.
+
+2007-10-22 16:33:17 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* configure.ac:
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_alsasink.c:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_filter.h:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_sink.h:
+	* omx/gstomx_dummy.c:
+	* omx/gstomx_h263dec.c:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_vorbisdec.c:
+	* omx/headers/OMX_Audio.h:
+	* omx/headers/OMX_Component.h:
+	* omx/headers/OMX_ContentPipe.h:
+	* omx/headers/OMX_Core.h:
+	* omx/headers/OMX_IVCommon.h:
+	* omx/headers/OMX_Image.h:
+	* omx/headers/OMX_Index.h:
+	* omx/headers/OMX_Other.h:
+	* omx/headers/OMX_Types.h:
+	* omx/headers/OMX_Video.h:
+	  Allow multiple OpenMAX IL implementations at the same time.
+	  * Add the concept of GstOmxImp to properly initialize/deinitialize
+	  implementations based on the number of elements using it.
+	  * Add the library-name property to base elements.
+	  * Add OpenMAX IL 1.1.1 headers (later go back to 1.1).
+	  * Remove dependenfy of libomxil-B.
+	  * s/OMX_COMPONENT_ID/OMX_COMPONENT_NAME/ for consistency.
+
+2007-10-16 16:20:44 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_alsasink.h:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_dummy.h:
+	* omx/gstomx_h263dec.c:
+	* omx/gstomx_h263dec.h:
+	* omx/gstomx_mp3dec.h:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_mpeg4dec.h:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_videosink.h:
+	* omx/gstomx_vorbisdec.h:
+	  Whitespace fixes
+
+2007-10-16 16:08:43 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_h263dec.c:
+	* omx/gstomx_mpeg4dec.c:
+	  Fix description for video decoder elements
+
+2007-10-16 16:06:18 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_h263dec.c:
+	* omx/gstomx_h263dec.h:
+	  New H.263 video decoder
+
+2007-10-16 16:04:19 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* configure.ac:
+	* omx/gstomx_util.h:
+	  Fixes for new Bellagio versions
+
+2007-10-16 16:02:45 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Add more debugging stuff to the base filter
+
+2007-10-16 16:01:56 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Add flush support for seeking on the base filter
+
+2007-10-16 16:01:13 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Use timestamps by default on the base filter
+
+2007-10-16 14:07:59 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_videosink.c:
+	  Specify the srcpad capabilities of the videosink.
+
+2007-10-16 14:06:42 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_filter.h:
+	  Don't hang if not properly initialized.
+
+2007-10-16 14:04:58 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* common:
+	* configure.ac:
+	  More proper autoconf.
+
+2007-08-28 16:40:50 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_videosink.c:
+	* omx/gstomx_videosink.h:
+	  Add video sink.
+	  Only works with TI's OpenMAX IL.
+
+2007-08-28 15:40:54 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_alsasink.c:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_filter.h:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_sink.h:
+	* omx/gstomx_dummy.c:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_vorbisdec.c:
+	  Add property for the OpenMAX component name.
+
+2007-08-28 15:39:45 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_filter.h:
+	  Add use-timestamps property.
+
+2007-08-28 14:12:48 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_mpeg4dec.c:
+	  Add more capabilities for MPEG-4 video dec.
+
+2007-08-28 14:12:01 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_alsasink.c:
+	* omx/gstomx_base_sink.c:
+	  Whitespace fixes.
+
+2007-08-28 12:09:20 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Add timestamp information.
+
+2007-08-28 12:07:56 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  More readable.
+
+2007-08-28 11:16:32 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  This looks better.
+
+2007-08-28 11:15:12 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_sink.c:
+	  Implement zerocopy on the base sink.
+
+2007-08-28 11:12:56 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Fix zerocopy.
+	  Now actually use it.
+
+2007-08-28 11:11:53 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	  Fix a small memory leak.
+
+2007-08-28 11:07:40 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* common:
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_sink.c:
+	  Improve logging.
+
+2007-07-10 15:28:48 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* configure.ac:
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_alsasink.c:
+	* omx/gstomx_alsasink.h:
+	* omx/gstomx_base_sink.c:
+	* omx/gstomx_base_sink.h:
+	  Add ALSA sink.
+
+2007-07-10 15:26:01 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base_filter.c:
+	* omx/gstomx_base_filter.h:
+	  Add missing files.
+
+2007-07-10 15:24:48 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_base.c:
+	* omx/gstomx_base.h:
+	* omx/gstomx_dummy.c:
+	* omx/gstomx_dummy.h:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mp3dec.h:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_mpeg4dec.h:
+	* omx/gstomx_vorbisdec.c:
+	* omx/gstomx_vorbisdec.h:
+	  Rename Base to BaseFilter.
+
+2007-07-10 15:23:46 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base.c:
+	* omx/gstomx_base.h:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_util.c:
+	  Set omx parameters from gst caps.
+	  Other playing fixes too.
+
+2007-07-06 10:41:23 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base.c:
+	* omx/gstomx_base.h:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Now the ports are extensible.
+
+2007-07-03 16:11:15 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx_mpeg4dec.c:
+	* omx/gstomx_mpeg4dec.h:
+	  New MPEG4v decoder.
+
+2007-07-03 16:07:57 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base.c:
+	* omx/gstomx_base.h:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_vorbisdec.c:
+	  Remove base "set_caps" and use "settings_changed_cb".
+
+2007-07-02 14:56:12 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* common:
+	* omx/gstomx_base.c:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_vorbisdec.c:
+	  Set version to 1.1 for now.
+
+2007-06-29 18:31:18 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* README:
+	  Add some sample gst-launch pipelines.
+
+2007-06-29 18:15:42 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_vorbisdec.c:
+	  Generate proper capabilities for the output buffer in the vorbis decoder.
+
+2007-06-29 15:43:29 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* omx/gstomx_base.c:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	  Add some error handling.
+
+2007-06-29 14:53:41 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* AUTHORS:
+	* COPYING:
+	* ChangeLog:
+	* NEWS:
+	* README:
+	* configure.ac:
+	  Add GNU standard files.
+
+2007-06-29 10:20:44 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* autogen.sh:
+	* common:
+	* configure.ac:
+	* omx/gstomx.c:
+	  Use GStreamer's common autotools macros.
+
+2007-06-15 11:59:03 +0000  Felipe Contreras <felipe.contreras@nokia.com>
+
+	* .gitmodules:
+	* Makefile.am:
+	* common:
+	* configure.ac:
+	* omx/Makefile.am:
+	* omx/gstomx.c:
+	* omx/gstomx.h:
+	* omx/gstomx_base.c:
+	* omx/gstomx_base.h:
+	* omx/gstomx_dummy.c:
+	* omx/gstomx_dummy.h:
+	* omx/gstomx_mp3dec.c:
+	* omx/gstomx_mp3dec.h:
+	* omx/gstomx_util.c:
+	* omx/gstomx_util.h:
+	* omx/gstomx_vorbisdec.c:
+	* omx/gstomx_vorbisdec.h:
+	  Initial commit.
+
