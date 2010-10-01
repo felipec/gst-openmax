@@ -24,28 +24,24 @@
 
 #include <gst/gst.h>
 
-G_BEGIN_DECLS
-
-GST_DEBUG_CATEGORY_EXTERN (gstomx_debug);
+G_BEGIN_DECLS GST_DEBUG_CATEGORY_EXTERN (gstomx_debug);
 GST_DEBUG_CATEGORY_EXTERN (gstomx_util_debug);
 #define GST_CAT_DEFAULT gstomx_debug
 
 enum
 {
-    GSTOMX_ARG_0,
-    ARG_COMPONENT_NAME,
-    ARG_COMPONENT_ROLE,
-    ARG_LIBRARY_NAME,
-    GSTOMX_NUM_COMMON_PROP
+  GSTOMX_ARG_0,
+  ARG_COMPONENT_NAME,
+  ARG_COMPONENT_ROLE,
+  ARG_LIBRARY_NAME,
+  GSTOMX_NUM_COMMON_PROP
 };
 
-gboolean gstomx_get_component_info (void *core,
-                                    GType type);
+gboolean gstomx_get_component_info (void *core, GType type);
 
 void *gstomx_core_new (void *object, GType type);
-void gstomx_install_property_helper (GObjectClass *gobject_class);
-gboolean gstomx_get_property_helper (void *core, guint prop_id, GValue *value);
+void gstomx_install_property_helper (GObjectClass * gobject_class);
+gboolean gstomx_get_property_helper (void *core, guint prop_id, GValue * value);
 
 G_END_DECLS
-
 #endif /* GSTOMX_H */

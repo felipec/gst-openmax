@@ -26,130 +26,125 @@
 AsyncQueue *
 async_queue_new (void)
 {
-    AsyncQueue *queue;
+  AsyncQueue *queue;
 
-    queue = g_slice_new0 (AsyncQueue);
+  queue = g_slice_new0 (AsyncQueue);
 
-    queue->condition = g_cond_new ();
-    queue->mutex = g_mutex_new ();
-    queue->enabled = TRUE;
+  queue->condition = g_cond_new ();
+  queue->mutex = g_mutex_new ();
+  queue->enabled = TRUE;
 
-    return queue;
+  return queue;
 }
 
 void
-async_queue_free (AsyncQueue *queue)
+async_queue_free (AsyncQueue * queue)
 {
-    g_cond_free (queue->condition);
-    g_mutex_free (queue->mutex);
+  g_cond_free (queue->condition);
+  g_mutex_free (queue->mutex);
 
-    g_list_free (queue->head);
-    g_slice_free (AsyncQueue, queue);
+  g_list_free (queue->head);
+  g_slice_free (AsyncQueue, queue);
 }
 
 void
-async_queue_push (AsyncQueue *queue,
-                  gpointer data)
+async_queue_push (AsyncQueue * queue, gpointer data)
 {
-    g_mutex_lock (queue->mutex);
+  g_mutex_lock (queue->mutex);
 
-    queue->head = g_list_prepend (queue->head, data);
-    if (!queue->tail)
-        queue->tail = queue->head;
-    queue->length++;
+  queue->head = g_list_prepend (queue->head, data);
+  if (!queue->tail)
+    queue->tail = queue->head;
+  queue->length++;
 
-    g_cond_signal (queue->condition);
+  g_cond_signal (queue->condition);
 
-    g_mutex_unlock (queue->mutex);
+  g_mutex_unlock (queue->mutex);
 }
 
 gpointer
-async_queue_pop (AsyncQueue *queue)
+async_queue_pop (AsyncQueue * queue)
 {
-    gpointer data = NULL;
+  gpointer data = NULL;
 
-    g_mutex_lock (queue->mutex);
+  g_mutex_lock (queue->mutex);
 
-    if (!queue->enabled)
-    {
-        /* g_warning ("not enabled!"); */
-        goto leave;
-    }
+  if (!queue->enabled) {
+    /* g_warning ("not enabled!"); */
+    goto leave;
+  }
 
-    if (!queue->tail)
-    {
-        g_cond_wait (queue->condition, queue->mutex);
-    }
+  if (!queue->tail) {
+    g_cond_wait (queue->condition, queue->mutex);
+  }
 
+  if (queue->tail) {
+    GList *node = queue->tail;
+    data = node->data;
+
+    queue->tail = node->prev;
     if (queue->tail)
-    {
-        GList *node = queue->tail;
-        data = node->data;
-
-        queue->tail = node->prev;
-        if (queue->tail)
-            queue->tail->next = NULL;
-        else
-            queue->head = NULL;
-        queue->length--;
-        g_list_free_1 (node);
-    }
+      queue->tail->next = NULL;
+    else
+      queue->head = NULL;
+    queue->length--;
+    g_list_free_1 (node);
+  }
 
 leave:
-    g_mutex_unlock (queue->mutex);
+  g_mutex_unlock (queue->mutex);
 
-    return data;
+  return data;
 }
 
 gpointer
-async_queue_pop_forced (AsyncQueue *queue)
+async_queue_pop_forced (AsyncQueue * queue)
 {
-    gpointer data = NULL;
+  gpointer data = NULL;
 
-    g_mutex_lock (queue->mutex);
+  g_mutex_lock (queue->mutex);
 
+  if (queue->tail) {
+    GList *node = queue->tail;
+    data = node->data;
+
+    queue->tail = node->prev;
     if (queue->tail)
-    {
-        GList *node = queue->tail;
-        data = node->data;
+      queue->tail->next = NULL;
+    else
+      queue->head = NULL;
+    queue->length--;
+    g_list_free_1 (node);
+  }
 
-        queue->tail = node->prev;
-        if (queue->tail)
-            queue->tail->next = NULL;
-        else
-            queue->head = NULL;
-        queue->length--;
-        g_list_free_1 (node);
-    }
+  g_mutex_unlock (queue->mutex);
 
-    g_mutex_unlock (queue->mutex);
-
-    return data;
+  return data;
 }
 
 void
-async_queue_disable (AsyncQueue *queue)
+async_queue_disable (AsyncQueue * queue)
 {
-    g_mutex_lock (queue->mutex);
-    queue->enabled = FALSE;
-    g_cond_broadcast (queue->condition);
-    g_mutex_unlock (queue->mutex);
+  g_mutex_lock (queue->mutex);
+  queue->enabled = FALSE;
+  g_cond_broadcast (queue->condition);
+  g_mutex_unlock (queue->mutex);
 }
 
 void
-async_queue_enable (AsyncQueue *queue)
+async_queue_enable (AsyncQueue * queue)
 {
-    g_mutex_lock (queue->mutex);
-    queue->enabled = TRUE;
-    g_mutex_unlock (queue->mutex);
+  g_mutex_lock (queue->mutex);
+  queue->enabled = TRUE;
+  g_mutex_unlock (queue->mutex);
 }
 
 void
-async_queue_flush (AsyncQueue *queue)
+async_queue_flush (AsyncQueue * queue)
 {
-    g_mutex_lock (queue->mutex);
-    g_list_free (queue->head);
-    queue->head = queue->tail = NULL;
-    queue->length = 0;
-    g_mutex_unlock (queue->mutex);
+  g_mutex_lock (queue->mutex);
+  g_list_free (queue->head);
+  queue->head = queue->tail = NULL;
+  queue->length = 0;
+  g_mutex_unlock (queue->mutex);
 }

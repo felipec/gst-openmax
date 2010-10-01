@@ -25,10 +25,8 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_BASE_VIDEOENC(obj) (GstOmxBaseVideoEnc *) (obj)
 #define GST_OMX_BASE_VIDEOENC_TYPE (gst_omx_base_videoenc_get_type ())
-
 typedef struct GstOmxBaseVideoEnc GstOmxBaseVideoEnc;
 typedef struct GstOmxBaseVideoEncClass GstOmxBaseVideoEncClass;
 
@@ -36,21 +34,20 @@ typedef struct GstOmxBaseVideoEncClass GstOmxBaseVideoEncClass;
 
 struct GstOmxBaseVideoEnc
 {
-    GstOmxBaseFilter omx_base;
+  GstOmxBaseFilter omx_base;
 
-    OMX_VIDEO_CODINGTYPE compression_format;
-    guint bitrate;
-    gint framerate_num;
-    gint framerate_denom;
+  OMX_VIDEO_CODINGTYPE compression_format;
+  guint bitrate;
+  gint framerate_num;
+  gint framerate_denom;
 };
 
 struct GstOmxBaseVideoEncClass
 {
-    GstOmxBaseFilterClass parent_class;
+  GstOmxBaseFilterClass parent_class;
 };
 
 GType gst_omx_base_videoenc_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_BASE_VIDEOENC_H */

@@ -25,10 +25,8 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_WMVDEC(obj) (GstOmxWmvDec *) (obj)
 #define GST_OMX_WMVDEC_TYPE (gst_omx_wmvdec_get_type ())
-
 typedef struct GstOmxWmvDec GstOmxWmvDec;
 typedef struct GstOmxWmvDecClass GstOmxWmvDecClass;
 
@@ -36,16 +34,15 @@ typedef struct GstOmxWmvDecClass GstOmxWmvDecClass;
 
 struct GstOmxWmvDec
 {
-    GstOmxBaseVideoDec omx_base;
+  GstOmxBaseVideoDec omx_base;
 };
 
 struct GstOmxWmvDecClass
 {
-    GstOmxBaseVideoDecClass parent_class;
+  GstOmxBaseVideoDecClass parent_class;
 };
 
 GType gst_omx_wmvdec_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_WMVDEC_H */

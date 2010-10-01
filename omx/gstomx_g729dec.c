@@ -22,117 +22,107 @@
 #include "gstomx_g729dec.h"
 #include "gstomx.h"
 
-GSTOMX_BOILERPLATE (GstOmxG729Dec, gst_omx_g729dec, GstOmxBaseAudioDec, GST_OMX_BASE_AUDIODEC_TYPE);
+GSTOMX_BOILERPLATE (GstOmxG729Dec, gst_omx_g729dec, GstOmxBaseAudioDec,
+    GST_OMX_BASE_AUDIODEC_TYPE);
 
 static GstCaps *
 generate_src_template (void)
 {
-    GstCaps *caps;
+  GstCaps *caps;
 
-    caps = gst_caps_new_simple ("audio/x-raw-int",
-                                "endianness", G_TYPE_INT, G_BYTE_ORDER,
-                                "width", G_TYPE_INT, 16,
-                                "depth", G_TYPE_INT, 16,
-                                "rate", G_TYPE_INT, 8000,
-                                "signed", G_TYPE_BOOLEAN, TRUE,
-                                "channels", G_TYPE_INT, 1,
-                                NULL);
+  caps = gst_caps_new_simple ("audio/x-raw-int",
+      "endianness", G_TYPE_INT, G_BYTE_ORDER,
+      "width", G_TYPE_INT, 16,
+      "depth", G_TYPE_INT, 16,
+      "rate", G_TYPE_INT, 8000,
+      "signed", G_TYPE_BOOLEAN, TRUE, "channels", G_TYPE_INT, 1, NULL);
 
-    return caps;
+  return caps;
 }
 
 static GstCaps *
 generate_sink_template (void)
 {
-    GstCaps *caps;
-    GstStructure *struc;
+  GstCaps *caps;
+  GstStructure *struc;
 
-    caps = gst_caps_new_empty ();
+  caps = gst_caps_new_empty ();
 
-    struc = gst_structure_new ("audio/G729",
-                               "rate", G_TYPE_INT, 8000,
-                               "channels", G_TYPE_INT, 1,
-                               NULL);
+  struc = gst_structure_new ("audio/G729",
+      "rate", G_TYPE_INT, 8000, "channels", G_TYPE_INT, 1, NULL);
 
-    gst_caps_append_structure (caps, struc);
+  gst_caps_append_structure (caps, struc);
 
-    return caps;
+  return caps;
 }
 
 static void
 type_base_init (gpointer g_class)
 {
-    GstElementClass *element_class;
+  GstElementClass *element_class;
 
-    element_class = GST_ELEMENT_CLASS (g_class);
+  element_class = GST_ELEMENT_CLASS (g_class);
 
-    gst_element_class_set_details_simple (element_class,
-            "OpenMAX IL G.729 audio decoder",
-            "Codec/Decoder/Audio",
-            "Decodes audio in G.729 format with OpenMAX IL",
-            "Felipe Contreras");
+  gst_element_class_set_details_simple (element_class,
+      "OpenMAX IL G.729 audio decoder",
+      "Codec/Decoder/Audio",
+      "Decodes audio in G.729 format with OpenMAX IL", "Felipe Contreras");
 
-    {
-        GstPadTemplate *template;
+  {
+    GstPadTemplate *template;
 
-        template = gst_pad_template_new ("src", GST_PAD_SRC,
-                                         GST_PAD_ALWAYS,
-                                         generate_src_template ());
+    template = gst_pad_template_new ("src", GST_PAD_SRC,
+        GST_PAD_ALWAYS, generate_src_template ());
 
-        gst_element_class_add_pad_template (element_class, template);
-    }
+    gst_element_class_add_pad_template (element_class, template);
+  }
 
-    {
-        GstPadTemplate *template;
+  {
+    GstPadTemplate *template;
 
-        template = gst_pad_template_new ("sink", GST_PAD_SINK,
-                                         GST_PAD_ALWAYS,
-                                         generate_sink_template ());
+    template = gst_pad_template_new ("sink", GST_PAD_SINK,
+        GST_PAD_ALWAYS, generate_sink_template ());
 
-        gst_element_class_add_pad_template (element_class, template);
-    }
+    gst_element_class_add_pad_template (element_class, template);
+  }
 }
 
 static void
-type_class_init (gpointer g_class,
-                 gpointer class_data)
+type_class_init (gpointer g_class, gpointer class_data)
 {
 }
 
 /* should we be overriding the settings_changed_cb from parent class like this?? */
 static void
-settings_changed_cb (GOmxCore *core)
+settings_changed_cb (GOmxCore * core)
 {
-    GstOmxBaseFilter *omx_base;
+  GstOmxBaseFilter *omx_base;
 
-    omx_base = core->object;
+  omx_base = core->object;
 
-    GST_DEBUG_OBJECT (omx_base, "settings changed");
+  GST_DEBUG_OBJECT (omx_base, "settings changed");
 
-    {
-        GstCaps *new_caps;
+  {
+    GstCaps *new_caps;
 
-        new_caps = gst_caps_new_simple ("audio/x-raw-int",
-                                        "endianness", G_TYPE_INT, G_BYTE_ORDER,
-                                        "width", G_TYPE_INT, 16,
-                                        "depth", G_TYPE_INT, 16,
-                                        "rate", G_TYPE_INT, 8000,
-                                        "signed", G_TYPE_BOOLEAN, TRUE,
-                                        "channels", G_TYPE_INT, 1,
-                                        NULL);
+    new_caps = gst_caps_new_simple ("audio/x-raw-int",
+        "endianness", G_TYPE_INT, G_BYTE_ORDER,
+        "width", G_TYPE_INT, 16,
+        "depth", G_TYPE_INT, 16,
+        "rate", G_TYPE_INT, 8000,
+        "signed", G_TYPE_BOOLEAN, TRUE, "channels", G_TYPE_INT, 1, NULL);
 
-        GST_INFO_OBJECT (omx_base, "caps are: %" GST_PTR_FORMAT, new_caps);
-        gst_pad_set_caps (omx_base->srcpad, new_caps);
-    }
+    GST_INFO_OBJECT (omx_base, "caps are: %" GST_PTR_FORMAT, new_caps);
+    gst_pad_set_caps (omx_base->srcpad, new_caps);
+  }
 }
 
 static void
-type_instance_init (GTypeInstance *instance,
-                    gpointer g_class)
+type_instance_init (GTypeInstance * instance, gpointer g_class)
 {
-    GstOmxBaseFilter *omx_base;
+  GstOmxBaseFilter *omx_base;
 
-    omx_base = GST_OMX_BASE_FILTER (instance);
+  omx_base = GST_OMX_BASE_FILTER (instance);
 
-    omx_base->gomx->settings_changed_cb = settings_changed_cb;
+  omx_base->gomx->settings_changed_cb = settings_changed_cb;
 }

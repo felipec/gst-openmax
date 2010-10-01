@@ -28,10 +28,8 @@
 #include <config.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_VOLUME(obj) (GstOmxVolume *) (obj)
 #define GST_OMX_VOLUME_TYPE (gst_omx_volume_get_type ())
-
 typedef struct GstOmxVolume GstOmxVolume;
 typedef struct GstOmxVolumeClass GstOmxVolumeClass;
 
@@ -39,16 +37,15 @@ typedef struct GstOmxVolumeClass GstOmxVolumeClass;
 
 struct GstOmxVolume
 {
-    GstOmxBaseFilter omx_base;
+  GstOmxBaseFilter omx_base;
 };
 
 struct GstOmxVolumeClass
 {
-    GstOmxBaseFilterClass parent_class;
+  GstOmxBaseFilterClass parent_class;
 };
 
 GType gst_omx_volume_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_VOLUME_H */

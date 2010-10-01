@@ -25,10 +25,8 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_VIDEOSINK(obj) (GstOmxVideoSink *) (obj)
 #define GST_OMX_VIDEOSINK_TYPE (gst_omx_videosink_get_type ())
-
 typedef struct GstOmxVideoSink GstOmxVideoSink;
 typedef struct GstOmxVideoSinkClass GstOmxVideoSinkClass;
 
@@ -36,19 +34,18 @@ typedef struct GstOmxVideoSinkClass GstOmxVideoSinkClass;
 
 struct GstOmxVideoSink
 {
-    GstOmxBaseSink omx_base;
-    guint x_scale;
-    guint y_scale;
-    guint rotation;
+  GstOmxBaseSink omx_base;
+  guint x_scale;
+  guint y_scale;
+  guint rotation;
 };
 
 struct GstOmxVideoSinkClass
 {
-    GstOmxBaseSinkClass parent_class;
+  GstOmxBaseSinkClass parent_class;
 };
 
 GType gst_omx_videosink_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_VIDEOSINK_H */

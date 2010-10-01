@@ -25,10 +25,8 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_H263ENC(obj) (GstOmxH263Enc *) (obj)
 #define GST_OMX_H263ENC_TYPE (gst_omx_h263enc_get_type ())
-
 typedef struct GstOmxH263Enc GstOmxH263Enc;
 typedef struct GstOmxH263EncClass GstOmxH263EncClass;
 
@@ -36,16 +34,15 @@ typedef struct GstOmxH263EncClass GstOmxH263EncClass;
 
 struct GstOmxH263Enc
 {
-    GstOmxBaseVideoEnc omx_base;
+  GstOmxBaseVideoEnc omx_base;
 };
 
 struct GstOmxH263EncClass
 {
-    GstOmxBaseVideoEncClass parent_class;
+  GstOmxBaseVideoEncClass parent_class;
 };
 
 GType gst_omx_h263enc_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_H263ENC_H */

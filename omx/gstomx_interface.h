@@ -25,21 +25,18 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_TYPE_OMX (gst_omx_get_type ())
 #define GST_OMX(obj) (GST_IMPLEMENTS_INTERFACE_CHECK_INSTANCE_CAST ((obj), GST_TYPE_OMX, GstOmx))
 #define GST_IS_OMX(obj) (GST_IMPLEMENTS_INTERFACE_CHECK_INSTANCE_TYPE ((obj), GST_TYPE_OMX))
-
 typedef struct GstOmx GstOmx;
 
 typedef struct GstOmxClass
 {
-    GTypeInterface klass;
+  GTypeInterface klass;
 
 } GstOmxClass;
 
 GType gst_omx_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_INTERFACE_H */

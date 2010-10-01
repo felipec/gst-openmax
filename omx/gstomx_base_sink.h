@@ -26,38 +26,35 @@
 #include <gst/base/gstbasesink.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_BASE_SINK(obj) (GstOmxBaseSink *) (obj)
 #define GST_OMX_BASE_SINK_TYPE (gst_omx_base_sink_get_type ())
 #define GST_OMX_BASE_SINK_CLASS(obj) (GstOmxBaseSinkClass *) (obj)
-
 typedef struct GstOmxBaseSink GstOmxBaseSink;
 typedef struct GstOmxBaseSinkClass GstOmxBaseSinkClass;
-typedef void (*GstOmxBaseSinkCb) (GstOmxBaseSink *self);
+typedef void (*GstOmxBaseSinkCb) (GstOmxBaseSink * self);
 
 #include <gstomx_util.h>
 
 struct GstOmxBaseSink
 {
-    GstBaseSink element;
+  GstBaseSink element;
 
-    GstPad *sinkpad;
+  GstPad *sinkpad;
 
-    GOmxCore *gomx;
-    GOmxPort *in_port;
+  GOmxCore *gomx;
+  GOmxPort *in_port;
 
-    gboolean ready;
-    GstPadActivateModeFunction base_activatepush;
-    gboolean initialized;
+  gboolean ready;
+  GstPadActivateModeFunction base_activatepush;
+  gboolean initialized;
 };
 
 struct GstOmxBaseSinkClass
 {
-    GstBaseSinkClass parent_class;
+  GstBaseSinkClass parent_class;
 };
 
 GType gst_omx_base_sink_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_BASE_SINK_H */

@@ -25,10 +25,8 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_G729DEC(obj) (GstOmxG729Dec *) (obj)
 #define GST_OMX_G729DEC_TYPE (gst_omx_g729dec_get_type ())
-
 typedef struct GstOmxG729Dec GstOmxG729Dec;
 typedef struct GstOmxG729DecClass GstOmxG729DecClass;
 
@@ -36,16 +34,15 @@ typedef struct GstOmxG729DecClass GstOmxG729DecClass;
 
 struct GstOmxG729Dec
 {
-    GstOmxBaseAudioDec omx_base;
+  GstOmxBaseAudioDec omx_base;
 };
 
 struct GstOmxG729DecClass
 {
-    GstOmxBaseAudioDecClass parent_class;
+  GstOmxBaseAudioDecClass parent_class;
 };
 
 GType gst_omx_g729dec_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_G729DEC_H */

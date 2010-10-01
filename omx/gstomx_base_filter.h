@@ -25,49 +25,46 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_BASE_FILTER(obj) (GstOmxBaseFilter *) (obj)
 #define GST_OMX_BASE_FILTER_TYPE (gst_omx_base_filter_get_type ())
 #define GST_OMX_BASE_FILTER_CLASS(obj) (GstOmxBaseFilterClass *) (obj)
-
 typedef struct GstOmxBaseFilter GstOmxBaseFilter;
 typedef struct GstOmxBaseFilterClass GstOmxBaseFilterClass;
-typedef void (*GstOmxBaseFilterCb) (GstOmxBaseFilter *self);
+typedef void (*GstOmxBaseFilterCb) (GstOmxBaseFilter * self);
 
 #include "gstomx_util.h"
 #include <async_queue.h>
 
 struct GstOmxBaseFilter
 {
-    GstElement element;
+  GstElement element;
 
-    GstPad *sinkpad;
-    GstPad *srcpad;
+  GstPad *sinkpad;
+  GstPad *srcpad;
 
-    GOmxCore *gomx;
-    GOmxPort *in_port;
-    GOmxPort *out_port;
+  GOmxCore *gomx;
+  GOmxPort *in_port;
+  GOmxPort *out_port;
 
-    gboolean use_timestamps; /** @todo remove; timestamps should always be used */
-    gboolean ready;
-    GMutex *ready_lock;
+  gboolean use_timestamps;   /** @todo remove; timestamps should always be used */
+  gboolean ready;
+  GMutex *ready_lock;
 
-    GstOmxBaseFilterCb omx_setup;
-    GstFlowReturn last_pad_push_return;
-    GstBuffer *codec_data;
+  GstOmxBaseFilterCb omx_setup;
+  GstFlowReturn last_pad_push_return;
+  GstBuffer *codec_data;
 
     /** @todo these are hacks, OpenMAX IL spec should be revised. */
-    gboolean share_input_buffer;
-    gboolean share_output_buffer;
+  gboolean share_input_buffer;
+  gboolean share_output_buffer;
 };
 
 struct GstOmxBaseFilterClass
 {
-    GstElementClass parent_class;
+  GstElementClass parent_class;
 };
 
 GType gst_omx_base_filter_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_BASE_FILTER_H */

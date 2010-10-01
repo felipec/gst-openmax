@@ -25,10 +25,8 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_AMRNBENC(obj) (GstOmxAmrNbEnc *) (obj)
 #define GST_OMX_AMRNBENC_TYPE (gst_omx_amrnbenc_get_type ())
-
 typedef struct GstOmxAmrNbEnc GstOmxAmrNbEnc;
 typedef struct GstOmxAmrNbEncClass GstOmxAmrNbEncClass;
 
@@ -36,17 +34,16 @@ typedef struct GstOmxAmrNbEncClass GstOmxAmrNbEncClass;
 
 struct GstOmxAmrNbEnc
 {
-    GstOmxBaseFilter omx_base;
-    guint bitrate;
+  GstOmxBaseFilter omx_base;
+  guint bitrate;
 };
 
 struct GstOmxAmrNbEncClass
 {
-    GstOmxBaseFilterClass parent_class;
+  GstOmxBaseFilterClass parent_class;
 };
 
 GType gst_omx_amrnbenc_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_AMRNBENC_H */

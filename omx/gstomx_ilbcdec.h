@@ -25,10 +25,8 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_ILBCDEC(obj) (GstOmxIlbcDec *) (obj)
 #define GST_OMX_ILBCDEC_TYPE (gst_omx_ilbcdec_get_type ())
-
 typedef struct GstOmxIlbcDec GstOmxIlbcDec;
 typedef struct GstOmxIlbcDecClass GstOmxIlbcDecClass;
 
@@ -36,16 +34,15 @@ typedef struct GstOmxIlbcDecClass GstOmxIlbcDecClass;
 
 struct GstOmxIlbcDec
 {
-    GstOmxBaseFilter omx_base;
+  GstOmxBaseFilter omx_base;
 };
 
 struct GstOmxIlbcDecClass
 {
-    GstOmxBaseFilterClass parent_class;
+  GstOmxBaseFilterClass parent_class;
 };
 
 GType gst_omx_ilbcdec_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_ILBCDEC_H */

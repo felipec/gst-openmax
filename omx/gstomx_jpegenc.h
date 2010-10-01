@@ -27,10 +27,8 @@
 #include <config.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_JPEGENC(obj) (GstOmxJpegEnc *) (obj)
 #define GST_OMX_JPEGENC_TYPE (gst_omx_jpegenc_get_type ())
-
 typedef struct GstOmxJpegEnc GstOmxJpegEnc;
 typedef struct GstOmxJpegEncClass GstOmxJpegEncClass;
 
@@ -38,20 +36,19 @@ typedef struct GstOmxJpegEncClass GstOmxJpegEncClass;
 
 struct GstOmxJpegEnc
 {
-    GstOmxBaseFilter omx_base;
+  GstOmxBaseFilter omx_base;
 
-    gint framerate_num;
-    gint framerate_denom;
-    guint quality;
+  gint framerate_num;
+  gint framerate_denom;
+  guint quality;
 };
 
 struct GstOmxJpegEncClass
 {
-    GstOmxBaseFilterClass parent_class;
+  GstOmxBaseFilterClass parent_class;
 };
 
 GType gst_omx_jpegenc_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_JPEGENC_H */

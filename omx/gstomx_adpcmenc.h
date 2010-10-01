@@ -25,10 +25,8 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_ADPCMENC(obj) (GstOmxAdpcmEnc *) (obj)
 #define GST_OMX_ADPCMENC_TYPE (gst_omx_adpcmenc_get_type ())
-
 typedef struct GstOmxAdpcmEnc GstOmxAdpcmEnc;
 typedef struct GstOmxAdpcmEncClass GstOmxAdpcmEncClass;
 
@@ -36,16 +34,15 @@ typedef struct GstOmxAdpcmEncClass GstOmxAdpcmEncClass;
 
 struct GstOmxAdpcmEnc
 {
-    GstOmxBaseFilter omx_base;
+  GstOmxBaseFilter omx_base;
 };
 
 struct GstOmxAdpcmEncClass
 {
-    GstOmxBaseFilterClass parent_class;
+  GstOmxBaseFilterClass parent_class;
 };
 
 GType gst_omx_adpcmenc_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_ADPCMENC_H */

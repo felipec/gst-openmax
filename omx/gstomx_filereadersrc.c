@@ -25,173 +25,161 @@
 
 enum
 {
-    ARG_0,
-    ARG_FILE_NAME,
+  ARG_0,
+  ARG_FILE_NAME,
 };
 
-GSTOMX_BOILERPLATE (GstOmxFilereaderSrc, gst_omx_filereadersrc, GstOmxBaseSrc, GST_OMX_BASE_SRC_TYPE);
+GSTOMX_BOILERPLATE (GstOmxFilereaderSrc, gst_omx_filereadersrc, GstOmxBaseSrc,
+    GST_OMX_BASE_SRC_TYPE);
 
 static GstCaps *
 generate_src_template (void)
 {
-    GstCaps *caps;
+  GstCaps *caps;
 
-    caps = gst_caps_new_any ();
+  caps = gst_caps_new_any ();
 
-    return caps;
+  return caps;
 }
 
 static void
 type_base_init (gpointer g_class)
 {
-    GstElementClass *element_class;
+  GstElementClass *element_class;
 
-    element_class = GST_ELEMENT_CLASS (g_class);
+  element_class = GST_ELEMENT_CLASS (g_class);
 
-    gst_element_class_set_details_simple (element_class,
-            "OpenMAX IL filereader src element",
-            "None",
-            "Does nothing",
-            "Felipe Contreras");
+  gst_element_class_set_details_simple (element_class,
+      "OpenMAX IL filereader src element",
+      "None", "Does nothing", "Felipe Contreras");
 
-    {
-        GstPadTemplate *template;
+  {
+    GstPadTemplate *template;
 
-        template = gst_pad_template_new ("src", GST_PAD_SRC,
-                                         GST_PAD_ALWAYS,
-                                         generate_src_template ());
+    template = gst_pad_template_new ("src", GST_PAD_SRC,
+        GST_PAD_ALWAYS, generate_src_template ());
 
-        gst_element_class_add_pad_template (element_class, template);
-    }
+    gst_element_class_add_pad_template (element_class, template);
+  }
 }
 
 static gboolean
-setcaps (GstBaseSrc *gst_src,
-         GstCaps *caps)
+setcaps (GstBaseSrc * gst_src, GstCaps * caps)
 {
-    GstOmxBaseSrc *self;
+  GstOmxBaseSrc *self;
 
-    self = GST_OMX_BASE_SRC (gst_src);
+  self = GST_OMX_BASE_SRC (gst_src);
 
-    GST_INFO_OBJECT (self, "setcaps (src): %" GST_PTR_FORMAT, caps);
+  GST_INFO_OBJECT (self, "setcaps (src): %" GST_PTR_FORMAT, caps);
 
-    g_return_val_if_fail (gst_caps_get_size (caps) == 1, FALSE);
+  g_return_val_if_fail (gst_caps_get_size (caps) == 1, FALSE);
 
-    return TRUE;
+  return TRUE;
 }
 
 static void
-settings_changed_cb (GOmxCore *core)
+settings_changed_cb (GOmxCore * core)
 {
-    GstOmxBaseSrc *omx_base;
+  GstOmxBaseSrc *omx_base;
 
-    omx_base = core->object;
+  omx_base = core->object;
 
-    GST_DEBUG_OBJECT (omx_base, "settings changed");
+  GST_DEBUG_OBJECT (omx_base, "settings changed");
 
     /** @todo properly set the capabilities */
 }
 
 static void
-setup_ports (GstOmxBaseSrc *base_src)
+setup_ports (GstOmxBaseSrc * base_src)
 {
-    GOmxCore *gomx;
-    GstOmxFilereaderSrc *self;
+  GOmxCore *gomx;
+  GstOmxFilereaderSrc *self;
 
-    self = GST_OMX_FILEREADERSRC (base_src);
-    gomx = base_src->gomx;
+  self = GST_OMX_FILEREADERSRC (base_src);
+  gomx = base_src->gomx;
 
-    /* This is specific for Bellagio. */
-    {
-        OMX_INDEXTYPE index;
-        OMX_GetExtensionIndex (gomx->omx_handle, "OMX.ST.index.param.filereader.inputfilename", &index);
-        OMX_SetParameter (gomx->omx_handle, index, self->file_name);
-    }
+  /* This is specific for Bellagio. */
+  {
+    OMX_INDEXTYPE index;
+    OMX_GetExtensionIndex (gomx->omx_handle,
+        "OMX.ST.index.param.filereader.inputfilename", &index);
+    OMX_SetParameter (gomx->omx_handle, index, self->file_name);
+  }
 }
 
 static void
-set_property (GObject *obj,
-              guint prop_id,
-              const GValue *value,
-              GParamSpec *pspec)
+set_property (GObject * obj,
+    guint prop_id, const GValue * value, GParamSpec * pspec)
 {
-    GstOmxFilereaderSrc *self;
+  GstOmxFilereaderSrc *self;
 
-    self = GST_OMX_FILEREADERSRC (obj);
+  self = GST_OMX_FILEREADERSRC (obj);
 
-    switch (prop_id)
-    {
-        case ARG_FILE_NAME:
-            if (self->file_name)
-            {
-                g_free (self->file_name);
-            }
-            self->file_name = g_value_dup_string (value);
-            break;
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
-            break;
-    }
+  switch (prop_id) {
+    case ARG_FILE_NAME:
+      if (self->file_name) {
+        g_free (self->file_name);
+      }
+      self->file_name = g_value_dup_string (value);
+      break;
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
+      break;
+  }
 }
 
 static void
-get_property (GObject *obj,
-              guint prop_id,
-              GValue *value,
-              GParamSpec *pspec)
+get_property (GObject * obj, guint prop_id, GValue * value, GParamSpec * pspec)
 {
-    GstOmxFilereaderSrc *self;
+  GstOmxFilereaderSrc *self;
 
-    self = GST_OMX_FILEREADERSRC (obj);
+  self = GST_OMX_FILEREADERSRC (obj);
 
-    switch (prop_id)
-    {
-        case ARG_FILE_NAME:
-            g_value_set_string (value, self->file_name);
-            break;
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
-            break;
-    }
+  switch (prop_id) {
+    case ARG_FILE_NAME:
+      g_value_set_string (value, self->file_name);
+      break;
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
+      break;
+  }
 }
 
 static void
-type_class_init (gpointer g_class,
-                 gpointer class_data)
+type_class_init (gpointer g_class, gpointer class_data)
 {
-    GstBaseSrcClass *gst_base_src_class;
-    GObjectClass *gobject_class;
+  GstBaseSrcClass *gst_base_src_class;
+  GObjectClass *gobject_class;
 
-    gst_base_src_class = GST_BASE_SRC_CLASS (g_class);
-    gobject_class = G_OBJECT_CLASS (g_class);
+  gst_base_src_class = GST_BASE_SRC_CLASS (g_class);
+  gobject_class = G_OBJECT_CLASS (g_class);
 
-    gst_base_src_class->set_caps = setcaps;
+  gst_base_src_class->set_caps = setcaps;
 
-    /* Properties stuff */
-    {
-        gobject_class->set_property = set_property;
-        gobject_class->get_property = get_property;
+  /* Properties stuff */
+  {
+    gobject_class->set_property = set_property;
+    gobject_class->get_property = get_property;
 
-        g_object_class_install_property (gobject_class, ARG_FILE_NAME,
-                                         g_param_spec_string ("file-name", "File name",
-                                                              "The input filename to use",
-                                                              NULL, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
-    }
+    g_object_class_install_property (gobject_class, ARG_FILE_NAME,
+        g_param_spec_string ("file-name", "File name",
+            "The input filename to use",
+            NULL, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+  }
 }
 
 static void
-type_instance_init (GTypeInstance *instance,
-                    gpointer g_class)
+type_instance_init (GTypeInstance * instance, gpointer g_class)
 {
-    GstOmxBaseSrc *omx_base;
+  GstOmxBaseSrc *omx_base;
 
-    omx_base = GST_OMX_BASE_SRC (instance);
+  omx_base = GST_OMX_BASE_SRC (instance);
 
-    GST_DEBUG_OBJECT (omx_base, "begin");
+  GST_DEBUG_OBJECT (omx_base, "begin");
 
-    omx_base->setup_ports = setup_ports;
+  omx_base->setup_ports = setup_ports;
 
-    omx_base->gomx->settings_changed_cb = settings_changed_cb;
+  omx_base->gomx->settings_changed_cb = settings_changed_cb;
 
-    GST_DEBUG_OBJECT (omx_base, "end");
+  GST_DEBUG_OBJECT (omx_base, "end");
 }

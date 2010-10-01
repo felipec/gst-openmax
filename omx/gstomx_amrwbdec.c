@@ -22,80 +22,72 @@
 #include "gstomx_amrwbdec.h"
 #include "gstomx.h"
 
-GSTOMX_BOILERPLATE (GstOmxAmrWbDec, gst_omx_amrwbdec, GstOmxBaseAudioDec, GST_OMX_BASE_AUDIODEC_TYPE);
+GSTOMX_BOILERPLATE (GstOmxAmrWbDec, gst_omx_amrwbdec, GstOmxBaseAudioDec,
+    GST_OMX_BASE_AUDIODEC_TYPE);
 
 static GstCaps *
 generate_src_template (void)
 {
-    GstCaps *caps;
+  GstCaps *caps;
 
-    caps = gst_caps_new_simple ("audio/x-raw-int",
-                                "endianness", G_TYPE_INT, G_BYTE_ORDER,
-                                "width", G_TYPE_INT, 16,
-                                "depth", G_TYPE_INT, 16,
-                                "rate", G_TYPE_INT, 16000,
-                                "signed", G_TYPE_BOOLEAN, TRUE,
-                                "channels", G_TYPE_INT, 1,
-                                NULL);
+  caps = gst_caps_new_simple ("audio/x-raw-int",
+      "endianness", G_TYPE_INT, G_BYTE_ORDER,
+      "width", G_TYPE_INT, 16,
+      "depth", G_TYPE_INT, 16,
+      "rate", G_TYPE_INT, 16000,
+      "signed", G_TYPE_BOOLEAN, TRUE, "channels", G_TYPE_INT, 1, NULL);
 
-    return caps;
+  return caps;
 }
 
 static GstCaps *
 generate_sink_template (void)
 {
-    GstCaps *caps;
+  GstCaps *caps;
 
-    caps = gst_caps_new_simple ("audio/AMR-WB",
-                                "rate", G_TYPE_INT, 16000,
-                                "channels", G_TYPE_INT, 1,
-                                NULL);
+  caps = gst_caps_new_simple ("audio/AMR-WB",
+      "rate", G_TYPE_INT, 16000, "channels", G_TYPE_INT, 1, NULL);
 
-    return caps;
+  return caps;
 }
 
 static void
 type_base_init (gpointer g_class)
 {
-    GstElementClass *element_class;
+  GstElementClass *element_class;
 
-    element_class = GST_ELEMENT_CLASS (g_class);
+  element_class = GST_ELEMENT_CLASS (g_class);
 
-    gst_element_class_set_details_simple (element_class,
-            "OpenMAX IL AMR-WB audio decoder",
-            "Codec/Decoder/Audio",
-            "Decodes audio in AMR-WB format with OpenMAX IL",
-            "Felipe Contreras");
+  gst_element_class_set_details_simple (element_class,
+      "OpenMAX IL AMR-WB audio decoder",
+      "Codec/Decoder/Audio",
+      "Decodes audio in AMR-WB format with OpenMAX IL", "Felipe Contreras");
 
-    {
-        GstPadTemplate *template;
+  {
+    GstPadTemplate *template;
 
-        template = gst_pad_template_new ("src", GST_PAD_SRC,
-                                         GST_PAD_ALWAYS,
-                                         generate_src_template ());
+    template = gst_pad_template_new ("src", GST_PAD_SRC,
+        GST_PAD_ALWAYS, generate_src_template ());
 
-        gst_element_class_add_pad_template (element_class, template);
-    }
+    gst_element_class_add_pad_template (element_class, template);
+  }
 
-    {
-        GstPadTemplate *template;
+  {
+    GstPadTemplate *template;
 
-        template = gst_pad_template_new ("sink", GST_PAD_SINK,
-                                         GST_PAD_ALWAYS,
-                                         generate_sink_template ());
+    template = gst_pad_template_new ("sink", GST_PAD_SINK,
+        GST_PAD_ALWAYS, generate_sink_template ());
 
-        gst_element_class_add_pad_template (element_class, template);
-    }
+    gst_element_class_add_pad_template (element_class, template);
+  }
 }
 
 static void
-type_class_init (gpointer g_class,
-                 gpointer class_data)
+type_class_init (gpointer g_class, gpointer class_data)
 {
 }
 
 static void
-type_instance_init (GTypeInstance *instance,
-                    gpointer g_class)
+type_instance_init (GTypeInstance * instance, gpointer g_class)
 {
 }

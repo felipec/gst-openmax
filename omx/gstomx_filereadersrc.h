@@ -25,10 +25,8 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_FILEREADERSRC(obj) (GstOmxFilereaderSrc *) (obj)
 #define GST_OMX_FILEREADERSRC_TYPE (gst_omx_filereadersrc_get_type ())
-
 typedef struct GstOmxFilereaderSrc GstOmxFilereaderSrc;
 typedef struct GstOmxFilereaderSrcClass GstOmxFilereaderSrcClass;
 
@@ -36,18 +34,17 @@ typedef struct GstOmxFilereaderSrcClass GstOmxFilereaderSrcClass;
 
 struct GstOmxFilereaderSrc
 {
-    GstOmxBaseSrc omx_base;
+  GstOmxBaseSrc omx_base;
 
-    char *file_name; /**< The input file name. */
+  char *file_name;   /**< The input file name. */
 };
 
 struct GstOmxFilereaderSrcClass
 {
-    GstOmxBaseSrcClass parent_class;
+  GstOmxBaseSrcClass parent_class;
 };
 
 GType gst_omx_filereadersrc_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_FILEREADERSRC_H */

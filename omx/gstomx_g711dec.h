@@ -25,10 +25,8 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_G711DEC(obj) (GstOmxG711Dec *) (obj)
 #define GST_OMX_G711DEC_TYPE (gst_omx_g711dec_get_type ())
-
 typedef struct GstOmxG711Dec GstOmxG711Dec;
 typedef struct GstOmxG711DecClass GstOmxG711DecClass;
 
@@ -36,16 +34,15 @@ typedef struct GstOmxG711DecClass GstOmxG711DecClass;
 
 struct GstOmxG711Dec
 {
-    GstOmxBaseFilter omx_base;
+  GstOmxBaseFilter omx_base;
 };
 
 struct GstOmxG711DecClass
 {
-    GstOmxBaseFilterClass parent_class;
+  GstOmxBaseFilterClass parent_class;
 };
 
 GType gst_omx_g711dec_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_G711DEC_H */

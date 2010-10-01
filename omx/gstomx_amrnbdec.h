@@ -25,10 +25,8 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_AMRNBDEC(obj) (GstOmxAmrNbDec *) (obj)
 #define GST_OMX_AMRNBDEC_TYPE (gst_omx_amrnbdec_get_type ())
-
 typedef struct GstOmxAmrNbDec GstOmxAmrNbDec;
 typedef struct GstOmxAmrNbDecClass GstOmxAmrNbDecClass;
 
@@ -36,16 +34,15 @@ typedef struct GstOmxAmrNbDecClass GstOmxAmrNbDecClass;
 
 struct GstOmxAmrNbDec
 {
-    GstOmxBaseAudioDec omx_base;
+  GstOmxBaseAudioDec omx_base;
 };
 
 struct GstOmxAmrNbDecClass
 {
-    GstOmxBaseAudioDecClass parent_class;
+  GstOmxBaseAudioDecClass parent_class;
 };
 
 GType gst_omx_amrnbdec_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_AMRNBDEC_H */

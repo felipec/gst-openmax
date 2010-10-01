@@ -25,10 +25,8 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_AUDIOSINK(obj) (GstOmxAudioSink *) (obj)
 #define GST_OMX_AUDIOSINK_TYPE (gst_omx_audiosink_get_type ())
-
 typedef struct GstOmxAudioSink GstOmxAudioSink;
 typedef struct GstOmxAudioSinkClass GstOmxAudioSinkClass;
 
@@ -36,16 +34,15 @@ typedef struct GstOmxAudioSinkClass GstOmxAudioSinkClass;
 
 struct GstOmxAudioSink
 {
-    GstOmxBaseSink omx_base;
+  GstOmxBaseSink omx_base;
 };
 
 struct GstOmxAudioSinkClass
 {
-    GstOmxBaseSinkClass parent_class;
+  GstOmxBaseSinkClass parent_class;
 };
 
 GType gst_omx_audiosink_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_AUDIOSINK_H */

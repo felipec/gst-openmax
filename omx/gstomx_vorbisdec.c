@@ -22,85 +22,78 @@
 #include "gstomx_vorbisdec.h"
 #include "gstomx.h"
 
-GSTOMX_BOILERPLATE (GstOmxVorbisDec, gst_omx_vorbisdec, GstOmxBaseAudioDec, GST_OMX_BASE_AUDIODEC_TYPE);
+GSTOMX_BOILERPLATE (GstOmxVorbisDec, gst_omx_vorbisdec, GstOmxBaseAudioDec,
+    GST_OMX_BASE_AUDIODEC_TYPE);
 
 static GstCaps *
 generate_src_template (void)
 {
-    GstCaps *caps = NULL;
+  GstCaps *caps = NULL;
 
-    caps = gst_caps_new_simple ("audio/x-raw-int",
-                                "rate", GST_TYPE_INT_RANGE, 8000, 96000,
-                                "signed", G_TYPE_BOOLEAN, TRUE,
-                                "endianness", G_TYPE_INT, G_BYTE_ORDER,
-                                "width", G_TYPE_INT, 16,
-                                "depth", G_TYPE_INT, 16,
-                                "channels", GST_TYPE_INT_RANGE, 1, 256,
-                                NULL);
+  caps = gst_caps_new_simple ("audio/x-raw-int",
+      "rate", GST_TYPE_INT_RANGE, 8000, 96000,
+      "signed", G_TYPE_BOOLEAN, TRUE,
+      "endianness", G_TYPE_INT, G_BYTE_ORDER,
+      "width", G_TYPE_INT, 16,
+      "depth", G_TYPE_INT, 16, "channels", GST_TYPE_INT_RANGE, 1, 256, NULL);
 
-    return caps;
+  return caps;
 }
 
 static GstCaps *
 generate_sink_template (void)
 {
-    GstCaps *caps = NULL;
+  GstCaps *caps = NULL;
 
-    caps = gst_caps_new_simple ("application/ogg",
-                                NULL);
+  caps = gst_caps_new_simple ("application/ogg", NULL);
 
-    return caps;
+  return caps;
 }
 
 static void
 type_base_init (gpointer g_class)
 {
-    GstElementClass *element_class;
+  GstElementClass *element_class;
 
-    element_class = GST_ELEMENT_CLASS (g_class);
+  element_class = GST_ELEMENT_CLASS (g_class);
 
-    gst_element_class_set_details_simple (element_class,
-            "OpenMAX IL Vorbis audio decoder",
-            "Codec/Decoder/Audio",
-            "Decodes audio in Vorbis format with OpenMAX IL",
-            "Felipe Contreras");
+  gst_element_class_set_details_simple (element_class,
+      "OpenMAX IL Vorbis audio decoder",
+      "Codec/Decoder/Audio",
+      "Decodes audio in Vorbis format with OpenMAX IL", "Felipe Contreras");
 
-    {
-        GstPadTemplate *template;
+  {
+    GstPadTemplate *template;
 
-        template = gst_pad_template_new ("src", GST_PAD_SRC,
-                                         GST_PAD_ALWAYS,
-                                         generate_src_template ());
+    template = gst_pad_template_new ("src", GST_PAD_SRC,
+        GST_PAD_ALWAYS, generate_src_template ());
 
-        gst_element_class_add_pad_template (element_class, template);
-    }
+    gst_element_class_add_pad_template (element_class, template);
+  }
 
-    {
-        GstPadTemplate *template;
+  {
+    GstPadTemplate *template;
 
-        template = gst_pad_template_new ("sink", GST_PAD_SINK,
-                                         GST_PAD_ALWAYS,
-                                         generate_sink_template ());
+    template = gst_pad_template_new ("sink", GST_PAD_SINK,
+        GST_PAD_ALWAYS, generate_sink_template ());
 
-        gst_element_class_add_pad_template (element_class, template);
-    }
+    gst_element_class_add_pad_template (element_class, template);
+  }
 }
 
 static void
-type_class_init (gpointer g_class,
-                 gpointer class_data)
+type_class_init (gpointer g_class, gpointer class_data)
 {
 }
 
 static void
-type_instance_init (GTypeInstance *instance,
-                    gpointer g_class)
+type_instance_init (GTypeInstance * instance, gpointer g_class)
 {
-    GstOmxBaseFilter *omx_base;
+  GstOmxBaseFilter *omx_base;
 
-    omx_base = GST_OMX_BASE_FILTER (instance);
+  omx_base = GST_OMX_BASE_FILTER (instance);
 
-    GST_DEBUG_OBJECT (omx_base, "start");
+  GST_DEBUG_OBJECT (omx_base, "start");
 
-    omx_base->use_timestamps = FALSE;
+  omx_base->use_timestamps = FALSE;
 }

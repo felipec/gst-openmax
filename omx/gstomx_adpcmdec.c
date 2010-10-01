@@ -24,140 +24,130 @@
 #include "gstomx.h"
 
 /* should this class extend GstOmxBaseAudioDec? */
-GSTOMX_BOILERPLATE (GstOmxAdpcmDec, gst_omx_adpcmdec, GstOmxBaseFilter, GST_OMX_BASE_FILTER_TYPE);
+GSTOMX_BOILERPLATE (GstOmxAdpcmDec, gst_omx_adpcmdec, GstOmxBaseFilter,
+    GST_OMX_BASE_FILTER_TYPE);
 
 static GstCaps *
 generate_src_template (void)
 {
-    GstCaps *caps;
+  GstCaps *caps;
 
-    caps = gst_caps_new_simple ("audio/x-raw-int",
-                                "endianness", G_TYPE_INT, G_BYTE_ORDER,
-                                "width", G_TYPE_INT, 16,
-                                "depth", G_TYPE_INT, 16,
-                                "rate", GST_TYPE_INT_RANGE, 8000, 96000,
-                                "signed", G_TYPE_BOOLEAN, TRUE,
-                                "channels", G_TYPE_INT, 1,
-                                NULL);
+  caps = gst_caps_new_simple ("audio/x-raw-int",
+      "endianness", G_TYPE_INT, G_BYTE_ORDER,
+      "width", G_TYPE_INT, 16,
+      "depth", G_TYPE_INT, 16,
+      "rate", GST_TYPE_INT_RANGE, 8000, 96000,
+      "signed", G_TYPE_BOOLEAN, TRUE, "channels", G_TYPE_INT, 1, NULL);
 
-    return caps;
+  return caps;
 }
 
 static GstCaps *
 generate_sink_template (void)
 {
-    GstCaps *caps;
+  GstCaps *caps;
 
-    caps = gst_caps_new_simple ("audio/x-adpcm",
-                                "layout", G_TYPE_STRING, "dvi",
-                                "rate", GST_TYPE_INT_RANGE, 8000, 96000,
-                                "channels", G_TYPE_INT, 1,
-                                NULL);
+  caps = gst_caps_new_simple ("audio/x-adpcm",
+      "layout", G_TYPE_STRING, "dvi",
+      "rate", GST_TYPE_INT_RANGE, 8000, 96000, "channels", G_TYPE_INT, 1, NULL);
 
-    return caps;
+  return caps;
 }
 
 static void
 type_base_init (gpointer g_class)
 {
-    GstElementClass *element_class;
+  GstElementClass *element_class;
 
-    element_class = GST_ELEMENT_CLASS (g_class);
+  element_class = GST_ELEMENT_CLASS (g_class);
 
-    gst_element_class_set_details_simple (element_class,
-            "OpenMAX IL ADPCM audio decoder",
-            "Codec/Decoder/Audio",
-            "Decodes audio in ADPCM format with OpenMAX IL",
-            "Felipe Contreras");
+  gst_element_class_set_details_simple (element_class,
+      "OpenMAX IL ADPCM audio decoder",
+      "Codec/Decoder/Audio",
+      "Decodes audio in ADPCM format with OpenMAX IL", "Felipe Contreras");
 
-    {
-        GstPadTemplate *template;
+  {
+    GstPadTemplate *template;
 
-        template = gst_pad_template_new ("src", GST_PAD_SRC,
-                                         GST_PAD_ALWAYS,
-                                         generate_src_template ());
+    template = gst_pad_template_new ("src", GST_PAD_SRC,
+        GST_PAD_ALWAYS, generate_src_template ());
 
-        gst_element_class_add_pad_template (element_class, template);
-    }
+    gst_element_class_add_pad_template (element_class, template);
+  }
 
-    {
-        GstPadTemplate *template;
+  {
+    GstPadTemplate *template;
 
-        template = gst_pad_template_new ("sink", GST_PAD_SINK,
-                                         GST_PAD_ALWAYS,
-                                         generate_sink_template ());
+    template = gst_pad_template_new ("sink", GST_PAD_SINK,
+        GST_PAD_ALWAYS, generate_sink_template ());
 
-        gst_element_class_add_pad_template (element_class, template);
-    }
+    gst_element_class_add_pad_template (element_class, template);
+  }
 }
 
 static void
-type_class_init (gpointer g_class,
-                 gpointer class_data)
+type_class_init (gpointer g_class, gpointer class_data)
 {
 }
 
 static gboolean
-sink_setcaps (GstPad *pad,
-              GstCaps *caps)
+sink_setcaps (GstPad * pad, GstCaps * caps)
 {
-    GstStructure *structure;
-    GstOmxBaseFilter *omx_base;
-    GOmxCore *gomx;
-    gint rate = 0;
+  GstStructure *structure;
+  GstOmxBaseFilter *omx_base;
+  GOmxCore *gomx;
+  gint rate = 0;
 
-    omx_base = GST_OMX_BASE_FILTER (GST_PAD_PARENT (pad));
-    gomx = (GOmxCore *) omx_base->gomx;
+  omx_base = GST_OMX_BASE_FILTER (GST_PAD_PARENT (pad));
+  gomx = (GOmxCore *) omx_base->gomx;
 
-    GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
+  GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
 
-    structure = gst_caps_get_structure (caps, 0);
+  structure = gst_caps_get_structure (caps, 0);
 
-    gst_structure_get_int (structure, "rate", &rate);
+  gst_structure_get_int (structure, "rate", &rate);
 
-    /* Input port configuration. */
-    {
-        OMX_AUDIO_PARAM_PCMMODETYPE param;
+  /* Input port configuration. */
+  {
+    OMX_AUDIO_PARAM_PCMMODETYPE param;
 
-        G_OMX_INIT_PARAM (param);
+    G_OMX_INIT_PARAM (param);
 
-        param.nPortIndex = omx_base->out_port->port_index;
-        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
+    param.nPortIndex = omx_base->out_port->port_index;
+    OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
 
-        param.nSamplingRate = rate;
+    param.nSamplingRate = rate;
 
-        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
+    OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
+  }
+
+  /* set caps on the srcpad */
+  {
+    GstCaps *tmp_caps;
+
+    tmp_caps = gst_pad_get_allowed_caps (omx_base->srcpad);
+    tmp_caps = gst_caps_make_writable (tmp_caps);
+    gst_caps_truncate (tmp_caps);
+
+    gst_pad_fixate_caps (omx_base->srcpad, tmp_caps);
+
+    if (gst_caps_is_fixed (tmp_caps)) {
+      GST_INFO_OBJECT (omx_base, "fixated to: %" GST_PTR_FORMAT, tmp_caps);
+      gst_pad_set_caps (omx_base->srcpad, tmp_caps);
     }
 
-    /* set caps on the srcpad */
-    {
-        GstCaps *tmp_caps;
+    gst_caps_unref (tmp_caps);
+  }
 
-        tmp_caps = gst_pad_get_allowed_caps (omx_base->srcpad);
-        tmp_caps = gst_caps_make_writable (tmp_caps);
-        gst_caps_truncate (tmp_caps);
-
-        gst_pad_fixate_caps (omx_base->srcpad, tmp_caps);
-
-        if (gst_caps_is_fixed (tmp_caps))
-        {
-            GST_INFO_OBJECT (omx_base, "fixated to: %" GST_PTR_FORMAT, tmp_caps);
-            gst_pad_set_caps (omx_base->srcpad, tmp_caps);
-        }
-
-        gst_caps_unref (tmp_caps);
-    }
-
-    return gst_pad_set_caps (pad, caps);
+  return gst_pad_set_caps (pad, caps);
 }
 
 static void
-type_instance_init (GTypeInstance *instance,
-                    gpointer g_class)
+type_instance_init (GTypeInstance * instance, gpointer g_class)
 {
-    GstOmxBaseFilter *omx_base;
+  GstOmxBaseFilter *omx_base;
 
-    omx_base = GST_OMX_BASE_FILTER (instance);
+  omx_base = GST_OMX_BASE_FILTER (instance);
 
-    gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);
+  gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);
 }

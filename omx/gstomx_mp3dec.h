@@ -25,10 +25,8 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_MP3DEC(obj) (GstOmxMp3Dec *) (obj)
 #define GST_OMX_MP3DEC_TYPE (gst_omx_mp3dec_get_type ())
-
 typedef struct GstOmxMp3Dec GstOmxMp3Dec;
 typedef struct GstOmxMp3DecClass GstOmxMp3DecClass;
 
@@ -36,16 +34,15 @@ typedef struct GstOmxMp3DecClass GstOmxMp3DecClass;
 
 struct GstOmxMp3Dec
 {
-    GstOmxBaseAudioDec omx_base;
+  GstOmxBaseAudioDec omx_base;
 };
 
 struct GstOmxMp3DecClass
 {
-    GstOmxBaseAudioDecClass parent_class;
+  GstOmxBaseAudioDecClass parent_class;
 };
 
 GType gst_omx_mp3dec_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_MP3DEC_H */

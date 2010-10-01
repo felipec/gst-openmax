@@ -22,105 +22,100 @@
 #include "gstomx_h263enc.h"
 #include "gstomx.h"
 
-GSTOMX_BOILERPLATE (GstOmxH263Enc, gst_omx_h263enc, GstOmxBaseVideoEnc, GST_OMX_BASE_VIDEOENC_TYPE);
+GSTOMX_BOILERPLATE (GstOmxH263Enc, gst_omx_h263enc, GstOmxBaseVideoEnc,
+    GST_OMX_BASE_VIDEOENC_TYPE);
 
 static GstCaps *
 generate_src_template (void)
 {
-    GstCaps *caps;
+  GstCaps *caps;
 
-    caps = gst_caps_new_simple ("video/x-h263",
-                                "variant", G_TYPE_STRING, "itu",
-                                "width", GST_TYPE_INT_RANGE, 16, 4096,
-                                "height", GST_TYPE_INT_RANGE, 16, 4096,
-                                "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, G_MAXINT, 1,
-                                NULL);
+  caps = gst_caps_new_simple ("video/x-h263",
+      "variant", G_TYPE_STRING, "itu",
+      "width", GST_TYPE_INT_RANGE, 16, 4096,
+      "height", GST_TYPE_INT_RANGE, 16, 4096,
+      "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, G_MAXINT, 1, NULL);
 
-    return caps;
+  return caps;
 }
 
 static void
 type_base_init (gpointer g_class)
 {
-    GstElementClass *element_class;
+  GstElementClass *element_class;
 
-    element_class = GST_ELEMENT_CLASS (g_class);
+  element_class = GST_ELEMENT_CLASS (g_class);
 
-    gst_element_class_set_details_simple (element_class,
-            "OpenMAX IL H.263 video encoder",
-            "Codec/Encoder/Video",
-            "Encodes video in H.263 format with OpenMAX IL",
-            "Felipe Contreras");
+  gst_element_class_set_details_simple (element_class,
+      "OpenMAX IL H.263 video encoder",
+      "Codec/Encoder/Video",
+      "Encodes video in H.263 format with OpenMAX IL", "Felipe Contreras");
 
-    {
-        GstPadTemplate *template;
+  {
+    GstPadTemplate *template;
 
-        template = gst_pad_template_new ("src", GST_PAD_SRC,
-                                         GST_PAD_ALWAYS,
-                                         generate_src_template ());
+    template = gst_pad_template_new ("src", GST_PAD_SRC,
+        GST_PAD_ALWAYS, generate_src_template ());
 
-        gst_element_class_add_pad_template (element_class, template);
-    }
+    gst_element_class_add_pad_template (element_class, template);
+  }
 }
 
 static void
-type_class_init (gpointer g_class,
-                 gpointer class_data)
+type_class_init (gpointer g_class, gpointer class_data)
 {
 }
 
 static void
-settings_changed_cb (GOmxCore *core)
+settings_changed_cb (GOmxCore * core)
 {
-    GstOmxBaseVideoEnc *omx_base;
-    GstOmxBaseFilter *omx_base_filter;
-    guint width;
-    guint height;
+  GstOmxBaseVideoEnc *omx_base;
+  GstOmxBaseFilter *omx_base_filter;
+  guint width;
+  guint height;
 
-    omx_base_filter = core->object;
-    omx_base = GST_OMX_BASE_VIDEOENC (omx_base_filter);
+  omx_base_filter = core->object;
+  omx_base = GST_OMX_BASE_VIDEOENC (omx_base_filter);
 
-    GST_DEBUG_OBJECT (omx_base, "settings changed");
+  GST_DEBUG_OBJECT (omx_base, "settings changed");
 
-    {
-        OMX_PARAM_PORTDEFINITIONTYPE param;
+  {
+    OMX_PARAM_PORTDEFINITIONTYPE param;
 
-        G_OMX_INIT_PARAM (param);
+    G_OMX_INIT_PARAM (param);
 
-        param.nPortIndex = omx_base_filter->out_port->port_index;
-        OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, &param);
+    param.nPortIndex = omx_base_filter->out_port->port_index;
+    OMX_GetParameter (core->omx_handle, OMX_IndexParamPortDefinition, &param);
 
-        width = param.format.video.nFrameWidth;
-        height = param.format.video.nFrameHeight;
-    }
+    width = param.format.video.nFrameWidth;
+    height = param.format.video.nFrameHeight;
+  }
 
-    {
-        GstCaps *new_caps;
+  {
+    GstCaps *new_caps;
 
-        new_caps = gst_caps_new_simple ("video/x-h263",
-                                        "variant", G_TYPE_STRING, "itu",
-                                        "width", G_TYPE_INT, width,
-                                        "height", G_TYPE_INT, height,
-                                        "framerate", GST_TYPE_FRACTION,
-                                        omx_base->framerate_num, omx_base->framerate_denom,
-                                        NULL);
+    new_caps = gst_caps_new_simple ("video/x-h263",
+        "variant", G_TYPE_STRING, "itu",
+        "width", G_TYPE_INT, width,
+        "height", G_TYPE_INT, height,
+        "framerate", GST_TYPE_FRACTION,
+        omx_base->framerate_num, omx_base->framerate_denom, NULL);
 
-        GST_INFO_OBJECT (omx_base, "caps are: %" GST_PTR_FORMAT, new_caps);
-        gst_pad_set_caps (omx_base_filter->srcpad, new_caps);
-    }
+    GST_INFO_OBJECT (omx_base, "caps are: %" GST_PTR_FORMAT, new_caps);
+    gst_pad_set_caps (omx_base_filter->srcpad, new_caps);
+  }
 }
 
 static void
-type_instance_init (GTypeInstance *instance,
-                    gpointer g_class)
+type_instance_init (GTypeInstance * instance, gpointer g_class)
 {
-    GstOmxBaseFilter *omx_base_filter;
-    GstOmxBaseVideoEnc *omx_base;
+  GstOmxBaseFilter *omx_base_filter;
+  GstOmxBaseVideoEnc *omx_base;
 
-    omx_base_filter = GST_OMX_BASE_FILTER (instance);
-    omx_base = GST_OMX_BASE_VIDEOENC (instance);
+  omx_base_filter = GST_OMX_BASE_FILTER (instance);
+  omx_base = GST_OMX_BASE_VIDEOENC (instance);
 
-    omx_base->compression_format = OMX_VIDEO_CodingH263;
+  omx_base->compression_format = OMX_VIDEO_CodingH263;
 
-    omx_base_filter->gomx->settings_changed_cb = settings_changed_cb;
+  omx_base_filter->gomx->settings_changed_cb = settings_changed_cb;
 }

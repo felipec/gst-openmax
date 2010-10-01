@@ -25,10 +25,8 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_MPEG4ENC(obj) (GstOmxMpeg4Enc *) (obj)
 #define GST_OMX_MPEG4ENC_TYPE (gst_omx_mpeg4enc_get_type ())
-
 typedef struct GstOmxMpeg4Enc GstOmxMpeg4Enc;
 typedef struct GstOmxMpeg4EncClass GstOmxMpeg4EncClass;
 
@@ -36,16 +34,15 @@ typedef struct GstOmxMpeg4EncClass GstOmxMpeg4EncClass;
 
 struct GstOmxMpeg4Enc
 {
-    GstOmxBaseVideoEnc omx_base;
+  GstOmxBaseVideoEnc omx_base;
 };
 
 struct GstOmxMpeg4EncClass
 {
-    GstOmxBaseVideoEncClass parent_class;
+  GstOmxBaseVideoEncClass parent_class;
 };
 
 GType gst_omx_mpeg4enc_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_MPEG4ENC_H */

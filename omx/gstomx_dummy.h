@@ -25,10 +25,8 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_DUMMY(obj) (GstOmxDummy *) (obj)
 #define GST_OMX_DUMMY_TYPE (gst_omx_dummy_get_type ())
-
 typedef struct GstOmxDummy GstOmxDummy;
 typedef struct GstOmxDummyClass GstOmxDummyClass;
 
@@ -36,16 +34,15 @@ typedef struct GstOmxDummyClass GstOmxDummyClass;
 
 struct GstOmxDummy
 {
-    GstOmxBaseFilter omx_base;
+  GstOmxBaseFilter omx_base;
 };
 
 struct GstOmxDummyClass
 {
-    GstOmxBaseFilterClass parent_class;
+  GstOmxBaseFilterClass parent_class;
 };
 
 GType gst_omx_dummy_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_DUMMY_H */

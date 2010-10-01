@@ -22,122 +22,117 @@
 #include "gstomx_audiosink.h"
 #include "gstomx.h"
 
-GSTOMX_BOILERPLATE (GstOmxAudioSink, gst_omx_audiosink, GstOmxBaseSink, GST_OMX_BASE_SINK_TYPE);
+GSTOMX_BOILERPLATE (GstOmxAudioSink, gst_omx_audiosink, GstOmxBaseSink,
+    GST_OMX_BASE_SINK_TYPE);
 
 static GstCaps *
 generate_sink_template (void)
 {
-    GstCaps *caps;
+  GstCaps *caps;
 
-    caps = gst_caps_new_simple ("audio/x-raw-int",
-                                "endianness", G_TYPE_INT, G_BYTE_ORDER,
-                                "width", GST_TYPE_INT_RANGE, 8, 32,
-                                "depth", GST_TYPE_INT_RANGE, 8, 32,
-                                "rate", GST_TYPE_INT_RANGE, 8000, 48000,
-                                "signed", G_TYPE_BOOLEAN, TRUE,
-                                "channels", GST_TYPE_INT_RANGE, 1, 8,
-                                NULL);
+  caps = gst_caps_new_simple ("audio/x-raw-int",
+      "endianness", G_TYPE_INT, G_BYTE_ORDER,
+      "width", GST_TYPE_INT_RANGE, 8, 32,
+      "depth", GST_TYPE_INT_RANGE, 8, 32,
+      "rate", GST_TYPE_INT_RANGE, 8000, 48000,
+      "signed", G_TYPE_BOOLEAN, TRUE,
+      "channels", GST_TYPE_INT_RANGE, 1, 8, NULL);
 
-    return caps;
+  return caps;
 }
 
 static void
 type_base_init (gpointer g_class)
 {
-    GstElementClass *element_class;
+  GstElementClass *element_class;
 
-    element_class = GST_ELEMENT_CLASS (g_class);
+  element_class = GST_ELEMENT_CLASS (g_class);
 
-    gst_element_class_set_details_simple (element_class,
-            "OpenMAX IL audiosink element",
-            "Sink/Audio",
-            "Renders audio",
-            "Felipe Contreras");
+  gst_element_class_set_details_simple (element_class,
+      "OpenMAX IL audiosink element",
+      "Sink/Audio", "Renders audio", "Felipe Contreras");
 
-    {
-        GstPadTemplate *template;
+  {
+    GstPadTemplate *template;
 
-        template = gst_pad_template_new ("sink", GST_PAD_SINK,
-                                         GST_PAD_ALWAYS,
-                                         generate_sink_template ());
+    template = gst_pad_template_new ("sink", GST_PAD_SINK,
+        GST_PAD_ALWAYS, generate_sink_template ());
 
-        gst_element_class_add_pad_template (element_class, template);
-    }
+    gst_element_class_add_pad_template (element_class, template);
+  }
 }
 
 static gboolean
-setcaps (GstBaseSink *gst_sink,
-         GstCaps *caps)
+setcaps (GstBaseSink * gst_sink, GstCaps * caps)
 {
-    GstOmxBaseSink *self;
-    GOmxCore *gomx;
+  GstOmxBaseSink *self;
+  GOmxCore *gomx;
 
-    self = GST_OMX_BASE_SINK (gst_sink);
-    gomx = (GOmxCore *) self->gomx;
+  self = GST_OMX_BASE_SINK (gst_sink);
+  gomx = (GOmxCore *) self->gomx;
 
-    GST_INFO_OBJECT (self, "setcaps (sink): %" GST_PTR_FORMAT, caps);
+  GST_INFO_OBJECT (self, "setcaps (sink): %" GST_PTR_FORMAT, caps);
 
-    g_return_val_if_fail (gst_caps_get_size (caps) == 1, FALSE);
+  g_return_val_if_fail (gst_caps_get_size (caps) == 1, FALSE);
 
+  {
+    GstStructure *structure;
+    gint channels;
+    gint width;
+    gint rate;
+    gboolean is_signed;
+    gboolean is_bigendian;
+
+    structure = gst_caps_get_structure (caps, 0);
+
+    gst_structure_get_int (structure, "channels", &channels);
+    gst_structure_get_int (structure, "width", &width);
+    gst_structure_get_int (structure, "rate", &rate);
+    gst_structure_get_boolean (structure, "signed", &is_signed);
     {
-        GstStructure *structure;
-        gint channels;
-        gint width;
-        gint rate;
-        gboolean is_signed;
-        gboolean is_bigendian;
-
-        structure = gst_caps_get_structure (caps, 0);
-
-        gst_structure_get_int (structure, "channels", &channels);
-        gst_structure_get_int (structure, "width", &width);
-        gst_structure_get_int (structure, "rate", &rate);
-        gst_structure_get_boolean (structure, "signed", &is_signed);
-        {
-            gint endianness;
-            gst_structure_get_int (structure, "endianness", &endianness);
-            is_bigendian = (endianness == 1234) ? FALSE : TRUE;
-        }
-
-        {
-            OMX_AUDIO_PARAM_PCMMODETYPE param;
-
-            G_OMX_INIT_PARAM (param);
-
-            param.nPortIndex = self->in_port->port_index;
-            OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
-
-            param.nChannels = channels;
-            param.eNumData = is_signed ? OMX_NumericalDataSigned : OMX_NumericalDataUnsigned;
-            param.eEndian = is_bigendian ? OMX_EndianBig : OMX_EndianLittle;
-            param.nBitPerSample = width;
-            param.nSamplingRate = rate;
-
-            OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
-        }
+      gint endianness;
+      gst_structure_get_int (structure, "endianness", &endianness);
+      is_bigendian = (endianness == 1234) ? FALSE : TRUE;
     }
 
-    return TRUE;
+    {
+      OMX_AUDIO_PARAM_PCMMODETYPE param;
+
+      G_OMX_INIT_PARAM (param);
+
+      param.nPortIndex = self->in_port->port_index;
+      OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
+
+      param.nChannels = channels;
+      param.eNumData =
+          is_signed ? OMX_NumericalDataSigned : OMX_NumericalDataUnsigned;
+      param.eEndian = is_bigendian ? OMX_EndianBig : OMX_EndianLittle;
+      param.nBitPerSample = width;
+      param.nSamplingRate = rate;
+
+      OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
+    }
+  }
+
+  return TRUE;
 }
 
 static void
-type_class_init (gpointer g_class,
-                 gpointer class_data)
+type_class_init (gpointer g_class, gpointer class_data)
 {
-    GstBaseSinkClass *gst_base_sink_class;
+  GstBaseSinkClass *gst_base_sink_class;
 
-    gst_base_sink_class = GST_BASE_SINK_CLASS (g_class);
+  gst_base_sink_class = GST_BASE_SINK_CLASS (g_class);
 
-    gst_base_sink_class->set_caps = setcaps;
+  gst_base_sink_class->set_caps = setcaps;
 }
 
 static void
-type_instance_init (GTypeInstance *instance,
-                    gpointer g_class)
+type_instance_init (GTypeInstance * instance, gpointer g_class)
 {
-    GstOmxBaseSink *omx_base;
+  GstOmxBaseSink *omx_base;
 
-    omx_base = GST_OMX_BASE_SINK (instance);
+  omx_base = GST_OMX_BASE_SINK (instance);
 
-    GST_DEBUG_OBJECT (omx_base, "start");
+  GST_DEBUG_OBJECT (omx_base, "start");
 }

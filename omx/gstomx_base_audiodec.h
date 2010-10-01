@@ -25,10 +25,8 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_BASE_AUDIODEC(obj) (GstOmxBaseAudioDec *) (obj)
 #define GST_OMX_BASE_AUDIODEC_TYPE (gst_omx_base_audiodec_get_type ())
-
 typedef struct GstOmxBaseAudioDec GstOmxBaseAudioDec;
 typedef struct GstOmxBaseAudioDecClass GstOmxBaseAudioDecClass;
 
@@ -36,16 +34,15 @@ typedef struct GstOmxBaseAudioDecClass GstOmxBaseAudioDecClass;
 
 struct GstOmxBaseAudioDec
 {
-    GstOmxBaseFilter omx_base;
+  GstOmxBaseFilter omx_base;
 };
 
 struct GstOmxBaseAudioDecClass
 {
-    GstOmxBaseFilterClass parent_class;
+  GstOmxBaseFilterClass parent_class;
 };
 
 GType gst_omx_base_audiodec_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_BASE_AUDIODEC_H */

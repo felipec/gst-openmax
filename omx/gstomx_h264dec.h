@@ -25,10 +25,8 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_H264DEC(obj) (GstOmxH264Dec *) (obj)
 #define GST_OMX_H264DEC_TYPE (gst_omx_h264dec_get_type ())
-
 typedef struct GstOmxH264Dec GstOmxH264Dec;
 typedef struct GstOmxH264DecClass GstOmxH264DecClass;
 
@@ -36,16 +34,15 @@ typedef struct GstOmxH264DecClass GstOmxH264DecClass;
 
 struct GstOmxH264Dec
 {
-    GstOmxBaseVideoDec omx_base;
+  GstOmxBaseVideoDec omx_base;
 };
 
 struct GstOmxH264DecClass
 {
-    GstOmxBaseVideoDecClass parent_class;
+  GstOmxBaseVideoDecClass parent_class;
 };
 
 GType gst_omx_h264dec_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_H264DEC_H */

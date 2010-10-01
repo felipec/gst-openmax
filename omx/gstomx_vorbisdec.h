@@ -25,10 +25,8 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_VORBISDEC(obj) (GstOmxVorbisDec *) (obj)
 #define GST_OMX_VORBISDEC_TYPE (gst_omx_vorbisdec_get_type ())
-
 typedef struct GstOmxVorbisDec GstOmxVorbisDec;
 typedef struct GstOmxVorbisDecClass GstOmxVorbisDecClass;
 
@@ -36,16 +34,15 @@ typedef struct GstOmxVorbisDecClass GstOmxVorbisDecClass;
 
 struct GstOmxVorbisDec
 {
-    GstOmxBaseAudioDec omx_base;
+  GstOmxBaseAudioDec omx_base;
 };
 
 struct GstOmxVorbisDecClass
 {
-    GstOmxBaseAudioDecClass parent_class;
+  GstOmxBaseAudioDecClass parent_class;
 };
 
 GType gst_omx_vorbisdec_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_VORBISDEC_H */

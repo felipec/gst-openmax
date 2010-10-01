@@ -22,141 +22,133 @@
 #include "gstomx_aacdec.h"
 #include "gstomx.h"
 
-GSTOMX_BOILERPLATE (GstOmxAacDec, gst_omx_aacdec, GstOmxBaseAudioDec, GST_OMX_BASE_AUDIODEC_TYPE);
+GSTOMX_BOILERPLATE (GstOmxAacDec, gst_omx_aacdec, GstOmxBaseAudioDec,
+    GST_OMX_BASE_AUDIODEC_TYPE);
 
 static GstCaps *
 generate_src_template (void)
 {
-    GstCaps *caps;
+  GstCaps *caps;
 
-    caps = gst_caps_new_simple ("audio/x-raw-int",
-                                "endianness", G_TYPE_INT, G_BYTE_ORDER,
-                                "width", G_TYPE_INT, 16,
-                                "depth", G_TYPE_INT, 16,
-                                "rate", GST_TYPE_INT_RANGE, 8000, 96000,
-                                "signed", G_TYPE_BOOLEAN, TRUE,
-                                "channels", GST_TYPE_INT_RANGE, 1, 6,
-                                NULL);
+  caps = gst_caps_new_simple ("audio/x-raw-int",
+      "endianness", G_TYPE_INT, G_BYTE_ORDER,
+      "width", G_TYPE_INT, 16,
+      "depth", G_TYPE_INT, 16,
+      "rate", GST_TYPE_INT_RANGE, 8000, 96000,
+      "signed", G_TYPE_BOOLEAN, TRUE,
+      "channels", GST_TYPE_INT_RANGE, 1, 6, NULL);
 
-    return caps;
+  return caps;
 }
 
 static GstCaps *
 generate_sink_template (void)
 {
-    GstCaps *caps;
-    GstStructure *struc;
+  GstCaps *caps;
+  GstStructure *struc;
 
-    caps = gst_caps_new_empty ();
+  caps = gst_caps_new_empty ();
 
-    struc = gst_structure_new ("audio/mpeg",
-                               "mpegversion", G_TYPE_INT, 4,
-                               "rate", GST_TYPE_INT_RANGE, 8000, 96000,
-                               "channels", GST_TYPE_INT_RANGE, 1, 6,
-                               NULL);
+  struc = gst_structure_new ("audio/mpeg",
+      "mpegversion", G_TYPE_INT, 4,
+      "rate", GST_TYPE_INT_RANGE, 8000, 96000,
+      "channels", GST_TYPE_INT_RANGE, 1, 6, NULL);
 
-    {
-        GValue list;
-        GValue val;
+  {
+    GValue list;
+    GValue val;
 
-        list.g_type = val.g_type = 0;
+    list.g_type = val.g_type = 0;
 
-        g_value_init (&list, GST_TYPE_LIST);
-        g_value_init (&val, G_TYPE_INT);
+    g_value_init (&list, GST_TYPE_LIST);
+    g_value_init (&val, G_TYPE_INT);
 
-        g_value_set_int (&val, 2);
-        gst_value_list_append_value (&list, &val);
+    g_value_set_int (&val, 2);
+    gst_value_list_append_value (&list, &val);
 
-        g_value_set_int (&val, 4);
-        gst_value_list_append_value (&list, &val);
+    g_value_set_int (&val, 4);
+    gst_value_list_append_value (&list, &val);
 
-        gst_structure_set_value (struc, "mpegversion", &list);
+    gst_structure_set_value (struc, "mpegversion", &list);
 
-        g_value_unset (&val);
-        g_value_unset (&list);
-    }
+    g_value_unset (&val);
+    g_value_unset (&list);
+  }
 
-    gst_caps_append_structure (caps, struc);
+  gst_caps_append_structure (caps, struc);
 
-    return caps;
+  return caps;
 }
 
 static void
 type_base_init (gpointer g_class)
 {
-    GstElementClass *element_class;
+  GstElementClass *element_class;
 
-    element_class = GST_ELEMENT_CLASS (g_class);
+  element_class = GST_ELEMENT_CLASS (g_class);
 
-    gst_element_class_set_details_simple (element_class,
-            "OpenMAX IL AAC audio decoder",
-            "Codec/Decoder/Audio",
-            "Decodes audio in AAC format with OpenMAX IL",
-            "Felipe Contreras");
+  gst_element_class_set_details_simple (element_class,
+      "OpenMAX IL AAC audio decoder",
+      "Codec/Decoder/Audio",
+      "Decodes audio in AAC format with OpenMAX IL", "Felipe Contreras");
 
-    {
-        GstPadTemplate *template;
+  {
+    GstPadTemplate *template;
 
-        template = gst_pad_template_new ("src", GST_PAD_SRC,
-                                         GST_PAD_ALWAYS,
-                                         generate_src_template ());
+    template = gst_pad_template_new ("src", GST_PAD_SRC,
+        GST_PAD_ALWAYS, generate_src_template ());
 
-        gst_element_class_add_pad_template (element_class, template);
-    }
+    gst_element_class_add_pad_template (element_class, template);
+  }
 
-    {
-        GstPadTemplate *template;
+  {
+    GstPadTemplate *template;
 
-        template = gst_pad_template_new ("sink", GST_PAD_SINK,
-                                         GST_PAD_ALWAYS,
-                                         generate_sink_template ());
+    template = gst_pad_template_new ("sink", GST_PAD_SINK,
+        GST_PAD_ALWAYS, generate_sink_template ());
 
-        gst_element_class_add_pad_template (element_class, template);
-    }
+    gst_element_class_add_pad_template (element_class, template);
+  }
 }
 
 static void
-type_class_init (gpointer g_class,
-                 gpointer class_data)
+type_class_init (gpointer g_class, gpointer class_data)
 {
 }
 
 static gboolean
-sink_setcaps (GstPad *pad,
-              GstCaps *caps)
+sink_setcaps (GstPad * pad, GstCaps * caps)
 {
-    GstStructure *structure;    
-    GstOmxBaseFilter *omx_base;
+  GstStructure *structure;
+  GstOmxBaseFilter *omx_base;
 
-    omx_base = GST_OMX_BASE_FILTER (GST_PAD_PARENT (pad));
+  omx_base = GST_OMX_BASE_FILTER (GST_PAD_PARENT (pad));
 
-    GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
+  GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
 
-    structure = gst_caps_get_structure (caps, 0);
+  structure = gst_caps_get_structure (caps, 0);
 
-    {
-        const GValue *codec_data;
-        GstBuffer *buffer;
+  {
+    const GValue *codec_data;
+    GstBuffer *buffer;
 
-        codec_data = gst_structure_get_value (structure, "codec_data");
-        if (codec_data)
-        {
-            buffer = gst_value_get_buffer (codec_data);
-            omx_base->codec_data = buffer;
-            gst_buffer_ref (buffer);
-        }
+    codec_data = gst_structure_get_value (structure, "codec_data");
+    if (codec_data) {
+      buffer = gst_value_get_buffer (codec_data);
+      omx_base->codec_data = buffer;
+      gst_buffer_ref (buffer);
     }
+  }
 
-    return gst_pad_set_caps (pad, caps);
+  return gst_pad_set_caps (pad, caps);
 }
 
 static void
-type_instance_init (GTypeInstance *instance,
-                    gpointer g_class)
+type_instance_init (GTypeInstance * instance, gpointer g_class)
 {
-    GstOmxBaseFilter *omx_base;
+  GstOmxBaseFilter *omx_base;
 
-    omx_base = GST_OMX_BASE_FILTER (instance);
+  omx_base = GST_OMX_BASE_FILTER (instance);
 
-    gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);
+  gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);
 }

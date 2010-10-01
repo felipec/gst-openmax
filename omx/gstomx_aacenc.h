@@ -25,10 +25,8 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_AACENC(obj) (GstOmxAacEnc *) (obj)
 #define GST_OMX_AACENC_TYPE (gst_omx_aacenc_get_type ())
-
 typedef struct GstOmxAacEnc GstOmxAacEnc;
 typedef struct GstOmxAacEncClass GstOmxAacEncClass;
 
@@ -36,19 +34,18 @@ typedef struct GstOmxAacEncClass GstOmxAacEncClass;
 
 struct GstOmxAacEnc
 {
-    GstOmxBaseFilter omx_base;
-    guint bitrate;
-    gint profile;
-    gint output_format;
+  GstOmxBaseFilter omx_base;
+  guint bitrate;
+  gint profile;
+  gint output_format;
 };
 
 struct GstOmxAacEncClass
 {
-    GstOmxBaseFilterClass parent_class;
+  GstOmxBaseFilterClass parent_class;
 };
 
 GType gst_omx_aacenc_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_AACENC_H */

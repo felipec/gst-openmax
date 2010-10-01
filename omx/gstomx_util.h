@@ -38,79 +38,77 @@ typedef struct GOmxImp GOmxImp;
 typedef struct GOmxSymbolTable GOmxSymbolTable;
 typedef enum GOmxPortType GOmxPortType;
 
-typedef void (*GOmxCb) (GOmxCore *core);
-typedef void (*GOmxPortCb) (GOmxPort *port);
+typedef void (*GOmxCb) (GOmxCore * core);
+typedef void (*GOmxPortCb) (GOmxPort * port);
 
 /* Enums. */
 
 enum GOmxPortType
 {
-    GOMX_PORT_INPUT,
-    GOMX_PORT_OUTPUT
+  GOMX_PORT_INPUT,
+  GOMX_PORT_OUTPUT
 };
 
 /* Structures. */
 
 struct GOmxSymbolTable
 {
-    OMX_ERRORTYPE (*init) (void);
-    OMX_ERRORTYPE (*deinit) (void);
-    OMX_ERRORTYPE (*get_handle) (OMX_HANDLETYPE *handle,
-                                 OMX_STRING name,
-                                 OMX_PTR data,
-                                 OMX_CALLBACKTYPE *callbacks);
-    OMX_ERRORTYPE (*free_handle) (OMX_HANDLETYPE handle);
+  OMX_ERRORTYPE (*init) (void);
+  OMX_ERRORTYPE (*deinit) (void);
+  OMX_ERRORTYPE (*get_handle) (OMX_HANDLETYPE * handle,
+      OMX_STRING name, OMX_PTR data, OMX_CALLBACKTYPE * callbacks);
+  OMX_ERRORTYPE (*free_handle) (OMX_HANDLETYPE handle);
 };
 
 struct GOmxImp
 {
-    guint client_count;
-    void *dl_handle;
-    GOmxSymbolTable sym_table;
-    GMutex *mutex;
+  guint client_count;
+  void *dl_handle;
+  GOmxSymbolTable sym_table;
+  GMutex *mutex;
 };
 
 struct GOmxCore
 {
-    gpointer object; /**< GStreamer element. */
+  gpointer object;   /**< GStreamer element. */
 
-    OMX_HANDLETYPE omx_handle;
-    OMX_ERRORTYPE omx_error;
+  OMX_HANDLETYPE omx_handle;
+  OMX_ERRORTYPE omx_error;
 
-    OMX_STATETYPE omx_state;
-    GCond *omx_state_condition;
-    GMutex *omx_state_mutex;
+  OMX_STATETYPE omx_state;
+  GCond *omx_state_condition;
+  GMutex *omx_state_mutex;
 
-    GPtrArray *ports;
+  GPtrArray *ports;
 
-    GSem *done_sem;
-    GSem *flush_sem;
-    GSem *port_sem;
+  GSem *done_sem;
+  GSem *flush_sem;
+  GSem *port_sem;
 
-    GOmxCb settings_changed_cb;
-    GOmxImp *imp;
+  GOmxCb settings_changed_cb;
+  GOmxImp *imp;
 
-    gboolean done;
+  gboolean done;
 
-    gchar *library_name;
-    gchar *component_name;
-    gchar *component_role;
+  gchar *library_name;
+  gchar *component_name;
+  gchar *component_role;
 };
 
 struct GOmxPort
 {
-    GOmxCore *core;
-    GOmxPortType type;
+  GOmxCore *core;
+  GOmxPortType type;
 
-    guint num_buffers;
-    gulong buffer_size;
-    guint port_index;
-    OMX_BUFFERHEADERTYPE **buffers;
+  guint num_buffers;
+  gulong buffer_size;
+  guint port_index;
+  OMX_BUFFERHEADERTYPE **buffers;
 
-    GMutex *mutex;
-    gboolean enabled;
-    gboolean omx_allocate; /**< Setup with OMX_AllocateBuffer rather than OMX_UseBuffer */
-    AsyncQueue *queue;
+  GMutex *mutex;
+  gboolean enabled;
+  gboolean omx_allocate;   /**< Setup with OMX_AllocateBuffer rather than OMX_UseBuffer */
+  AsyncQueue *queue;
 };
 
 /* Functions. */
@@ -119,31 +117,33 @@ void g_omx_init (void);
 void g_omx_deinit (void);
 
 GOmxCore *g_omx_core_new (void *object);
-void g_omx_core_free (GOmxCore *core);
-void g_omx_core_init (GOmxCore *core);
-void g_omx_core_prepare (GOmxCore *core);
-void g_omx_core_start (GOmxCore *core);
-void g_omx_core_pause (GOmxCore *core);
-void g_omx_core_stop (GOmxCore *core);
-void g_omx_core_unload (GOmxCore *core);
-void g_omx_core_set_done (GOmxCore *core);
-void g_omx_core_wait_for_done (GOmxCore *core);
-void g_omx_core_flush_start (GOmxCore *core);
-void g_omx_core_flush_stop (GOmxCore *core);
-GOmxPort *g_omx_core_new_port (GOmxCore *core, guint index);
+void g_omx_core_free (GOmxCore * core);
+void g_omx_core_init (GOmxCore * core);
+void g_omx_core_prepare (GOmxCore * core);
+void g_omx_core_start (GOmxCore * core);
+void g_omx_core_pause (GOmxCore * core);
+void g_omx_core_stop (GOmxCore * core);
+void g_omx_core_unload (GOmxCore * core);
+void g_omx_core_set_done (GOmxCore * core);
+void g_omx_core_wait_for_done (GOmxCore * core);
+void g_omx_core_flush_start (GOmxCore * core);
+void g_omx_core_flush_stop (GOmxCore * core);
+GOmxPort *g_omx_core_new_port (GOmxCore * core, guint index);
 
-GOmxPort *g_omx_port_new (GOmxCore *core, guint index);
-void g_omx_port_free (GOmxPort *port);
-void g_omx_port_setup (GOmxPort *port);
-void g_omx_port_push_buffer (GOmxPort *port, OMX_BUFFERHEADERTYPE *omx_buffer);
-OMX_BUFFERHEADERTYPE *g_omx_port_request_buffer (GOmxPort *port);
-void g_omx_port_release_buffer (GOmxPort *port, OMX_BUFFERHEADERTYPE *omx_buffer);
-void g_omx_port_resume (GOmxPort *port);
-void g_omx_port_pause (GOmxPort *port);
-void g_omx_port_flush (GOmxPort *port);
-void g_omx_port_enable (GOmxPort *port);
-void g_omx_port_disable (GOmxPort *port);
-void g_omx_port_finish (GOmxPort *port);
+GOmxPort *g_omx_port_new (GOmxCore * core, guint index);
+void g_omx_port_free (GOmxPort * port);
+void g_omx_port_setup (GOmxPort * port);
+void g_omx_port_push_buffer (GOmxPort * port,
+    OMX_BUFFERHEADERTYPE * omx_buffer);
+OMX_BUFFERHEADERTYPE *g_omx_port_request_buffer (GOmxPort * port);
+void g_omx_port_release_buffer (GOmxPort * port,
+    OMX_BUFFERHEADERTYPE * omx_buffer);
+void g_omx_port_resume (GOmxPort * port);
+void g_omx_port_pause (GOmxPort * port);
+void g_omx_port_flush (GOmxPort * port);
+void g_omx_port_enable (GOmxPort * port);
+void g_omx_port_disable (GOmxPort * port);
+void g_omx_port_finish (GOmxPort * port);
 
 /* Utility Macros */
 
@@ -194,7 +194,7 @@ GType type_as_function ## _get_type (void)                                    \
   GSTOMX_BOILERPLATE_FULL (type, type_as_function, parent_type, parent_type_macro, \
       __GST_DO_NOTHING)
 
-#include <string.h>  /* for memset */
+#include <string.h>             /* for memset */
 #define G_OMX_INIT_PARAM(param) G_STMT_START {                                \
         memset (&(param), 0, sizeof ((param)));                               \
         (param).nSize = sizeof (param);                                       \

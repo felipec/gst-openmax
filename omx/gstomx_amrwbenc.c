@@ -25,229 +25,212 @@
 
 enum
 {
-    ARG_0,
-    ARG_BITRATE,
+  ARG_0,
+  ARG_BITRATE,
 };
 
 #define DEFAULT_BITRATE 64000
 
-GSTOMX_BOILERPLATE (GstOmxAmrWbEnc, gst_omx_amrwbenc, GstOmxBaseFilter, GST_OMX_BASE_FILTER_TYPE);
+GSTOMX_BOILERPLATE (GstOmxAmrWbEnc, gst_omx_amrwbenc, GstOmxBaseFilter,
+    GST_OMX_BASE_FILTER_TYPE);
 
 static GstCaps *
 generate_src_template (void)
 {
-    GstCaps *caps;
+  GstCaps *caps;
 
-    caps = gst_caps_new_simple ("audio/AMR-WB",
-                                "channels", G_TYPE_INT, 1,
-                                "rate", G_TYPE_INT, 16000,
-                                NULL);
+  caps = gst_caps_new_simple ("audio/AMR-WB",
+      "channels", G_TYPE_INT, 1, "rate", G_TYPE_INT, 16000, NULL);
 
-    return caps;
+  return caps;
 }
 
 static GstCaps *
 generate_sink_template (void)
 {
-    GstCaps *caps;
+  GstCaps *caps;
 
-    caps = gst_caps_new_simple ("audio/x-raw-int",
-                                "endianness", G_TYPE_INT, G_BYTE_ORDER,
-                                "width", G_TYPE_INT, 16,
-                                "depth", G_TYPE_INT, 16,
-                                "rate", G_TYPE_INT, 16000,
-                                "signed", G_TYPE_BOOLEAN, TRUE,
-                                "channels", G_TYPE_INT, 1,
-                                NULL);
+  caps = gst_caps_new_simple ("audio/x-raw-int",
+      "endianness", G_TYPE_INT, G_BYTE_ORDER,
+      "width", G_TYPE_INT, 16,
+      "depth", G_TYPE_INT, 16,
+      "rate", G_TYPE_INT, 16000,
+      "signed", G_TYPE_BOOLEAN, TRUE, "channels", G_TYPE_INT, 1, NULL);
 
-    return caps;
+  return caps;
 }
 
 static void
 type_base_init (gpointer g_class)
 {
-    GstElementClass *element_class;
+  GstElementClass *element_class;
 
-    element_class = GST_ELEMENT_CLASS (g_class);
+  element_class = GST_ELEMENT_CLASS (g_class);
 
-    gst_element_class_set_details_simple (element_class,
-            "OpenMAX IL AMR-WB audio encoder",
-            "Codec/Encoder/Audio",
-            "Encodes audio in AMR-WB format with OpenMAX IL",
-            "Felipe Contreras");
+  gst_element_class_set_details_simple (element_class,
+      "OpenMAX IL AMR-WB audio encoder",
+      "Codec/Encoder/Audio",
+      "Encodes audio in AMR-WB format with OpenMAX IL", "Felipe Contreras");
 
-    {
-        GstPadTemplate *template;
+  {
+    GstPadTemplate *template;
 
-        template = gst_pad_template_new ("src", GST_PAD_SRC,
-                                         GST_PAD_ALWAYS,
-                                         generate_src_template ());
+    template = gst_pad_template_new ("src", GST_PAD_SRC,
+        GST_PAD_ALWAYS, generate_src_template ());
 
-        gst_element_class_add_pad_template (element_class, template);
-    }
+    gst_element_class_add_pad_template (element_class, template);
+  }
 
-    {
-        GstPadTemplate *template;
+  {
+    GstPadTemplate *template;
 
-        template = gst_pad_template_new ("sink", GST_PAD_SINK,
-                                         GST_PAD_ALWAYS,
-                                         generate_sink_template ());
+    template = gst_pad_template_new ("sink", GST_PAD_SINK,
+        GST_PAD_ALWAYS, generate_sink_template ());
 
-        gst_element_class_add_pad_template (element_class, template);
-    }
+    gst_element_class_add_pad_template (element_class, template);
+  }
 }
 
 static void
-set_property (GObject *obj,
-              guint prop_id,
-              const GValue *value,
-              GParamSpec *pspec)
+set_property (GObject * obj,
+    guint prop_id, const GValue * value, GParamSpec * pspec)
 {
-    GstOmxAmrWbEnc *self;
+  GstOmxAmrWbEnc *self;
 
-    self = GST_OMX_AMRWBENC (obj);
+  self = GST_OMX_AMRWBENC (obj);
 
-    switch (prop_id)
-    {
-        case ARG_BITRATE:
-            self->bitrate = g_value_get_uint (value);
-            break;
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
-            break;
-    }
+  switch (prop_id) {
+    case ARG_BITRATE:
+      self->bitrate = g_value_get_uint (value);
+      break;
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
+      break;
+  }
 }
 
 static void
-get_property (GObject *obj,
-              guint prop_id,
-              GValue *value,
-              GParamSpec *pspec)
+get_property (GObject * obj, guint prop_id, GValue * value, GParamSpec * pspec)
 {
-    GstOmxAmrWbEnc *self;
+  GstOmxAmrWbEnc *self;
 
-    self = GST_OMX_AMRWBENC (obj);
+  self = GST_OMX_AMRWBENC (obj);
 
-    switch (prop_id)
-    {
-        case ARG_BITRATE:
+  switch (prop_id) {
+    case ARG_BITRATE:
             /** @todo propagate this to OpenMAX when processing. */
-            g_value_set_uint (value, self->bitrate);
-            break;
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
-            break;
-    }
+      g_value_set_uint (value, self->bitrate);
+      break;
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, prop_id, pspec);
+      break;
+  }
 }
 
 static void
-type_class_init (gpointer g_class,
-                 gpointer class_data)
+type_class_init (gpointer g_class, gpointer class_data)
 {
-    GObjectClass *gobject_class;
+  GObjectClass *gobject_class;
 
-    gobject_class = G_OBJECT_CLASS (g_class);
+  gobject_class = G_OBJECT_CLASS (g_class);
 
-    /* Properties stuff */
-    {
-        gobject_class->set_property = set_property;
-        gobject_class->get_property = get_property;
+  /* Properties stuff */
+  {
+    gobject_class->set_property = set_property;
+    gobject_class->get_property = get_property;
 
-        g_object_class_install_property (gobject_class, ARG_BITRATE,
-                                         g_param_spec_uint ("bitrate", "Bit-rate",
-                                                            "Encoding bit-rate",
-                                                            0, G_MAXUINT, DEFAULT_BITRATE,
-                                                            G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
-    }
+    g_object_class_install_property (gobject_class, ARG_BITRATE,
+        g_param_spec_uint ("bitrate", "Bit-rate",
+            "Encoding bit-rate",
+            0, G_MAXUINT, DEFAULT_BITRATE,
+            G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+  }
 }
 
 static void
-settings_changed_cb (GOmxCore *core)
+settings_changed_cb (GOmxCore * core)
 {
-    GstOmxBaseFilter *omx_base;
-    guint channels;
+  GstOmxBaseFilter *omx_base;
+  guint channels;
 
-    omx_base = core->object;
+  omx_base = core->object;
 
-    GST_DEBUG_OBJECT (omx_base, "settings changed");
+  GST_DEBUG_OBJECT (omx_base, "settings changed");
 
-    {
-        OMX_AUDIO_PARAM_AMRTYPE param;
+  {
+    OMX_AUDIO_PARAM_AMRTYPE param;
 
-        G_OMX_INIT_PARAM (param);
+    G_OMX_INIT_PARAM (param);
 
-        param.nPortIndex = omx_base->out_port->port_index;
-        OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioAmr, &param);
+    param.nPortIndex = omx_base->out_port->port_index;
+    OMX_GetParameter (omx_base->gomx->omx_handle, OMX_IndexParamAudioAmr,
+        &param);
 
-        channels = param.nChannels;
-    }
+    channels = param.nChannels;
+  }
 
-    {
-        GstCaps *new_caps;
+  {
+    GstCaps *new_caps;
 
-        new_caps = gst_caps_new_simple ("audio/AMR-WB",
-                                        "channels", G_TYPE_INT, channels,
-                                        "rate", G_TYPE_INT, 16000,
-                                        NULL);
+    new_caps = gst_caps_new_simple ("audio/AMR-WB",
+        "channels", G_TYPE_INT, channels, "rate", G_TYPE_INT, 16000, NULL);
 
-        GST_INFO_OBJECT (omx_base, "caps are: %" GST_PTR_FORMAT, new_caps);
-        gst_pad_set_caps (omx_base->srcpad, new_caps);
-    }
+    GST_INFO_OBJECT (omx_base, "caps are: %" GST_PTR_FORMAT, new_caps);
+    gst_pad_set_caps (omx_base->srcpad, new_caps);
+  }
 }
 
 static gboolean
-sink_setcaps (GstPad *pad,
-              GstCaps *caps)
+sink_setcaps (GstPad * pad, GstCaps * caps)
 {
-    GstStructure *structure;
-    GstOmxBaseFilter *omx_base;
-    GOmxCore *gomx;
-    gint rate = 0;
-    gint channels = 0;
+  GstStructure *structure;
+  GstOmxBaseFilter *omx_base;
+  GOmxCore *gomx;
+  gint rate = 0;
+  gint channels = 0;
 
-    omx_base = GST_OMX_BASE_FILTER (GST_PAD_PARENT (pad));
-    gomx = (GOmxCore *) omx_base->gomx;
+  omx_base = GST_OMX_BASE_FILTER (GST_PAD_PARENT (pad));
+  gomx = (GOmxCore *) omx_base->gomx;
 
-    GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
+  GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
 
-    g_return_val_if_fail (gst_caps_get_size (caps) == 1, FALSE);
+  g_return_val_if_fail (gst_caps_get_size (caps) == 1, FALSE);
 
-    structure = gst_caps_get_structure (caps, 0);
+  structure = gst_caps_get_structure (caps, 0);
 
-    gst_structure_get_int (structure, "rate", &rate);
-    gst_structure_get_int (structure, "channels", &channels);
+  gst_structure_get_int (structure, "rate", &rate);
+  gst_structure_get_int (structure, "channels", &channels);
 
-    /* Input port configuration. */
-    {
-        OMX_AUDIO_PARAM_PCMMODETYPE param;
+  /* Input port configuration. */
+  {
+    OMX_AUDIO_PARAM_PCMMODETYPE param;
 
-        G_OMX_INIT_PARAM (param);
+    G_OMX_INIT_PARAM (param);
 
-        param.nPortIndex = omx_base->in_port->port_index;
-        OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
+    param.nPortIndex = omx_base->in_port->port_index;
+    OMX_GetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
 
-        param.nSamplingRate = rate;
-        param.nChannels = channels;
+    param.nSamplingRate = rate;
+    param.nChannels = channels;
 
-        OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
-    }
+    OMX_SetParameter (gomx->omx_handle, OMX_IndexParamAudioPcm, &param);
+  }
 
-    return gst_pad_set_caps (pad, caps);
+  return gst_pad_set_caps (pad, caps);
 }
 
 static void
-type_instance_init (GTypeInstance *instance,
-                    gpointer g_class)
+type_instance_init (GTypeInstance * instance, gpointer g_class)
 {
-    GstOmxBaseFilter *omx_base;
-    GstOmxAmrWbEnc *self;
+  GstOmxBaseFilter *omx_base;
+  GstOmxAmrWbEnc *self;
 
-    omx_base = GST_OMX_BASE_FILTER (instance);
-    self = GST_OMX_AMRWBENC (instance);
+  omx_base = GST_OMX_BASE_FILTER (instance);
+  self = GST_OMX_AMRWBENC (instance);
 
-    omx_base->gomx->settings_changed_cb = settings_changed_cb;
+  omx_base->gomx->settings_changed_cb = settings_changed_cb;
 
-    gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);
+  gst_pad_set_setcaps_function (omx_base->sinkpad, sink_setcaps);
 
-    self->bitrate = DEFAULT_BITRATE;
+  self->bitrate = DEFAULT_BITRATE;
 }

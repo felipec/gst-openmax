@@ -22,65 +22,61 @@
 #include "gstomx_h263dec.h"
 #include "gstomx.h"
 
-GSTOMX_BOILERPLATE (GstOmxH263Dec, gst_omx_h263dec, GstOmxBaseVideoDec, GST_OMX_BASE_VIDEODEC_TYPE);
+GSTOMX_BOILERPLATE (GstOmxH263Dec, gst_omx_h263dec, GstOmxBaseVideoDec,
+    GST_OMX_BASE_VIDEODEC_TYPE);
 
 static GstCaps *
 generate_sink_template (void)
 {
-    GstCaps *caps;
-    GstStructure *struc;
+  GstCaps *caps;
+  GstStructure *struc;
 
-    caps = gst_caps_new_empty ();
+  caps = gst_caps_new_empty ();
 
-    struc = gst_structure_new ("video/x-h263",
-                               "variant", G_TYPE_STRING, "itu",
-                               "width", GST_TYPE_INT_RANGE, 16, 4096,
-                               "height", GST_TYPE_INT_RANGE, 16, 4096,
-                               "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, G_MAXINT, 1,
-                               NULL);
+  struc = gst_structure_new ("video/x-h263",
+      "variant", G_TYPE_STRING, "itu",
+      "width", GST_TYPE_INT_RANGE, 16, 4096,
+      "height", GST_TYPE_INT_RANGE, 16, 4096,
+      "framerate", GST_TYPE_FRACTION_RANGE, 0, 1, G_MAXINT, 1, NULL);
 
-    gst_caps_append_structure (caps, struc);
+  gst_caps_append_structure (caps, struc);
 
-    return caps;
+  return caps;
 }
 
 static void
 type_base_init (gpointer g_class)
 {
-    GstElementClass *element_class;
+  GstElementClass *element_class;
 
-    element_class = GST_ELEMENT_CLASS (g_class);
+  element_class = GST_ELEMENT_CLASS (g_class);
 
-    gst_element_class_set_details_simple (element_class,
-            "OpenMAX IL H.263 video decoder",
-            "Codec/Decoder/Video",
-            "Decodes video in H.263 format with OpenMAX IL",
-            "Felipe Contreras");
+  gst_element_class_set_details_simple (element_class,
+      "OpenMAX IL H.263 video decoder",
+      "Codec/Decoder/Video",
+      "Decodes video in H.263 format with OpenMAX IL", "Felipe Contreras");
 
-    {
-        GstPadTemplate *template;
+  {
+    GstPadTemplate *template;
 
-        template = gst_pad_template_new ("sink", GST_PAD_SINK,
-                                         GST_PAD_ALWAYS,
-                                         generate_sink_template ());
+    template = gst_pad_template_new ("sink", GST_PAD_SINK,
+        GST_PAD_ALWAYS, generate_sink_template ());
 
-        gst_element_class_add_pad_template (element_class, template);
-    }
+    gst_element_class_add_pad_template (element_class, template);
+  }
 }
 
 static void
-type_class_init (gpointer g_class,
-                 gpointer class_data)
+type_class_init (gpointer g_class, gpointer class_data)
 {
 }
 
 static void
-type_instance_init (GTypeInstance *instance,
-                    gpointer g_class)
+type_instance_init (GTypeInstance * instance, gpointer g_class)
 {
-    GstOmxBaseVideoDec *omx_base;
+  GstOmxBaseVideoDec *omx_base;
 
-    omx_base = GST_OMX_BASE_VIDEODEC (instance);
+  omx_base = GST_OMX_BASE_VIDEODEC (instance);
 
-    omx_base->compression_format = OMX_VIDEO_CodingH263;
+  omx_base->compression_format = OMX_VIDEO_CodingH263;
 }

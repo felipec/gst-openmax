@@ -25,10 +25,8 @@
 #include <gst/gst.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_AMRWBENC(obj) (GstOmxAmrWbEnc *) (obj)
 #define GST_OMX_AMRWBENC_TYPE (gst_omx_amrwbenc_get_type ())
-
 typedef struct GstOmxAmrWbEnc GstOmxAmrWbEnc;
 typedef struct GstOmxAmrWbEncClass GstOmxAmrWbEncClass;
 
@@ -36,17 +34,16 @@ typedef struct GstOmxAmrWbEncClass GstOmxAmrWbEncClass;
 
 struct GstOmxAmrWbEnc
 {
-    GstOmxBaseFilter omx_base;
-    guint bitrate;
+  GstOmxBaseFilter omx_base;
+  guint bitrate;
 };
 
 struct GstOmxAmrWbEncClass
 {
-    GstOmxBaseFilterClass parent_class;
+  GstOmxBaseFilterClass parent_class;
 };
 
 GType gst_omx_amrwbenc_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_AMRWBENC_H */

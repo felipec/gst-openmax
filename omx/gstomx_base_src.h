@@ -26,34 +26,31 @@
 #include <gst/base/gstbasesrc.h>
 
 G_BEGIN_DECLS
-
 #define GST_OMX_BASE_SRC(obj) (GstOmxBaseSrc *) (obj)
 #define GST_OMX_BASE_SRC_TYPE (gst_omx_base_src_get_type ())
 #define GST_OMX_BASE_SRC_CLASS(obj) (GstOmxBaseSrcClass *) (obj)
-
 typedef struct GstOmxBaseSrc GstOmxBaseSrc;
 typedef struct GstOmxBaseSrcClass GstOmxBaseSrcClass;
-typedef void (*GstOmxBaseSrcCb) (GstOmxBaseSrc *self);
+typedef void (*GstOmxBaseSrcCb) (GstOmxBaseSrc * self);
 
 #include <gstomx_util.h>
 
 struct GstOmxBaseSrc
 {
-    GstBaseSrc element;
+  GstBaseSrc element;
 
-    GOmxCore *gomx;
-    GOmxPort *out_port;
+  GOmxCore *gomx;
+  GOmxPort *out_port;
 
-    GstOmxBaseSrcCb setup_ports;
+  GstOmxBaseSrcCb setup_ports;
 };
 
 struct GstOmxBaseSrcClass
 {
-    GstBaseSrcClass parent_class;
+  GstBaseSrcClass parent_class;
 };
 
 GType gst_omx_base_src_get_type (void);
 
 G_END_DECLS
-
 #endif /* GSTOMX_BASE_SRC_H */
